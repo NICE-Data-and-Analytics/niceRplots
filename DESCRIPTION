@@ -5,12 +5,14 @@ Authors@R: c(
     person("Jonathan", "Wray", , "jonathan.wray@nice.org.uk", role = c("aut", "cre")),
     person("Vanessa", "Kam", , "vanessa.kam@nice.org.uk", role = c("aut"))
     )
-Description: The niceRplots package helps to create and export ggplot2 or plotly charts in the NICE style 
+Description: The niceRplots package helps to create and export ggplot2 or plotly charts in the NICE style.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
 Imports: 
-    ggplot2
+    dplyr,
+    ggplot2,
+    plotly
 URL: https://github.com/GitWray1/niceRplots
 BugReports: https://github.com/GitWray1/niceRplots/issues

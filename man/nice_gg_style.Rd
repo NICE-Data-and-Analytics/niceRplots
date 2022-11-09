@@ -9,3 +9,8 @@ nice_gg_style()
 \description{
 nice_gg_style
 }
+\examples{
+line_chart <- ggplot(line_df, aes(x = year, y = people)) +
+geom_line(colour = "#228096") +
+nice_gg_style()
+}
