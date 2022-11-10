@@ -18,14 +18,14 @@ nice_gg_theme <- function(legend = "none"){
 
       # This sets the font, size, and colour of text for the chart's title
       plot.title = ggplot2::element_text(family = font,
-                                         size = 28,
+                                         size = 18,
                                          face = "bold",
                                          color = "#000000"),
 
       # This sets the font, size and colour of text for the chart's subtitle, as
       # well as setting a margin between the title and the subtitle
       plot.subtitle = ggplot2::element_text(family = font,
-                                            size = 22,
+                                            size = 14,
                                             margin = ggplot2::margin(9,0,9,0)),
 
       # This leaves the caption text element empty, because it is set elsewhere in
@@ -41,10 +41,11 @@ nice_gg_theme <- function(legend = "none"){
 
       axis.title = ggplot2::element_blank(),
       axis.text = ggplot2::element_text(family = font,
-                                        size = 14,
+                                        size = 12,
                                         color = "#000000"),
       axis.text.x = ggplot2::element_text(margin = ggplot2::margin(5, b = 10)),
-      axis.ticks = ggplot2::element_blank(),
+      #axis.ticks = ggplot2::element_blank(),
+      #axis.ticks = ggplot2::element_line(linewidth = 5),
       axis.line = ggplot2::element_blank(),
 
 
@@ -89,12 +90,12 @@ nice_gg_theme <- function(legend = "none"){
                                                linetype = "solid"),
 
       strip.text = ggplot2::element_text(family = font,
-                                         size  = 14,
+                                         size  = 12,
                                          hjust = 0.5,
                                          color = "#FFFFFF"),
 
       panel.border = ggplot2::element_rect(color = "#000000",
-                                           size = 0.5,
+                                           size = 0.3,
                                            fill = NA)
 
     )
