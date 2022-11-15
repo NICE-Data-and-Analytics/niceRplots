@@ -8,7 +8,7 @@
 #' geom_line(colour = "#228096") +
 #' nice_gg_style()
 
-nice_gg_theme <- function(legend = "none"){
+nice_gg_theme <- function(legend = "none", xlabel = FALSE, border = FALSE, vgrid = FALSE){
 
     font <- "Helvetica"
 
@@ -39,29 +39,35 @@ nice_gg_theme <- function(legend = "none"){
       # setting the margins and removes lines and ticks. In some cases, axis lines
       # and axis ticks are things we would want to have in the chart
 
-      axis.title = ggplot2::element_blank(),
+      axis.title.x = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_text(family = font,
+                                           size = 12,
+                                           color = "#000000",
+                                           margin = ggplot2::margin(r = 8)),
       axis.text = ggplot2::element_text(family = font,
                                         size = 12,
                                         color = "#000000"),
-      axis.text.x = ggplot2::element_text(margin = ggplot2::margin(5, b = 10)),
-      #axis.ticks = ggplot2::element_blank(),
-      #axis.ticks = ggplot2::element_line(linewidth = 5),
-      axis.line = ggplot2::element_blank(),
-
-
-      # Format the grid lines ---------------------------------------------------
-
-      # This removes all minor grid lines and adds major y grid lines. In many cases
-      # you will want to change this to remove y grid lines and add x grid lines
-      panel.grid.minor = ggplot2::element_blank(),
-      panel.grid.major.y = ggplot2::element_line(color = "#BFBFBF"),
-      panel.grid.major.x = ggplot2::element_line(color = "#BFBFBF"), #ggplot2::element_blank(),
+      #axis.text.x = ggplot2::element_text(margin = ggplot2::margin(-5, b = 10)),
+      panel.border = ggplot2::element_blank(),
+      axis.ticks.x = ggplot2::element_line(linewidth = 1),
+      axis.ticks.y = element_blank(),
 
 
       # Format the background ---------------------------------------------------
 
       #This sets the panel background as blank, removing the standard grey
       panel.background = ggplot2::element_blank(),
+
+
+      # Format the grid lines ---------------------------------------------------
+
+      # This removes all minor grid lines and adds major y grid lines. In many cases
+      # you will want to change this to remove y grid lines and add x grid lines
+
+      panel.grid.minor = ggplot2::element_blank(),
+      panel.grid.major.x = ggplot2::element_blank(),
+      #panel.grid.major.x = ggplot2::element_line(color = "#BFBFBF"),
+      panel.grid.major.y = ggplot2::element_line(color = "#BFBFBF"),
 
 
       # Format the legend -----------------------------------------------------
@@ -92,13 +98,69 @@ nice_gg_theme <- function(legend = "none"){
       strip.text = ggplot2::element_text(family = font,
                                          size  = 12,
                                          hjust = 0.5,
-                                         color = "#FFFFFF"),
+                                         color = "#FFFFFF")
 
-      panel.border = ggplot2::element_rect(color = "#000000",
-                                           size = 0.3,
-                                           fill = NA)
+      # panel.border = ggplot2::element_rect(color = "#000000",
+      #                                      size = 0.3,
+      #                                      fill = NA)
 
     )
+
+    # Add in option to allow x axis label -----------------------------------------
+
+    if (xlabel) {
+
+      nice_theme <- nice_theme +
+        ggplot2::theme(
+
+          axis.title.x = ggplot2::element_text(family = font,
+                                               size = 12,
+                                               color = "#000000")) #margin = ggplot2::margin(t = -5)
+    } else {
+
+      nice_theme <- nice_theme +
+        ggplot2::theme(
+
+          axis.title.x = ggplot2::element_blank())
+    }
+
+
+    # Add in border option (useful for facet plots) ---------------------------
+
+    if (border) {
+
+      nice_theme <- nice_theme +
+        ggplot2::theme(
+
+          panel.border = ggplot2::element_rect(color = "#000000",
+                                               size = 0.3,
+                                               fill = NA))
+
+    } else {
+
+      nice_theme <- nice_theme +
+        ggplot2::theme(
+
+          panel.border = ggplot2::element_blank())
+    }
+
+
+    # Add in option for vertical grid - useful for scatter plots --------------
+
+    if (vgrid) {
+
+      nice_theme <- nice_theme +
+        ggplot2::theme(
+
+          panel.grid.major.x = ggplot2::element_line(color = "#BFBFBF"))
+
+    } else {
+
+      nice_theme <- nice_theme +
+        ggplot2::theme(
+
+          panel.grid.major.x = ggplot2::element_blank())
+    }
 
     return(nice_theme)
 }
