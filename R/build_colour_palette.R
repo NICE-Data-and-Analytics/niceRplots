@@ -44,7 +44,7 @@ print(three_or_more %>%
 nice_palettes <- list(
   discrete_4 = nice_colours[c("deep_blue_100",
                             "natural_tan_100",
-                            "black_75",
+                            "black_100",
                             "balanced_green_100")])
 
 palette_check(nice_palettes[["discrete_4"]], plot = T)
