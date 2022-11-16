@@ -1,11 +1,12 @@
 library(devtools)
 library(dplyr)
 library(ggplot2)
+library(ragg)
+library(systemfonts)
 
 load_all()
 
 doacs_df <- readr::read_csv("data/DOACs_data.csv")
-
 
 # Histogram ---------------------------------------------------------------
 
@@ -32,27 +33,11 @@ nice_hist <- histogram +
 
 nice_hist
 
-finalise_plot(nice_hist,
+nice_hist <- finalise_plot(nice_hist,
               source_name = "Source: Iris dataset",
-              save_filepath = "data/output.png",
               logo_image_path = "data/NICE_short_logo_black.png")
 
-footer <- create_footer("Source: Iris dataset", logo_image_path = "data/NICE_short_logo_black.png")
-
-#Draw your left-aligned grid
-plot_left_aligned <- left_align(nice_hist, c("subtitle", "title", "caption"))
-plot_grid <- ggpubr::ggarrange(plot_left_aligned, footer,
-                               ncol = 1, nrow = 2,
-                               heights = c(1, 0.045/(450/450)))
-
-## print(paste("Saving to", save_filepath))
-save_plot(plot_grid, 640, 450, "data/output.png")
-
-ggplot2::ggsave(filename = "data/output.png",
-                plot=plot_grid, width=(640/72), height=(450/72),  bg="white")
-
-showtext::showtext_opts()
-showtext::showtext_opts(dpi = 300)
+nice_hist
 
 # Bar chart ---------------------------------------------------------------
 
@@ -75,9 +60,16 @@ bar_chart <- bar_df %>%
 bar_chart
 
 # NICE theme
-bar_chart +
+bar_chart <- bar_chart +
   nice_gg_theme(xlabel = FALSE)
 
+bar_chart
+
+bar_chart <- finalise_plot(bar_chart,
+                           source_name = "Source: Iris dataset",
+                           logo_image_path = "data/NICE_short_logo_black.png")
+
+bar_chart
 
 # Line chart --------------------------------------------------------------
 

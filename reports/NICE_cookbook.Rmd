@@ -1,0 +1,70 @@
+---
+title: "NICE visual cookbook for R graphics"
+author: "Impact team"
+date: "Last updated: November 2022"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(dev = "ragg_png")
+here::i_am("reports/NICE_cookbook.Rmd")
+
+```
+
+# NICE visual cookbook for R graphics
+
+## How to create NICE style graphics
+
+The `niceRplots` package and cookbook make the process of creating publication-ready graphics in the NICE style a more reproducible process, as well as making it easier for people new to R to create graphics. 
+
+### Load the relevant packages
+
+Before we can start making charts, we first need to load all of the relevant packages. We wont load every package here, just the ones that we will use the most often. It is good practice to limit the number of loaded packages to prevent masking conflicts. For this reason, we will often use double colons `::` to access the specific functions within a package, rather than loading the full package using `library(pkg)`.
+
+```{r pkg_load, echo = FALSE}
+
+# Load relevant packages
+library(dplyr)
+library(ggplot2)
+library(plotly)
+
+```
+
+### How to style your plots 
+
+### How to save your styled plots 
+
+## Static charts using ggplot2
+
+Before making charts we first have to read in our data. We will use data on monthly CCG level prescribing of 5 direct oral anticoagulants (DOACS) in England between January 2020 and December 2021. This was downloaded from [OpenPrescribing.net](https://openprescribing.net/).
+
+```{r load_data, echo = FALSE}
+
+# Load data for plotting, specifying the type for each column
+doacs_df <- readr::read_csv("data/DOACs_data.csv", 
+                            col_types = "Dcccddd")
+
+```
+
+### Histogram
+
+
+
+
+
+### Bar chart
+
+### Line chart
+
+### Scatter plot
+
+### Faceted chart
+
+
+## Interactive charts
