@@ -23,12 +23,36 @@ histogram <- iris %>%
 histogram
 
 # NICE theme
-histogram +
+nice_hist <- histogram +
   nice_gg_theme(legend = "right", xlabel = TRUE) +
   labs(title = "Species setosa has the longest sepal length",
        subtitle = "Distribution of sepal width by species",
        x = "Sepal Width",
        y = "Frequency")
+
+nice_hist
+
+finalise_plot(nice_hist,
+              source_name = "Source: Iris dataset",
+              save_filepath = "data/output.png",
+              logo_image_path = "data/NICE_short_logo_black.png")
+
+footer <- create_footer("Source: Iris dataset", logo_image_path = "data/NICE_short_logo_black.png")
+
+#Draw your left-aligned grid
+plot_left_aligned <- left_align(nice_hist, c("subtitle", "title", "caption"))
+plot_grid <- ggpubr::ggarrange(plot_left_aligned, footer,
+                               ncol = 1, nrow = 2,
+                               heights = c(1, 0.045/(450/450)))
+
+## print(paste("Saving to", save_filepath))
+save_plot(plot_grid, 640, 450, "data/output.png")
+
+ggplot2::ggsave(filename = "data/output.png",
+                plot=plot_grid, width=(640/72), height=(450/72),  bg="white")
+
+showtext::showtext_opts()
+showtext::showtext_opts(dpi = 300)
 
 # Bar chart ---------------------------------------------------------------
 
@@ -88,8 +112,6 @@ line_chart +
 scatter_chart <- iris %>%
   ggplot(aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
   geom_point(size = 2, position = "jitter") +
-  #geom_smooth(method = "lm") +
-  #geom_hline(yintercept = 1.5, linewidth = 1, colour="#333333") +
   expand_limits(y = c(1.5,4.5)) +
   labs(title = "Sepal Length-Width relationship",
        subtitle = "This is what a subtitle would look like",

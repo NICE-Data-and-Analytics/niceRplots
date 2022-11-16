@@ -6,11 +6,14 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-This repo contains the functions of the `niceRplots` package, which
-provides functions to create graphics in the NICE style, inspired by the
-similar [bbplot](https://github.com/bbc/bbplot) package. These funtions
-can be used to style static charts created using `ggplot2`, or
+This repository contains the functions of the `niceRplots` package,
+which provides functions to create graphics in the NICE style, inspired
+by the similar [bbplot](https://github.com/bbc/bbplot) package. These
+functions can be used to style static charts created using `ggplot2`, or
 interactive charts created using `plotly`.
+
+Examples of plots created using the nicerplots package can be found in
+the niceRplots cookbook.
 
 ## Installation
 
@@ -36,9 +39,7 @@ A basic explanation for each is as follows
 
 1.  `nice_gg_theme(legend, xlabel, border, vgrid)`:
 
-The function arguments are as follows:
-
-`nice_gg_theme(plot_name, )`
+The function arguments are as follows: `nice_gg_theme(plot_name, )`
 
 -   `legend`:
 -   `xlabel`:
