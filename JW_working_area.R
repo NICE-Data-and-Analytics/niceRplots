@@ -100,7 +100,7 @@ scatter_chart
 
 # NICE theme
 scatter_chart +
-  nice_gg_theme(legend = "right", xlabel = TRUE, border = TRUE)
+  nice_gg_theme(legend = "right", xlabel = TRUE, border = TRUE, vgrid = TRUE)
 
 # Faceted chart ----------------------------------------------------------
 
@@ -121,7 +121,5 @@ facet_chart
 # NICE theme
 facet_chart +
   nice_gg_theme(legend = "right", border = TRUE)
-
-
 
 

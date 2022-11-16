@@ -10,16 +10,17 @@
 
 nice_gg_theme <- function(legend = "none", xlabel = FALSE, border = FALSE, vgrid = FALSE){
 
-    font <- "Helvetica"
+    font <- "Inter-Regular"
+    heading_font <- "Lora-SemiBold"
 
     nice_theme <- ggplot2::theme(
 
       # Format the text ---------------------------------------------------------
 
       # This sets the font, size, and colour of text for the chart's title
-      plot.title = ggplot2::element_text(family = font,
+      plot.title = ggplot2::element_text(family = heading_font,
                                          size = 18,
-                                         face = "bold",
+                                         #face = "bold",
                                          color = "#000000"),
 
       # This sets the font, size and colour of text for the chart's subtitle, as

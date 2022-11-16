@@ -13,6 +13,8 @@ RoxygenNote: 7.2.1
 Imports: 
     dplyr,
     ggplot2,
-    plotly
+    plotly,
+    showtext,
+    sysfonts
 URL: https://github.com/GitWray1/niceRplots
 BugReports: https://github.com/GitWray1/niceRplots/issues
