@@ -51,6 +51,18 @@ nice_palettes <- list(
 
 seecol(nice_palettes[["discrete"]])
 
+# Manually inputting colour palette
+## Note, need to remove names from vector, otherwise ggplot will be trying to use the
+## names to assign colours to the colour variable levels
+## e.g. will be looking for an item with name "pce" to use as the colour for level "pce"
+economics_long %>%
+  ggplot(aes(x = date, y = value01, colour = variable)) +
+  geom_line(size = 1) +
+  scale_colour_manual(values = unname(nice_palettes[["discrete"]])[1:6]) +
+  theme(panel.background = element_rect(fill = nice_colours[["white_100"]]),
+        axis.line = element_line(colour = nice_colours[["black_100"]]),
+        panel.grid = element_line(colour = "grey90"))
+
 # Interpolation method ----
 ## Colours look a bit off but able to interpolate if more colours needed in a graph than are specified
 
@@ -145,11 +157,24 @@ scale_fill_nice_d <- function(name = "discrete") {
 }
 
 # Test plots
+# Soft cream 25% panel background
 economics_long %>%
     ggplot(aes(x = date, y = value01, colour = variable)) +
     geom_line(size = 1) +
     scale_colour_nice_d() +
-    theme_bw()
+    theme(panel.background = element_rect(fill = nice_colours[["soft_cream_25"]],
+                                         colour = nice_colours[["soft_cream_25"]]),
+          panel.grid.major = element_line(size = 1.2),
+          panel.grid.minor = element_line(size = 0.8))
+
+  # White background
+  economics_long %>%
+    ggplot(aes(x = date, y = value01, colour = variable)) +
+    geom_line(size = 1) +
+    scale_colour_nice_d() +
+    theme(panel.background = element_rect(fill = nice_colours[["white_100"]]),
+          axis.line = element_line(colour = nice_colours[["black_100"]]),
+          panel.grid = element_line(colour = "grey90"))
 
 ggplot(iris, aes(Sepal.Width, Sepal.Length, color = Sepal.Length)) +
   geom_point(size = 4) +
@@ -161,3 +186,6 @@ mpg %>%
   geom_bar() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   scale_fill_nice_d()
+
+
+
