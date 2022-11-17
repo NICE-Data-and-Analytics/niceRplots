@@ -4,7 +4,6 @@ author: "Impact team"
 date: "Last updated: November 2022"
 output: 
   html_document:
-    code_folding: hide
     toc: true
     toc_depth: 3
     toc_float: true
@@ -12,6 +11,9 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+# ragg_png <- function(..., res = 150) {
+#   ragg::agg_png(..., res = res, units = "in")
+# }
 knitr::opts_chunk$set(dev = "ragg_png")
 here::i_am("reports/NICE_cookbook.Rmd")
 
@@ -27,12 +29,14 @@ The `niceRplots` package and cookbook make the process of creating publication-r
 
 Before we can start making charts, we first need to load all of the relevant packages. We wont load every package here, just the ones that we will use the most often. It is good practice to limit the number of loaded packages to prevent masking conflicts. For this reason, we will often use double colons `::` to access the specific functions within a package, rather than loading the full package using `library(pkg)`.
 
-```{r pkg_load, echo = FALSE}
+```{r pkg_load, message = FALSE}
 
 # Load relevant packages
 library(dplyr)
 library(ggplot2)
 library(plotly)
+
+devtools::load_all()
 
 ```
 
@@ -47,24 +51,169 @@ Before making charts we first have to read in our data. We will use data on mont
 ```{r load_data, echo = FALSE}
 
 # Load data for plotting, specifying the type for each column
-doacs_df <- readr::read_csv("data/DOACs_data.csv", 
+doacs_df <- readr::read_csv(here::here("data/DOACs_data.csv"), 
                             col_types = "Dcccddd")
 
 ```
 
 ### Histogram
 
+```{r gg_histogram, echo = FALSE}
 
+# Prepare data
 
+# Find more relevant data
+
+# NICE theme
+
+nice_hist <- iris %>%
+  ggplot(aes(x = Sepal.Width)) +
+  geom_histogram(aes(fill = Species), binwidth = 0.2, color = "black") +
+  geom_hline(yintercept = 0, linewidth = 1, colour = "#333333") +
+  scale_y_continuous(expand = c(0,0), limits = c(0,40)) +
+  nice_gg_simple() +
+  labs(title = "Species setosa has the longest sepal length",
+       subtitle = "Distribution of sepal width by species",
+       x = "Sepal Width",
+       y = "Frequency")
+
+nice_hist
+
+# Create chart
+
+```
 
 
 ### Bar chart
 
+```{r gg_bar, echo = TRUE, message = FALSE, warning = FALSE}
+
+# Prepare data
+
+bar_df <- doacs_df %>% 
+  filter(between(date, as.Date("2021-01-01"), as.Date("2021-12-31"))) %>% 
+  group_by(chemical) %>% 
+  summarise(items = sum(items)/1000000)
+
+# Create chart
+
+bar_chart <- bar_df %>%
+  ggplot(aes(y = items, x = reorder(chemical, items))) +
+  geom_hline(yintercept = 0, linewidth = 1, colour="#333333") +
+  scale_y_continuous(expand = c(0,0), limits = c(0,8)) +
+  scale_x_discrete(labels = function(x) {stringr::str_wrap(x, width = 10)}) +
+  geom_col(fill = "#228096", colour = "#000000", linewidth = 0.7) +
+  nice_gg_simple() +
+  theme(axis.title.x = ggplot2::element_blank()) +
+  labs(title = "Apixaban was the most prescribed DOAC in 2021",
+       subtitle = "Total DOAC medicines dispensed in primary care in England, 2020",
+       y = "Dispensed items (millions)")
+
+bar_chart
+
+```
+
 ### Line chart
+
+```{r gg_line, echo= TRUE, message = FALSE, warning = FALSE}
+
+# Prepare data
+line_df <- doacs_df %>%
+  filter(chemical == "Edoxaban") %>% 
+  group_by(date, chemical) %>%
+  summarise(items = sum(items)) %>%
+  ungroup()
+
+# Create chart
+line_chart <- line_df %>%
+  ggplot(aes(x = date, y = items)) +
+  geom_line(linewidth = 0.8, colour = "#228096") +
+  geom_point(size = 2, colour = "#228096") +
+  scale_y_continuous(expand = c(0,0), limits = c(0,200000), label = scales::comma) +
+  scale_x_date(date_labels = "%b\n%Y", date_breaks = "3 months") +
+  geom_hline(yintercept = 0, linewidth = 1, colour="#333333") +
+  nice_gg_simple() +
+  theme(axis.title.x = ggplot2::element_blank()) +
+  labs(title = "Edoxaban prescribing has increased",
+       subtitle = "Edoxaban prescribing in England, 2020-2022",
+       y = "Dispensed items")
+
+line_chart
+
+```
 
 ### Scatter plot
 
+```{r gg_scatter, echo= TRUE, message = FALSE, warning = FALSE}
+
+# Prepare data
+scatter_df <- doacs_df %>%
+  filter(chemical == "Apixaban",
+         date == "2021-07-01") %>% 
+  mutate(total_list_size = total_list_size/1000)
+
+# Create chart
+
+scatter_chart <- scatter_df %>%
+  ggplot() +
+  geom_point(aes(x = total_list_size, y = items), 
+             colour = "#228096", size = 2) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.05)), 
+                     limits = c(0,3000), 
+                     label = scales::comma) +
+  scale_y_continuous(expand = c(0,0), 
+                     limits = c(0,25000), 
+                     label = scales::comma) +
+  nice_gg_simple() +
+  theme(panel.border = ggplot2::element_rect(color = "#000000",
+                                               linewidth = 0.3,
+                                               fill = NA),
+        panel.grid.major.x = ggplot2::element_line(color = "#BFBFBF")) +
+  labs(title = "Apixaban prescribing",
+       subtitle = "Items of apixaban dispensed in primary care compared to CCG list size, 
+July 2021",
+       x = "Primary care list size (x1000)",
+       y = "Dispensed items")
+
+scatter_chart
+
+```
+
 ### Faceted chart
+
+```{r gg_facet, echo= TRUE, message = FALSE, warning = FALSE}
+
+# Prepare data
+facet_df <- doacs_df %>%
+  filter(chemical %in% c("Apixaban", "Edoxaban", "Warfarin sodium")) %>% 
+  group_by(date, chemical) %>%
+  summarise(items = sum(items)/1000) %>%
+  ungroup()
+
+# Create chart
+
+facet_chart <- facet_df %>%
+  ggplot(aes(x = date, y = items,
+             color = chemical)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2) +
+  scale_y_continuous(expand = c(0,0), limits = c(0,800)) +
+  scale_x_date(date_labels = "%b\n%Y", date_breaks = "6 months") +
+  facet_wrap(~chemical) +
+  nice_gg_simple() +
+  theme(panel.border = ggplot2::element_rect(color = "#000000",
+                                               linewidth = 0.3,
+                                               fill = NA),
+        axis.title.x = ggplot2::element_blank(),
+        legend.position = "none") +
+  labs(title = "This is what a title would look like",
+       subtitle = "This is what a subtitle would look like",
+       x = "Sepal Length",
+       y = "Dispensed items")
+
+facet_chart
+
+```
 
 
 ## Interactive charts

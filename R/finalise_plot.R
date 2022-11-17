@@ -13,9 +13,12 @@ left_align <- function(plot_name, pieces){
 create_footer <- function (source_name, logo_image_path) {
 
   #Make the footer
-  footer <- grid::grobTree(grid::linesGrob(x = grid::unit(c(0, 1), "npc"), y = grid::unit(1.1, "npc")),
+  footer <- grid::grobTree(grid::linesGrob(x = grid::unit(c(0, 1), "npc"),
+                                           y = grid::unit(1.1, "npc")),
                            grid::textGrob(source_name,
-                                          x = 0.004, hjust = 0, gp = grid::gpar(fontsize=16)),
+                                          x = 0.004, hjust = 0,
+                                          gp = grid::gpar(fontsize=12,
+                                                          fontfamily = "Inter")),
                            grid::rasterGrob(png::readPNG(logo_image_path), x = 0.944))
   return(footer)
 }
@@ -26,7 +29,13 @@ create_footer <- function (source_name, logo_image_path) {
 finalise_plot <- function(plot_name,
                           source_name,
                           height_pixels=450,
-                          logo_image_path = file.path(system.file("data", package = 'niceRplots'),"NICE_short_logo_black.png")) {
+                          logo = "NICE") {
+
+  if (logo == "NICE"){
+    logo_image_path <- file.path(system.file("data", package = 'niceRplots'),"NICE_short_logo_black.png")
+  } else {
+    logo_image_path <- file.path(system.file("data", package = 'niceRplots'),"placeholder.png")
+  }
 
   footer <- create_footer(source_name, logo_image_path)
 
