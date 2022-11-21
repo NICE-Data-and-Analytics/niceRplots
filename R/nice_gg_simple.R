@@ -8,12 +8,14 @@
 #' geom_line(colour = "#228096") +
 #' nice_gg_style()
 
-nice_gg_simple <- function(){
+nice_gg_simple <- function(base_size = 12){
 
   font <- "Inter"
   heading_font <- "Lora SemiBold"
 
   nice_theme <- ggplot2::theme(
+
+    text = element_text(size = base_size),
 
     # Format the background ---------------------------------------------------
 
@@ -25,11 +27,11 @@ nice_gg_simple <- function(){
     # Format the title and subtitle -------------------------------------------
 
     plot.title = ggplot2::element_text(family = heading_font,
-                                       size = 18,
+                                       size = rel(1.5),
                                        color = "#000000"),
 
     plot.subtitle = ggplot2::element_text(family = font,
-                                          size = 14,
+                                          size = rel(1.2),
                                           margin = ggplot2::margin(0,0,15,0)),
 
     # Leave the caption empty, because we add this when finalizing the chart
@@ -39,17 +41,17 @@ nice_gg_simple <- function(){
     # Format the axes ---------------------------------------------------------
 
     axis.title.x = ggplot2::element_text(family = font,
-                                         size = 12,
+                                         size = rel(1),
                                          color = "#000000",
                                          margin = ggplot2::margin(t = 8)),
 
     axis.title.y = ggplot2::element_text(family = font,
-                                         size = 12,
+                                         size = rel(1),
                                          color = "#000000",
                                          margin = ggplot2::margin(r = 8)),
 
     axis.text = ggplot2::element_text(family = font,
-                                      size = 12,
+                                      size = rel(1),
                                       color = "#000000"),
 
     axis.ticks.x = ggplot2::element_line(linewidth = 1),
@@ -73,7 +75,7 @@ nice_gg_simple <- function(){
     legend.title = ggplot2::element_blank(),
     legend.key = ggplot2::element_blank(),
     legend.text = ggplot2::element_text(family = font,
-                                        size = 12,
+                                        size = rel(1),
                                         color = "#000000"),
     legend.text.align = 0,
 
@@ -83,12 +85,12 @@ nice_gg_simple <- function(){
     # Set the background of the facet titles to NICE teal
     strip.background = ggplot2::element_rect(fill = "#228096",
                                              color = "#000000",
-                                             size = 1,
+                                             linewidth = 1,
                                              linetype = "solid"),
 
     # Make the facet title text white
     strip.text = ggplot2::element_text(family = font,
-                                       size  = 12,
+                                       size  = rel(1),
                                        hjust = 0.5,
                                        color = "#FFFFFF"),
 
