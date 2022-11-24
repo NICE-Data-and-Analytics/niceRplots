@@ -11,9 +11,6 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-# ragg_png <- function(..., res = 150) {
-#   ragg::agg_png(..., res = res, units = "in")
-# }
 knitr::opts_chunk$set(dev = "ragg_png")
 here::i_am("reports/NICE_cookbook.Rmd")
 
@@ -27,50 +24,110 @@ The `niceRplots` package and cookbook make the process of creating publication-r
 
 ### Load the relevant packages
 
-Before we can start making charts, we first need to load all of the relevant packages. We wont load every package here, just the ones that we will use the most often. It is good practice to limit the number of loaded packages to prevent masking conflicts. For this reason, we will often use double colons `::` to access the specific functions within a package, rather than loading the full package using `library(pkg)`.
+Before we can start making charts, we first need to load all of the relevant packages. We wont load every package here, just the ones that we will use the most often. It is good practice to limit the number of loaded packages to prevent masking conflicts. For this reason, we will often use double colons `::` to access the specific functions within a package (e.g. `readr::read_csv()`), rather than loading the full package using `library(pkg)`.
 
 ```{r pkg_load, message = FALSE}
 
-# Load relevant packages
+# Load in the relevant packages
 library(dplyr)
 library(ggplot2)
 library(plotly)
+library(leaflet)
 
 devtools::load_all()
 
+# Set up the NICE colour palette
+nice_colours <- c("Bold teal" = "#228096",
+                  "Deep blue" = "#00436C",
+                  "Balanced green" = "#37906D",
+                  "Natural tan" = "D07B4D",
+                  "Positive yellow" = "EAD054")
+
 ```
+
 
 ### How to style your plots 
 
-### How to save your styled plots 
+Once a plot has been created and styled using `NICE_gg_simple()`, the next step is to apply the `finalise_plot()` function. This function will create a footer containing information on the data source, as well as adding the NICE logo to the bottom right. It will then left-align the title, subtitle and footer. The `finalise_plot()` function has 4 arguments:
+
+```{r finalise, echo = TRUE}
+
+# Create an example plot
+example_plot <- iris %>% 
+  group_by(Species) %>% 
+  summarise(Sepal_Width = mean(Sepal.Width)) %>% 
+  ungroup() %>% 
+  ggplot() + 
+  geom_col(aes(x = Species, y = Sepal_Width)) +
+    labs(title = "Example title",
+         subtitle = "Example subtitle",
+         x = "Species",
+         y = "Sepal Width")
+
+# Apply the finalise plot function
+finalise_plot(example_plot,
+              source_name = "Source: Iris dataset")
+
+
+```
+
+
+### How to save your styled plots
+
+After applying the `finalise_plot()` function, the plot can be saved using the `ggsave()` function.
+
+
+```{r save_plot, echo = TRUE}
+
+# Save plot using the ggsave() function 
+#ggsave("example_plot.png", example_plot)
+
+
+```
+
 
 ## Static charts using ggplot2
 
 Before making charts we first have to read in our data. We will use data on monthly CCG level prescribing of 5 direct oral anticoagulants (DOACS) in England between January 2020 and December 2021. This was downloaded from [OpenPrescribing.net](https://openprescribing.net/).
 
-```{r load_data, echo = FALSE}
+```{r load_data, echo=FALSE, message = FALSE, warning = FALSE}
 
 # Load data for plotting, specifying the type for each column
 doacs_df <- readr::read_csv(here::here("data/DOACs_data.csv"), 
                             col_types = "Dcccddd")
 
+# CCG_code_lookup (needed for maps)
+ccg_lookup <- readr::read_csv(here::here("data/CCG_lookup.csv")) %>% 
+  janitor::clean_names() %>% 
+  select(ccg21cd, ccg21cdh)
+
+# Load in geoJSON file with ccg shapes (needed for maps)
+CCG_shapes_df <- sf::read_sf(here::here("data/CCG_shapes_2021_04.geojson")) %>% 
+  janitor::clean_names() %>% 
+  select(-ccg21nm)
+
 ```
 
 ### Histogram
 
-```{r gg_histogram, echo = FALSE}
+```{r gg_histogram, echo = TRUE}
 
 # Prepare data
 
-# Find more relevant data
 
-# NICE theme
+# Create chart
 
 nice_hist <- iris %>%
-  ggplot(aes(x = Sepal.Width)) +
-  geom_histogram(aes(fill = Species), binwidth = 0.2, color = "black") +
+  ggplot() +
+  geom_histogram(aes(x = Sepal.Width, fill = Species), 
+                 binwidth = 0.2, color = "black") +
+  # Add a line on the x axis
   geom_hline(yintercept = 0, linewidth = 1, colour = "#333333") +
+  # Remove extra spacing and set y axis limits
   scale_y_continuous(expand = c(0,0), limits = c(0,40)) +
+  # Use NICE colours
+  scale_fill_manual(values = c("#228096", "#D07B4D", "#EAD054")) +
+  # Add nice theme and set labels
   nice_gg_simple() +
   labs(title = "Species setosa has the longest sepal length",
        subtitle = "Distribution of sepal width by species",
@@ -79,7 +136,7 @@ nice_hist <- iris %>%
 
 nice_hist
 
-# Create chart
+#finalise_plot(example_plot, source_name = "Source: Iris dataset")
 
 ```
 
@@ -88,14 +145,13 @@ nice_hist
 
 ```{r gg_bar, echo = TRUE, message = FALSE, warning = FALSE}
 
-devtools::load_all()
-
 # Prepare data
 
 bar_df <- doacs_df %>% 
   filter(between(date, as.Date("2021-01-01"), as.Date("2021-12-31"))) %>% 
   group_by(chemical) %>% 
-  summarise(items = sum(items)/1000000)
+  summarise(items = sum(items)/1000000) %>% 
+  ungroup()
 
 # Create chart
 
@@ -104,12 +160,13 @@ bar_chart <- bar_df %>%
   geom_hline(yintercept = 0, linewidth = 1, colour="#333333") +
   scale_y_continuous(expand = c(0,0), limits = c(0,8)) +
   scale_x_discrete(labels = function(x) {stringr::str_wrap(x, width = 10)}) +
-  geom_col(fill = "#228096", colour = "#000000", linewidth = 0.7) +
+  geom_col(fill = "#228096", colour = "#000000") +
   nice_gg_simple(base_size = 12) +
   theme(axis.title.x = ggplot2::element_blank()) +
   labs(title = "Apixaban was the most prescribed DOAC in 2021",
        subtitle = "Total DOAC medicines dispensed in primary care in England, 2020",
-       y = "Dispensed items (millions)")
+       y = "Dispensed items (millions)",
+       alt = "example alt text")
 
 bar_chart
 
@@ -201,6 +258,7 @@ facet_chart <- facet_df %>%
   geom_point(size = 2) +
   scale_y_continuous(expand = c(0,0), limits = c(0,800)) +
   scale_x_date(date_labels = "%b\n%Y", date_breaks = "6 months") +
+  scale_color_manual(values = c("#228096", "#D07B4D", "#37906D")) +
   facet_wrap(~chemical) +
   nice_gg_simple() +
   theme(panel.border = ggplot2::element_rect(color = "#000000",
@@ -217,5 +275,125 @@ facet_chart
 
 ```
 
+### Choropleth chart (heatmap)
+
+```{r gg_choropleth, echo= TRUE, message = FALSE, warning = FALSE}
+
+# Prepare data
+
+map_df <- doacs_df %>% 
+  filter(between(date, as.Date("2021-01-01"), as.Date("2021-12-31")),
+         chemical == "Apixaban") %>% 
+  group_by(chemical, ccg_name, ccg_ods) %>% 
+  summarise(items_per_1000 = sum(items)/(sum(total_list_size)/1000),
+            items = sum(items)) %>% 
+  ungroup() %>% 
+  left_join(ccg_lookup, by = c("ccg_ods" = "ccg21cdh"))
+
+
+map_df <- left_join(CCG_shapes_df, map_df, by = c("ccg21cd" = "ccg21cd"))
+
+# Create chart
+choropleth_chart <- map_df %>% 
+  ggplot() +
+  geom_sf(aes(fill = items_per_1000), color = "black", size = 0.3) +
+  scale_fill_binned(name = "Items per 1000",
+                    low = "#e9e9e9",
+                    high = "#004650",
+                    na.value = "grey50") +
+  labs(title = "Apixaban prescribing in England, 2021",
+       subtitle = "Plotted by CCG") +
+  theme_void()
+
+choropleth_chart <- map_df %>% 
+  mutate(items_per_1000_bin = cut(items_per_1000,
+                          breaks = c(0,5,10,15,20,Inf),
+                          labels = c("<5","5-10", "10-15", "15-20", "20+"))) %>% 
+  ggplot() +
+  geom_sf(aes(fill = items_per_1000_bin), color = "black", size = 0.2) +
+  scale_fill_viridis_d(guide = guide_legend(
+                       title = "Items per 1000",
+                       direction = "vertical",
+                       title.position = "top",
+                       title.hjust = 0.3,
+                       #title.vjust = 0.,
+                       label.position = "left",
+                       keywidth = 1.5,
+                       keyheight = 1,
+                       reverse = TRUE)) +
+  labs(title = "Apixaban prescribing in England, 2021" ,
+       subtitle = "Plotted by CCG") +
+  theme_void() +
+  theme(legend.position = c(0.15, 0.5))
+
+choropleth_chart
+
+```
+
 
 ## Interactive charts
+
+### Choropleth map (Leaflet)
+
+```{r leaflet, echo= TRUE, message = FALSE, warning = FALSE}
+
+# Prepare data
+map_df <- doacs_df %>% 
+  filter(between(date, as.Date("2021-01-01"), as.Date("2021-12-31")),
+         chemical == "Warfarin sodium") %>% 
+  group_by(chemical, ccg_name, ccg_ods) %>% 
+  summarise(items_per_1000 = sum(items)/(sum(total_list_size)/1000),
+            items = sum(items)) %>% 
+  ungroup() %>% 
+  left_join(ccg_lookup, by = c("ccg_ods" = "ccg21cdh"))
+
+
+map_df <- left_join(CCG_shapes_df, map_df, by = c("ccg21cd" = "ccg21cd"))
+
+# Create chart
+
+pal <- colorBin("plasma",
+                domain = map_df$items_per_1000,
+                bins = 5,
+                na.color = "#808080")
+
+leaflet_map <- map_df %>% 
+    # Set up width and degree of zoom per click
+    leaflet(width = 800, 
+            options = leafletOptions(zoomDelta = 0.25,
+                                     zoomSnap = 0.25)) %>% 
+    # Set view to centre on England
+    setView(lat = 53,
+            lng = -1.5,
+            zoom = 6) %>%
+    # add basic base tile
+    addProviderTiles(provider = "CartoDB.Positron") %>%
+    # Add shapes
+    addPolygons(fillColor = ~pal(items_per_1000),
+                fillOpacity = 0.3,
+                color = "#393939",
+                weight = 1.5,
+                opacity = 1,
+                layerId = ~ccg_name,
+                # Add functionality to highlight shape when hovered over
+                highlight = highlightOptions(weight = 3,
+                                             color = "#222222",
+                                             fillOpacity = 0.7,
+                                             bringToFront = TRUE),
+                # Add labels upon hover
+                label = ~lapply(paste0("<strong>Name: </strong>", ccg_name,
+                                       "<br><strong>Items per 1000 population: </strong> ", 
+                                       round(items_per_1000, 2)),
+                                htmltools::HTML),
+                labelOptions = labelOptions(textsize = "12px",
+                                            style = list("font-family" = "Arial"))) %>%
+    clearControls() %>%
+    addLegend(position = "bottomleft",
+              pal = pal,
+              values = ~items_per_1000,
+              title = "Items per 1000 population",
+              opacity = 0.7)
+
+leaflet_map
+
+```
