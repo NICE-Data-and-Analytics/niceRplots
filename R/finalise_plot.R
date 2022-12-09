@@ -28,14 +28,15 @@ create_footer <- function (source_name, logo_image_path) {
 
 finalise_plot <- function(plot_name,
                           source_name,
-                          height_pixels=450,
                           logo = "NICE") {
 
   if (logo == "NICE"){
     logo_image_path <- file.path(system.file("data", package = 'niceRplots'),"NICE_short_logo_black.png")
-  } else {
+  } else if (logo == "none") {
     logo_image_path <- file.path(system.file("data", package = 'niceRplots'),"placeholder.png")
   }
+
+  source_name <- paste0("Source: ", source_name)
 
   footer <- create_footer(source_name, logo_image_path)
 
@@ -43,7 +44,7 @@ finalise_plot <- function(plot_name,
   plot <- left_align(plot_name, c("subtitle", "title", "caption"))
   plot <- ggpubr::ggarrange(plot, footer,
                             ncol = 1, nrow = 2,
-                            heights = c(1, 0.045/(height_pixels/450)))
+                            heights = c(1, 0.045/(450/450)))
 
   return(plot)
 }

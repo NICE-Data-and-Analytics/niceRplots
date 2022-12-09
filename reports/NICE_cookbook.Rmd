@@ -16,46 +16,40 @@ here::i_am("reports/NICE_cookbook.Rmd")
 
 ```
 
-
+<br>
 # How to create NICE style graphics
 
 The `niceRplots` package and cookbook make the process of creating publication-ready graphics in the NICE style a more reproducible process, as well as making it easier for people new to R to create graphics. 
 
-Within this cookbook, we will demonstrate how to use the functions included within the `niceRplots` package. We will also provide examples of several plots that have been created in the NICE style. 
+Within this cookbook, we will demonstrate how to use the functions included within the `niceRplots` package. We will also provide examples of plots that have been created in the NICE style. 
 
+<br>
 ## Load the relevant packages
 
-Before we can start making charts, we first need to load all of the relevant packages. We wont load every package here, just the ones that we will use the most often. It is good practice to limit the number of loaded packages to prevent masking conflicts. For this reason, we will often use double colons `::` to access the specific functions within a package (e.g. `readr::read_csv()`), rather than loading the full package using `library(pkg)`.
+Before we can start making charts, we first need to load all of the relevant packages. We wont load every package here, just the ones that we will use the most often. It is good practice to limit the number of loaded packages to prevent masking conflicts. For this reason, we will often use double colons `::` to access specific functions within a package (e.g. `readr::read_csv()`), rather than loading the full package using `library(pkg)`.
 
 ```{r pkg_load, message = FALSE}
 
 # Load in the relevant packages
 library(dplyr)
 library(ggplot2)
-library(plotly)
 library(leaflet)
 
 devtools::load_all()
 
 # Set up the NICE colour palette
 nice_colours <- c("#228096",
-                  "#00436C",
-                  "#37906D",
                   "#D07B4D",
-                  "#EAD054")
-
-# nice_colours <- c("Bold teal" = "#228096",
-#                   "Deep blue" = "#00436C",
-#                   "Balanced green" = "#37906D",
-#                   "Natural tan" = "D07B4D",
-#                   "Positive yellow" = "EAD054")
+                  "#EAD054",
+                  "#00436C",
+                  "#37906D")
 
 ```
-
+<br>
 
 ## How to style your charts
 
-As an example we will create a simple bar chart using the iris dataset. We will first create a basic chart, and then add some additional formatting. We can see the two charts below with and without formatting.
+As an example we will create a simple bar chart using the `iris` dataset. We will first create a basic chart, and then add some additional formatting. We can see the two charts below with and without formatting.
 
 ```{r format_chart, echo = TRUE, fig.show="hold", out.width="50%"}
 
@@ -65,7 +59,7 @@ iris_bar_df <- iris %>%
   summarise(Sepal_Width = mean(Sepal.Width)) %>% 
   ungroup()
 
-# Create basic bar chart
+# Create basic bar chart (left)
 iris_bar <- ggplot(iris_bar_df) + 
   geom_col(aes(x = Species, y = Sepal_Width), ) +
   labs(title = "Basic chart title",
@@ -73,14 +67,14 @@ iris_bar <- ggplot(iris_bar_df) +
        x = "Species",
        y = "Sepal Width")
 
-# Create formatted chart
+# Create formatted chart (right)
 iris_bar_formatted <- ggplot(iris_bar_df) + 
   # Adjust bar fill and outline colour
-  geom_col(aes(x = Species, y = Sepal_Width), fill = "#228096", colour = "#000000")+
-  # Add baseline
-  geom_hline(yintercept = 0, linewidth = 1, colour="#333333") +
+  geom_col(aes(x = Species, y = Sepal_Width), fill = nice_colours[1], colour = "#000000")+
+  # Add baseline to x axis
+  geom_hline(yintercept = 0, linewidth = 1, colour = "#333333") +
   # set y-axis limits and remove padding
-  scale_y_continuous(expand = c(0,0), limits = c(0,4)) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 4)) +
   # Add labels 
   labs(title = "Formatted chart title",
        subtitle = "Formatted chart subtitle ",
@@ -90,15 +84,15 @@ iris_bar
 iris_bar_formatted
 
 ```
+<br>
 
-
-We can now apply the nice theme using the `nice_gg_simple()` function, specifying the base font for the plot to be of size 12. The `nice_gg_simple()` function alters several aspects of the chart to make it consistent with the [NICE brand guidelines](https://indepth.nice.org.uk/our-brand/index.html). These are as follows:
+We can now apply the NICE theme using the `nice_gg_simple()` function from the `niceRplots` package, specifying the base font for the plot to be of size 12. The `nice_gg_simple()` function alters several aspects of the chart to make it consistent with the [NICE brand guidelines](https://indepth.nice.org.uk/our-brand/index.html). These are as follows:
 
 * **Fonts**: changes the title font to Lora SemiBold, and all other text to Inter Regular. 
 
 * **Text scaling**: applies a text hierarchy to the chart using relative text sizes. Changing the `base_size` argument will change the text size throughout the plot. Titles and subtitles will be automatically scaled relative to this base_size to maintain the text hierarchy. This is useful if you want to change the chart size, as all text can be simply adjusted by changing the `base_size` argument. 
 
-* **Colour scheme**: changes line and text colours to be consistent with the NICE brand colour palette. This is particularly noticeable when creating faceted charts (shown later in cookbook).
+* **Colour scheme**: changes line and text colours to be consistent with the NICE brand colour palette. This is particularly noticeable when creating faceted charts (shown later in cookbook). It should be noted that this will not add colour to the plotted data, this will still need to be added manually when creating the chart. For instance, a fill colour was added in the `geom_col()` argument in the above example. 
 
 * **Margins**: adjusts the margins around the title, subtitle, and axis titles to give everything space to breathe.
 
@@ -121,26 +115,32 @@ iris_bar_themed <- iris_bar_formatted +
 iris_bar_themed
 
 ```
-
+<br>
 
 ## How to finalise your charts
 
-Once a plot has been created and styled using `NICE_gg_simple()`, the next step is to apply the `finalise_plot()` function. This function will create a footer containing information on the data source, as well as adding the NICE logo to the bottom right. It will then left-align the title, subtitle and footer. The `finalise_plot()` function has 4 arguments:
+Once a plot has been created and styled using `nice_gg_simple()`, the next step is to apply the `finalise_plot()` function. This function will create a footer containing information on the data source, as well as adding the NICE logo to the bottom right. It will then left-align the title, subtitle and footer. The `finalise_plot()` function has 3 arguments:
+
+* `plot_name`: the name of the plot object, in the example below we have saved ours as `iris_bar_themed`.
+
+* `source_name`: the source of the underlying data. We have used data from the `iris` dataset.
+
+* `logo`: this will determine whether the NICE logo is included in the footer. It can have a value of "NICE" to include the logo, or "none" to leave it blank.
 
 ```{r finalise, echo = TRUE}
 
 # Apply the finalise plot function
 finalised_plot <- finalise_plot(iris_bar_themed,
-              source_name = "Source: Iris dataset")
+                                source_name = "Iris dataset",
+                                logo = "NICE")
 
 finalised_plot
 ```
-
+<br>
 
 ## How to save your finalised plots
 
-After applying the `finalise_plot()` function, the plot can be saved using the `ggsave()` function.
-
+After applying the `finalise_plot()` function, the chart can be saved using the `ggsave()` function.
 
 ```{r save_plot, echo = TRUE, eval = FALSE}
 
@@ -148,40 +148,26 @@ After applying the `finalise_plot()` function, the plot can be saved using the `
 ggsave("finalised_plot.png", finalised_plot)
 
 ```
-
+<br>
 
 # Static charts using ggplot2
 
-Before making charts we first have to read in our data. We will use data on monthly CCG level prescribing of 5 direct oral anticoagulants (DOACS) in England between January 2020 and December 2021. This was downloaded from [OpenPrescribing.net](https://openprescribing.net/).
+The sections below provide examples of how to make different types of static chart using the ggplot2 package. These will demonstrate how to format different charts and apply the NICE theme. For some examples we will continue to use R's built in `iris` dataset. For others we will use data on the monthly Sub-ICB location level prescribing of 5 direct oral anticoagulants (DOACS) in England between February 2017 and January 2022. This was downloaded from [OpenPrescribing.net](https://openprescribing.net/).
 
-```{r load_data, echo=FALSE, message = FALSE, warning = FALSE}
+```{r load_data, echo = TRUE, message = FALSE, warning = FALSE}
 
-# Load data for plotting, specifying the type for each column
-doacs_df <- readr::read_csv(here::here("data/DOACs_data.csv"), 
-                            col_types = "Dcccddd")
-
-# CCG_code_lookup (needed for maps)
-ccg_lookup <- readr::read_csv(here::here("data/CCG_lookup.csv")) %>% 
-  janitor::clean_names() %>% 
-  select(ccg21cd, ccg21cdh)
-
-# Load in geoJSON file with ccg shapes (needed for maps)
-CCG_shapes_df <- sf::read_sf(here::here("data/CCG_shapes_2021_04.geojson")) %>% 
-  janitor::clean_names() %>% 
-  select(-ccg21nm)
+# Load in DOACs data
+doacs_df <- readr::read_csv(here::here("data/DOACs_data_full_new.csv"),
+                             col_types = "Dcccccdddd")
 
 ```
-
+<br>
 
 ## Histogram
 
 ```{r gg_histogram, echo = TRUE}
 
-# Prepare data
-
-
 # Create chart
-
 nice_hist <- iris %>%
   ggplot() +
   geom_histogram(aes(x = Sepal.Width, fill = Species), 
@@ -191,7 +177,7 @@ nice_hist <- iris %>%
   # Remove extra spacing and set y axis limits
   scale_y_continuous(expand = c(0,0), limits = c(0,40)) +
   # Use NICE colours
-  scale_fill_manual(values = c("#228096", "#D07B4D", "#EAD054")) +
+  scale_fill_manual(values = nice_colours) +
   # Add nice theme and set labels
   nice_gg_simple() +
   labs(title = "Species setosa has the longest sepal length",
@@ -204,14 +190,13 @@ nice_hist
 #finalise_plot(example_plot, source_name = "Source: Iris dataset")
 
 ```
-
+<br>
 
 ## Bar chart
 
 ```{r gg_bar, echo = TRUE, message = FALSE, warning = FALSE}
 
-# Prepare data
-
+# Prepare data, get total items dispensed for each medicine in 2021 (in millions)
 bar_df <- doacs_df %>% 
   filter(between(date, as.Date("2021-01-01"), as.Date("2021-12-31"))) %>% 
   group_by(chemical) %>% 
@@ -219,23 +204,30 @@ bar_df <- doacs_df %>%
   ungroup()
 
 # Create chart
-
 bar_chart <- bar_df %>%
-  ggplot(aes(y = items, x = reorder(chemical, items))) +
-  geom_hline(yintercept = 0, linewidth = 1, colour="#333333") +
+  # Plot bars in decreasing order of items
+  ggplot(aes(y = items, x = reorder(chemical, -items))) +
+  # Add baseline to x axis
+  geom_hline(yintercept = 0, linewidth = 1, colour = "#333333") +
+  # set y-axis limits and remove padding
   scale_y_continuous(expand = c(0,0), limits = c(0,8)) +
+  # set x-axis labels to wrap to prevent overlapping
   scale_x_discrete(labels = function(x) {stringr::str_wrap(x, width = 10)}) +
-  geom_col(fill = "#228096", colour = "#000000") +
+  # Add bars, add fill and border colours
+  geom_col(fill = nice_colours[1], colour = "#000000") +
+  # Apply NICE theme
   nice_gg_simple(base_size = 12) +
+  # Remove the x-axis title
   theme(axis.title.x = ggplot2::element_blank()) +
+  # Add labels
   labs(title = "Apixaban was the most prescribed DOAC in 2021",
        subtitle = "Total DOAC medicines dispensed in primary care in England, 2020",
-       y = "Dispensed items (millions)",
-       alt = "example alt text")
+       y = "Dispensed items (millions)")
 
 bar_chart
 
 ```
+<br>
 
 ## Line chart
 
@@ -251,20 +243,34 @@ line_df <- doacs_df %>%
 # Create chart
 line_chart <- line_df %>%
   ggplot(aes(x = date, y = items)) +
-  geom_line(linewidth = 0.8, colour = "#228096") +
-  geom_point(size = 2, colour = "#228096") +
-  scale_y_continuous(expand = c(0,0), limits = c(0,200000), label = scales::comma) +
-  scale_x_date(date_labels = "%b\n%Y", date_breaks = "3 months") +
+  # Add baseline to x axis
   geom_hline(yintercept = 0, linewidth = 1, colour="#333333") +
+  # Add the vertical dashed line to show lockdown date. Added this before plotting the 
+  # data so that it sits on a layer behind the line and points
+  geom_vline(xintercept = as.Date("2020-03-01"), linewidth = 0.6, linetype = "dashed") +
+  # Add the line and points, make both teal
+  geom_line(linewidth = 0.8, colour = nice_colours[1]) +
+  geom_point(size = 2, colour = nice_colours[1]) +
+  # Set y-axis limits and remove padding, add commas to axis labels
+  scale_y_continuous(expand = c(0,0), limits = c(0,200000), label = scales::comma) +
+  # Set x-axis labels to show as month year, and to occur at 6-monthly intervals
+  scale_x_date(date_labels = "%b\n%Y", date_breaks = "6 months") +
+  # Apply NICE theme
   nice_gg_simple() +
+  # Remove x-axis title
   theme(axis.title.x = ggplot2::element_blank()) +
-  labs(title = "Edoxaban prescribing has increased",
-       subtitle = "Edoxaban prescribing in England, 2020-2022",
-       y = "Dispensed items")
+  # Add labels
+  labs(title = "Edoxaban prescribing has increased since 2017",
+       subtitle = "Edoxaban prescribing in England, 2017-2022",
+       y = "Dispensed items") +
+  # Add annotation for dashed line
+  annotate("text", x = as.Date("2020-02-01"), y = 180000, 
+           label = "National lockdown\non 23 March", hjust = "right")
 
 line_chart
 
 ```
+<br>
 
 ## Scatter plot
 
@@ -277,31 +283,32 @@ scatter_df <- doacs_df %>%
   mutate(total_list_size = total_list_size/1000)
 
 # Create chart
-
 scatter_chart <- scatter_df %>%
-  ggplot() +
-  geom_point(aes(x = total_list_size, y = items), 
-             colour = "#228096", size = 2) +
+  ggplot(aes(x = total_list_size, y = items)) +
+  # Add the points and make them teal
+  geom_point(colour = nice_colours[1], size = 2) +
+  # set x-axis limits, adjust padding and add commas to axis labels
   scale_x_continuous(expand = expansion(mult = c(0, 0.05)), 
-                     limits = c(0,3000), 
-                     label = scales::comma) +
-  scale_y_continuous(expand = c(0,0), 
-                     limits = c(0,25000), 
-                     label = scales::comma) +
+                     limits = c(0,3000), label = scales::comma) +
+  # set y-axis limits and remove padding, add commas to axis labels
+  scale_y_continuous(expand = c(0,0), limits = c(0, 25000), label = scales::comma) +
+  # Apply NICE theme
   nice_gg_simple() +
+  # Add a panel border and vertical grid lines
   theme(panel.border = ggplot2::element_rect(color = "#000000",
-                                               linewidth = 0.3,
-                                               fill = NA),
+                                             linewidth = 0.3,
+                                             fill = NA),
         panel.grid.major.x = ggplot2::element_line(color = "#BFBFBF")) +
+  # Add labels
   labs(title = "Apixaban prescribing",
-       subtitle = "Items of apixaban dispensed in primary care compared to CCG list size, 
-July 2021",
+       subtitle = "Items of apixaban dispensed in primary care compared to sub-ICB\nlocation list size, July 2021",
        x = "Primary care list size (x1000)",
        y = "Dispensed items")
 
 scatter_chart
 
 ```
+<br>
 
 ## Faceted chart
 
@@ -309,92 +316,112 @@ scatter_chart
 
 # Prepare data
 facet_df <- doacs_df %>%
-  filter(chemical %in% c("Apixaban", "Edoxaban", "Warfarin sodium")) %>% 
+  filter(chemical %in% c("Apixaban", "Edoxaban", "Warfarin sodium"),
+         between(date, as.Date("2020-01-01"), as.Date("2021-12-31"))) %>% 
   group_by(date, chemical) %>%
   summarise(items = sum(items)/1000) %>%
   ungroup()
 
 # Create chart
-
 facet_chart <- facet_df %>%
-  ggplot(aes(x = date, y = items,
-             color = chemical)) +
+  ggplot(aes(x = date, y = items, color = chemical)) +
+  # Add lines
   geom_line(linewidth = 1) +
+  # Add points
   geom_point(size = 2) +
+  ## set y-axis limits and remove padding
   scale_y_continuous(expand = c(0,0), limits = c(0,800)) +
+  # set x-axis labels to show as month year, and to occur at 6-monthly intervals
   scale_x_date(date_labels = "%b\n%Y", date_breaks = "6 months") +
-  scale_color_manual(values = c("#228096", "#D07B4D", "#37906D")) +
+  # Manually set the colour of the lines and points
+  scale_color_manual(values = nice_colours) +
+  # APply facet wrapping to put each chemical into an individual plot
   facet_wrap(~chemical) +
+  # Apply the NICE theme
   nice_gg_simple() +
+  # Add a panel border, remove x axis title and legend
   theme(panel.border = ggplot2::element_rect(color = "#000000",
                                                linewidth = 0.3,
                                                fill = NA),
         axis.title.x = ggplot2::element_blank(),
         legend.position = "none") +
-  labs(title = "This is what a title would look like",
-       subtitle = "This is what a subtitle would look like",
+  # Add labels
+  labs(title = "Trends in anti-coagulant prescribing",
+       subtitle = "Prescribing of 3 anti-coagulants in England, 2020-2021",
        x = "Sepal Length",
-       y = "Dispensed items")
+       y = "Dispensed items (thousands)")
 
 facet_chart
 
 ```
+<br>
 
 ## Choropleth chart (heatmap)
 
 ```{r gg_choropleth, echo= TRUE, message = FALSE, warning = FALSE}
 
 # Prepare data
-
 map_df <- doacs_df %>% 
   filter(between(date, as.Date("2021-01-01"), as.Date("2021-12-31")),
          chemical == "Apixaban") %>% 
-  group_by(chemical, ccg_name, ccg_ods) %>% 
+  group_by(chemical, name, ods_code, gss_code) %>% 
   summarise(items_per_1000 = sum(items)/(sum(total_list_size)/1000),
             items = sum(items)) %>% 
-  ungroup() %>% 
-  left_join(ccg_lookup, by = c("ccg_ods" = "ccg21cdh"))
+  ungroup()
 
+# Load in the dataframe containing the shape files
+sloc_shapes_df <- sf::read_sf(here::here("data/sub_icb_shapes.geojson")) %>% 
+  janitor::clean_names() %>% 
+  select(-objectid)
 
-map_df <- left_join(CCG_shapes_df, map_df, by = c("ccg21cd" = "ccg21cd"))
+sf::sf_use_s2(FALSE)
+nat_shape <- sf::st_union(sloc_shapes_df)
 
-# Create chart
+# Join to dataframe containing shape files. Ensure the dataframe containing the 
+# shape files is the first argument in the join, as we want to preserve the class of this table. 
+# If not the column containing the shapes will be dropped.
+map_df <- left_join(sloc_shapes_df, map_df, by = c("sicbl22cd" = "gss_code"))
+
+# Set up palette
+pal <- colorRampPalette((c("#BFBFBF", nice_colours[1])))(5)
+#pal <- colorRampPalette((c("#228096", "#BFBFBF","#EAD054")))(5) # 
+#pal <- viridis::plasma(5) # viridis palette
+
+# Create chart 
 choropleth_chart <- map_df %>% 
-  ggplot() +
-  geom_sf(aes(fill = items_per_1000), color = "black", size = 0.3) +
-  scale_fill_binned(name = "Items per 1000",
-                    low = "#e9e9e9",
-                    high = "#004650",
-                    na.value = "grey50") +
-  labs(title = "Apixaban prescribing in England, 2021",
-       subtitle = "Plotted by CCG") +
-  theme_void()
-
-choropleth_chart <- map_df %>% 
+  # Set up a column with categorical labels for each bin
   mutate(items_per_1000_bin = cut(items_per_1000,
-                          breaks = c(0,5,10,15,20,Inf),
-                          labels = c("<5","5-10", "10-15", "15-20", "20+"))) %>% 
+                                  breaks = c(0,5,10,15,20,Inf),
+                                  labels = c("<5","5-10", "10-15", "15-20", "20+"))) %>% 
   ggplot() +
-  geom_sf(aes(fill = items_per_1000_bin), color = "black", size = 0.2) +
-  scale_fill_viridis_d(guide = guide_legend(
-                       title = "Items per 1000",
-                       direction = "vertical",
-                       title.position = "top",
-                       title.hjust = 0.3,
-                       #title.vjust = 0.,
-                       label.position = "left",
-                       keywidth = 1.5,
-                       keyheight = 1,
-                       reverse = TRUE)) +
-  labs(title = "Apixaban prescribing in England, 2021" ,
-       subtitle = "Plotted by CCG") +
-  theme_void() +
-  theme(legend.position = c(0.15, 0.5))
+  # Plot the shapes
+  geom_sf(aes(fill = items_per_1000_bin), color = "#FFFFFF", lwd = 0.1) +
+  # Use the viridis palette and adjust the legend style
+  scale_fill_manual(values = pal, 
+                    na.value = "#808080",
+                    guide = guide_legend(
+                      title = "Items per 1000",
+                      label.position = "left",
+                      reverse = TRUE)) +
+  geom_sf(data = nat_shape, fill = NA, color = "black", lwd = 0.1) +
+  # Add the NICE theme
+  nice_gg_simple() +
+  # Postion the legend
+  theme(legend.position = c(0.15, 0.5),
+        axis.text = element_blank(),
+        axis.ticks.x = ggplot2::element_blank(),
+        legend.title = ggplot2::element_text(family = "Inter",
+                                             size = 12,
+                                             color = "#000000"),
+        legend.text.align = 1) +
+  # Add labels
+  labs(title = "Apixaban prescribing in England, 2021",
+       subtitle = "Plotted by CCG")
 
 choropleth_chart
 
 ```
-
+<br>
 
 # Interactive charts
 
@@ -402,18 +429,7 @@ choropleth_chart
 
 ```{r leaflet, echo= TRUE, message = FALSE, warning = FALSE}
 
-# Prepare data
-map_df <- doacs_df %>% 
-  filter(between(date, as.Date("2021-01-01"), as.Date("2021-12-31")),
-         chemical == "Warfarin sodium") %>% 
-  group_by(chemical, ccg_name, ccg_ods) %>% 
-  summarise(items_per_1000 = sum(items)/(sum(total_list_size)/1000),
-            items = sum(items)) %>% 
-  ungroup() %>% 
-  left_join(ccg_lookup, by = c("ccg_ods" = "ccg21cdh"))
-
-
-map_df <- left_join(CCG_shapes_df, map_df, by = c("ccg21cd" = "ccg21cd"))
+# Using same data as above
 
 # Create chart
 
@@ -439,14 +455,14 @@ leaflet_map <- map_df %>%
                 color = "#393939",
                 weight = 1.5,
                 opacity = 1,
-                layerId = ~ccg_name,
+                layerId = ~ods_code,
                 # Add functionality to highlight shape when hovered over
                 highlight = highlightOptions(weight = 3,
                                              color = "#222222",
                                              fillOpacity = 0.7,
                                              bringToFront = TRUE),
                 # Add labels upon hover
-                label = ~lapply(paste0("<strong>Name: </strong>", ccg_name,
+                label = ~lapply(paste0("<strong>Name: </strong>", sicbl22nm,
                                        "<br><strong>Items per 1000 population: </strong> ", 
                                        round(items_per_1000, 2)),
                                 htmltools::HTML),
