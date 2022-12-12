@@ -16,14 +16,13 @@ here::i_am("reports/NICE_cookbook.Rmd")
 
 ```
 
-<br>
+
 # How to create NICE style graphics
 
 The `niceRplots` package and cookbook make the process of creating publication-ready graphics in the NICE style a more reproducible process, as well as making it easier for people new to R to create graphics. 
 
 Within this cookbook, we will demonstrate how to use the functions included within the `niceRplots` package. We will also provide examples of plots that have been created in the NICE style. 
 
-<br>
 ## Load the relevant packages
 
 Before we can start making charts, we first need to load all of the relevant packages. We wont load every package here, just the ones that we will use the most often. It is good practice to limit the number of loaded packages to prevent masking conflicts. For this reason, we will often use double colons `::` to access specific functions within a package (e.g. `readr::read_csv()`), rather than loading the full package using `library(pkg)`.
@@ -40,9 +39,9 @@ devtools::load_all()
 # Set up the NICE colour palette
 nice_colours <- c("#228096",
                   "#D07B4D",
-                  "#EAD054",
+                  "#37906D",
                   "#00436C",
-                  "#37906D")
+                  "#EAD054")
 
 ```
 <br>
@@ -51,7 +50,7 @@ nice_colours <- c("#228096",
 
 As an example we will create a simple bar chart using the `iris` dataset. We will first create a basic chart, and then add some additional formatting. We can see the two charts below with and without formatting.
 
-```{r format_chart, echo = TRUE, fig.show="hold", out.width="50%"}
+```{r format_chart, echo = TRUE, fig.show = "hold", out.width = "50%"}
 
 # Wrangle data for plotting
 iris_bar_df <- iris %>% 
@@ -86,11 +85,12 @@ iris_bar_formatted
 ```
 <br>
 
-We can now apply the NICE theme using the `nice_gg_simple()` function from the `niceRplots` package, specifying the base font for the plot to be of size 12. The `nice_gg_simple()` function alters several aspects of the chart to make it consistent with the [NICE brand guidelines](https://indepth.nice.org.uk/our-brand/index.html). These are as follows:
+
+We can now apply the NICE theme using the `nice_gg_theme()` function from the `niceRplots` package, specifying the base font for the plot to be of size 12. The `nice_gg_theme()` function alters several aspects of the chart to make it consistent with the [NICE brand guidelines](https://indepth.nice.org.uk/our-brand/index.html). These are as follows:
 
 * **Fonts**: changes the title font to Lora SemiBold, and all other text to Inter Regular. 
 
-* **Text scaling**: applies a text hierarchy to the chart using relative text sizes. Changing the `base_size` argument will change the text size throughout the plot. Titles and subtitles will be automatically scaled relative to this base_size to maintain the text hierarchy. This is useful if you want to change the chart size, as all text can be simply adjusted by changing the `base_size` argument. 
+* **Text scaling**: applies a text hierarchy to the chart using relative text sizes. Changing the optional `base_size` argument will change the text size throughout the plot. Titles and subtitles will be automatically scaled relative to this base_size to maintain the text hierarchy. This is useful if you want to change the chart size, as all text can be simply adjusted by changing the `base_size` argument. 
 
 * **Colour scheme**: changes line and text colours to be consistent with the NICE brand colour palette. This is particularly noticeable when creating faceted charts (shown later in cookbook). It should be noted that this will not add colour to the plotted data, this will still need to be added manually when creating the chart. For instance, a fill colour was added in the `geom_col()` argument in the above example. 
 
@@ -101,14 +101,13 @@ We can now apply the NICE theme using the `nice_gg_simple()` function from the `
 * **Other**: Applies major grid lines along the y-axis. This will be appropriate for most charts, but may need to be disabled in others by applying `theme(panel.grid.major.y = ggplot2::element_blank())`
 
 
-The `nice_gg_theme` function isn't designed to modify every aspect of the chart, but to apply a general theme that will maintain consistency with the NICE style guide across all charts. Many aspects of the chart will still need to be modified manually. For example, in the below chart we may choose to apply an additional theme argument to remove the x-axis title. 
+The `nice_gg_theme()` function isn't designed to modify every aspect of the chart, but to apply a general theme that will maintain consistency with the NICE style guide across all charts. Many aspects of the chart will still need to be modified manually. For example, in the below chart we may choose to apply an additional theme argument to remove the x-axis title. 
 
 ```{r theme_chart, echo = TRUE}
 
-# Apply the NICE theme
 iris_bar_themed <- iris_bar_formatted +
-  # Apply nice theme, set base text size to 12
-  nice_gg_simple(base_size = 12) +
+  # Apply NICE theme, set base text size to 12
+  nice_gg_theme(base_size = 12) +
   # remove x axis title as this is not needed
   theme(axis.title.x = ggplot2::element_blank())
 
@@ -119,7 +118,7 @@ iris_bar_themed
 
 ## How to finalise your charts
 
-Once a plot has been created and styled using `nice_gg_simple()`, the next step is to apply the `finalise_plot()` function. This function will create a footer containing information on the data source, as well as adding the NICE logo to the bottom right. It will then left-align the title, subtitle and footer. The `finalise_plot()` function has 3 arguments:
+Once a plot has been created and styled using `nice_gg_theme()`, the next step is to apply the `finalise_plot()` function. This function will create a footer containing information on the data source, as well as adding the NICE logo to the bottom right. It will then left-align the title, subtitle and footer. The `finalise_plot()` function has 3 arguments:
 
 * `plot_name`: the name of the plot object, in the example below we have saved ours as `iris_bar_themed`.
 
@@ -178,8 +177,8 @@ nice_hist <- iris %>%
   scale_y_continuous(expand = c(0,0), limits = c(0,40)) +
   # Use NICE colours
   scale_fill_manual(values = nice_colours) +
-  # Add nice theme and set labels
-  nice_gg_simple() +
+  # Add NICE theme and set labels
+  nice_gg_theme() +
   labs(title = "Species setosa has the longest sepal length",
        subtitle = "Distribution of sepal width by species",
        x = "Sepal Width",
@@ -216,7 +215,7 @@ bar_chart <- bar_df %>%
   # Add bars, add fill and border colours
   geom_col(fill = nice_colours[1], colour = "#000000") +
   # Apply NICE theme
-  nice_gg_simple(base_size = 12) +
+  nice_gg_theme(base_size = 12) +
   # Remove the x-axis title
   theme(axis.title.x = ggplot2::element_blank()) +
   # Add labels
@@ -256,7 +255,7 @@ line_chart <- line_df %>%
   # Set x-axis labels to show as month year, and to occur at 6-monthly intervals
   scale_x_date(date_labels = "%b\n%Y", date_breaks = "6 months") +
   # Apply NICE theme
-  nice_gg_simple() +
+  nice_gg_theme() +
   # Remove x-axis title
   theme(axis.title.x = ggplot2::element_blank()) +
   # Add labels
@@ -274,7 +273,7 @@ line_chart
 
 ## Scatter plot
 
-```{r gg_scatter, echo= TRUE, message = FALSE, warning = FALSE}
+```{r gg_scatter, echo = TRUE, message = FALSE, warning = FALSE}
 
 # Prepare data
 scatter_df <- doacs_df %>%
@@ -293,7 +292,7 @@ scatter_chart <- scatter_df %>%
   # set y-axis limits and remove padding, add commas to axis labels
   scale_y_continuous(expand = c(0,0), limits = c(0, 25000), label = scales::comma) +
   # Apply NICE theme
-  nice_gg_simple() +
+  nice_gg_theme() +
   # Add a panel border and vertical grid lines
   theme(panel.border = ggplot2::element_rect(color = "#000000",
                                              linewidth = 0.3,
@@ -312,7 +311,7 @@ scatter_chart
 
 ## Faceted chart
 
-```{r gg_facet, echo= TRUE, message = FALSE, warning = FALSE}
+```{r gg_facet, echo = TRUE, message = FALSE, warning = FALSE}
 
 # Prepare data
 facet_df <- doacs_df %>%
@@ -338,7 +337,7 @@ facet_chart <- facet_df %>%
   # APply facet wrapping to put each chemical into an individual plot
   facet_wrap(~chemical) +
   # Apply the NICE theme
-  nice_gg_simple() +
+  nice_gg_theme() +
   # Add a panel border, remove x axis title and legend
   theme(panel.border = ggplot2::element_rect(color = "#000000",
                                                linewidth = 0.3,
@@ -358,9 +357,9 @@ facet_chart
 
 ## Choropleth chart (heatmap)
 
-```{r gg_choropleth, echo= TRUE, message = FALSE, warning = FALSE}
+```{r gg_choropleth, echo = TRUE, message = FALSE, warning = FALSE}
 
-# Prepare data
+# Prepare the data
 map_df <- doacs_df %>% 
   filter(between(date, as.Date("2021-01-01"), as.Date("2021-12-31")),
          chemical == "Apixaban") %>% 
@@ -369,23 +368,24 @@ map_df <- doacs_df %>%
             items = sum(items)) %>% 
   ungroup()
 
-# Load in the dataframe containing the shape files
-sloc_shapes_df <- sf::read_sf(here::here("data/sub_icb_shapes.geojson")) %>% 
+# Load in the dataframe containing the shapes for Sub ICB location areas
+sub_icb_shapes_df <- sf::read_sf(here::here("data/sub_icb_shapes_2022_04.geojson")) %>% 
   janitor::clean_names() %>% 
   select(-objectid)
 
-sf::sf_use_s2(FALSE)
-nat_shape <- sf::st_union(sloc_shapes_df)
+# Load in the dataframe containing the shape for England - we will use this to make the map outline
+national_shape_df <- sf::read_sf(here::here("data/national_shape_2022_04.geojson")) %>% 
+  janitor::clean_names()
 
-# Join to dataframe containing shape files. Ensure the dataframe containing the 
-# shape files is the first argument in the join, as we want to preserve the class of this table. 
-# If not the column containing the shapes will be dropped.
-map_df <- left_join(sloc_shapes_df, map_df, by = c("sicbl22cd" = "gss_code"))
+# Join our data to the relevant Sub ICB location shapes. Ensure the dataframe containing the 
+# shapes is the first argument in the join, as we want to preserve the class of this table. 
+# If not the geometry column containing the shapes will be dropped.
+map_df <- left_join(sub_icb_shapes_df, map_df, by = c("sicbl22cd" = "gss_code"))
 
-# Set up palette
-pal <- colorRampPalette((c("#BFBFBF", nice_colours[1])))(5)
-#pal <- colorRampPalette((c("#228096", "#BFBFBF","#EAD054")))(5) # 
-#pal <- viridis::plasma(5) # viridis palette
+# Set up the colour palette 
+pal <- colorRampPalette((c("#BFBFBF", nice_colours[1])))(5) # Sequential palette
+#pal <- colorRampPalette((c("#228096", "#BFBFBF","#EAD054")))(5) # Diverging palette
+#pal <- viridis::viridis(5) # Alternative sequential palette
 
 # Create chart 
 choropleth_chart <- map_df %>% 
@@ -394,19 +394,21 @@ choropleth_chart <- map_df %>%
                                   breaks = c(0,5,10,15,20,Inf),
                                   labels = c("<5","5-10", "10-15", "15-20", "20+"))) %>% 
   ggplot() +
-  # Plot the shapes
-  geom_sf(aes(fill = items_per_1000_bin), color = "#FFFFFF", lwd = 0.1) +
-  # Use the viridis palette and adjust the legend style
+  # Plot the shapes. Add white borders for accesibility
+  geom_sf(aes(fill = items_per_1000_bin), color = "#FFFFFF", lwd = 0.05) +
+  # Apply our palette and adjust the legend
   scale_fill_manual(values = pal, 
                     na.value = "#808080",
                     guide = guide_legend(
-                      title = "Items per 1000",
+                      title = "Items per 1000\npopulation",
+                      title.hjust = 0.5,
                       label.position = "left",
                       reverse = TRUE)) +
-  geom_sf(data = nat_shape, fill = NA, color = "black", lwd = 0.1) +
+  # Add another layer with the England shape to add an outline
+  geom_sf(data = national_shape_df, fill = NA, color = "black", lwd = 0.1) +
   # Add the NICE theme
-  nice_gg_simple() +
-  # Postion the legend
+  nice_gg_theme() +
+  # Alter some theme elements - remove axes, move the legend and add title
   theme(legend.position = c(0.15, 0.5),
         axis.text = element_blank(),
         axis.ticks.x = ggplot2::element_blank(),
@@ -427,7 +429,7 @@ choropleth_chart
 
 ## Choropleth map (Leaflet)
 
-```{r leaflet, echo= TRUE, message = FALSE, warning = FALSE}
+```{r leaflet, echo = TRUE, message = FALSE, warning = FALSE}
 
 # Using same data as above
 
@@ -447,7 +449,7 @@ leaflet_map <- map_df %>%
     setView(lat = 53,
             lng = -1.5,
             zoom = 6) %>%
-    # add basic base tile
+    # Add basic base tile
     addProviderTiles(provider = "CartoDB.Positron") %>%
     # Add shapes
     addPolygons(fillColor = ~pal(items_per_1000),

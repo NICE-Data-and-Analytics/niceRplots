@@ -8,148 +8,100 @@
 #' geom_line(colour = "#228096") +
 #' nice_gg_style()
 
-nice_gg_theme <- function(legend = "none", xlabel = FALSE, border = FALSE, vgrid = FALSE){
+nice_gg_theme <- function(base_size = 12){
 
-    font <- "Inter"
-    heading_font <- "Lora SemiBold"
+  font <- "Inter"
+  heading_font <- "Lora SemiBold"
 
-    nice_theme <- ggplot2::theme(
+  nice_theme <- ggplot2::theme(
 
-# Format the background ---------------------------------------------------
+    text = element_text(size = base_size),
 
-      # Remove the standard grey background
-      panel.background = ggplot2::element_blank(),
+    # Format the background ---------------------------------------------------
 
-
-# Format the title and subtitle -------------------------------------------
-
-      plot.title = ggplot2::element_text(family = heading_font,
-                                         size = 18,
-                                         color = "#000000"),
-
-      plot.subtitle = ggplot2::element_text(family = font,
-                                            size = 14,
-                                            margin = ggplot2::margin(0,0,15,0)),
-
-      # Leave the caption empty, because we add this when finalizing the chart
-      plot.caption = ggplot2::element_blank(),
+    # Remove the standard grey background
+    panel.background = ggplot2::element_blank(),
+    panel.border = ggplot2::element_blank(),
 
 
-# Format the axes ---------------------------------------------------------
+    # Format the title and subtitle -------------------------------------------
 
-      axis.title.y = ggplot2::element_text(family = font,
-                                           size = 12,
-                                           color = "#000000",
-                                           margin = ggplot2::margin(r = 8)),
+    plot.title = ggplot2::element_text(family = heading_font,
+                                       size = rel(1.5),
+                                       color = "#000000"),
 
-      axis.text = ggplot2::element_text(family = font,
-                                        size = 12,
+    plot.subtitle = ggplot2::element_text(family = font,
+                                          size = rel(1.2),
+                                          margin = ggplot2::margin(0,0,15,0)),
+
+    # Leave the caption empty, because we add this when finalizing the chart
+    plot.caption = ggplot2::element_blank(),
+
+
+    # Format the axes ---------------------------------------------------------
+
+    axis.title.x = ggplot2::element_text(family = font,
+                                         size = rel(1),
+                                         color = "#000000",
+                                         margin = ggplot2::margin(t = 8)),
+
+    axis.title.y = ggplot2::element_text(family = font,
+                                         size = rel(1),
+                                         color = "#000000",
+                                         margin = ggplot2::margin(r = 8)),
+
+    axis.text = ggplot2::element_text(family = font,
+                                      size = rel(1),
+                                      color = "#000000"),
+
+    axis.ticks.x = ggplot2::element_line(linewidth = 1),
+    axis.ticks.y = element_blank(),
+
+
+    # Format the grid lines ---------------------------------------------------
+
+    # Adjust major grid lines
+    panel.grid.major.x = ggplot2::element_blank(),
+    panel.grid.major.y = ggplot2::element_line(color = "#BFBFBF"),
+
+    # Adjust minor grid lines
+    panel.grid.minor = ggplot2::element_blank(),
+
+
+    # Format the legend -----------------------------------------------------
+
+    legend.position = "top",
+    legend.justification = "right",
+    legend.box.margin = margin(-10, 0, -10, 0),
+    legend.background = ggplot2::element_blank(),
+    legend.title = ggplot2::element_blank(),
+    legend.key = ggplot2::element_blank(),
+    legend.text = ggplot2::element_text(family = font,
+                                        size = rel(1),
                                         color = "#000000"),
-
-      axis.ticks.x = ggplot2::element_line(linewidth = 1),
-      axis.ticks.y = element_blank(),
+    legend.text.align = 0,
 
 
-# Format the grid lines ---------------------------------------------------
+    # Set up faceting options ------------------------------------------------
 
-      # Adjust major grid lines
-      panel.grid.major.y = ggplot2::element_line(color = "#BFBFBF"),
+    # Set the background of the facet titles to NICE teal
+    strip.background = ggplot2::element_rect(fill = "#228096",
+                                             color = "#000000",
+                                             linewidth = 1,
+                                             linetype = "solid"),
 
-      # Adjust minor grid lines
-      panel.grid.minor = ggplot2::element_blank(),
+    # Make the facet title text white
+    strip.text = ggplot2::element_text(family = font,
+                                       size  = rel(1),
+                                       hjust = 0.5,
+                                       color = "#FFFFFF"),
 
+    # Adjust plot spacing -----------------------------------------------------
 
-# Format the legend -----------------------------------------------------
+    # Add spacing around the plot
+    plot.margin = margin(0.25, 0.25, 0.25, 0.25,"cm")
 
-      legend.position = legend,
-      legend.background = ggplot2::element_blank(),
-      legend.title = ggplot2::element_blank(),
-      legend.key = ggplot2::element_blank(),
-      legend.text = ggplot2::element_text(family = font,
-                                          size = 12,
-                                          color = "#000000"),
-      legend.text.align = 0,
+  )
 
-
-# Set up faceting options ------------------------------------------------
-
-      # Set the background of the facet titles to NICE teal
-      strip.background = ggplot2::element_rect(fill = "#228096",
-                                               color = "#000000",
-                                               size = 1,
-                                               linetype = "solid"),
-
-      # Make the facet title text white
-      strip.text = ggplot2::element_text(family = font,
-                                         size  = 12,
-                                         hjust = 0.5,
-                                         color = "#FFFFFF"),
-
-# Adjust plot spacing -----------------------------------------------------
-
-      # Add spacing around the plot
-      plot.margin = margin(0.25, 0.25, 0.25, 0.25,"cm")
-
-    )
-
-### Optional adjustments ###
-
-# Add in option to allow x axis label -----------------------------------------
-
-    if (xlabel) {
-
-      nice_theme <- nice_theme +
-        ggplot2::theme(
-
-          axis.title.x = ggplot2::element_text(family = font,
-                                               size = 12,
-                                               color = "#000000",
-                                               margin = ggplot2::margin(t = 8)))
-    } else {
-
-      nice_theme <- nice_theme +
-        ggplot2::theme(
-
-          axis.title.x = ggplot2::element_blank())
-    }
-
-
-# Add in border option (useful for facet plots) ---------------------------
-
-    if (border) {
-
-      nice_theme <- nice_theme +
-        ggplot2::theme(
-
-          panel.border = ggplot2::element_rect(color = "#000000",
-                                               linewidth = 0.3,
-                                               fill = NA))
-
-    } else {
-
-      nice_theme <- nice_theme +
-        ggplot2::theme(
-
-          panel.border = ggplot2::element_blank())
-    }
-
-
-# Add in option for vertical grid - useful for scatter plots --------------
-
-    if (vgrid) {
-
-      nice_theme <- nice_theme +
-        ggplot2::theme(
-
-          panel.grid.major.x = ggplot2::element_line(color = "#BFBFBF"))
-
-    } else {
-
-      nice_theme <- nice_theme +
-        ggplot2::theme(
-
-          panel.grid.major.x = ggplot2::element_blank())
-    }
-
-    return(nice_theme)
+  return(nice_theme)
 }

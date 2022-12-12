@@ -4,7 +4,7 @@
 \alias{nice_gg_theme}
 \title{nice_gg_theme}
 \usage{
-nice_gg_theme(legend = "none")
+nice_gg_theme(base_size = 12)
 }
 \description{
 nice_gg_theme
