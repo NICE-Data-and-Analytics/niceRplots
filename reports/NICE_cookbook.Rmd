@@ -156,7 +156,7 @@ The sections below provide examples of how to make different types of static cha
 ```{r load_data, echo = TRUE, message = FALSE, warning = FALSE}
 
 # Load in DOACs data
-doacs_df <- readr::read_csv(here::here("data/DOACs_data_full_new.csv"),
+doacs_df <- readr::read_csv(here::here("data/DOACs_data.csv"),
                              col_types = "Dcccccdddd")
 
 ```
@@ -300,7 +300,7 @@ scatter_chart <- scatter_df %>%
         panel.grid.major.x = ggplot2::element_line(color = "#BFBFBF")) +
   # Add labels
   labs(title = "Apixaban prescribing",
-       subtitle = "Items of apixaban dispensed in primary care compared to sub-ICB\nlocation list size, July 2021",
+       subtitle = "Items of apixaban dispensed in primary care compared to\nsub-ICB location list size, July 2021",
        x = "Primary care list size (x1000)",
        y = "Dispensed items")
 

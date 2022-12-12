@@ -10,7 +10,7 @@
 
 nice_gg_theme <- function(base_size = 12){
 
-  font <- "Inter"
+  font <- "Inter Regular"
   heading_font <- "Lora SemiBold"
 
   nice_theme <- ggplot2::theme(

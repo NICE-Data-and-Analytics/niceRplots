@@ -12,9 +12,21 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
 Imports: 
     dplyr,
+    readr,
     ggplot2,
     plotly,
-    showtext,
-    sysfonts
+    stringr,
+    scales,
+    sf,
+    janitor,
+    here,
+    ggpubr,
+    png,
+    systemfonts,
+    grid,
+    leaflet,
+    grDevices,
+    htmltools,
+    knitr
 URL: https://github.com/GitWray1/niceRplots
 BugReports: https://github.com/GitWray1/niceRplots/issues
