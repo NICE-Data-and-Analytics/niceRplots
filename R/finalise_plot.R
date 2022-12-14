@@ -18,7 +18,7 @@ create_footer <- function (source_name, logo_image_path) {
                            grid::textGrob(source_name,
                                           x = 0.004, hjust = 0,
                                           gp = grid::gpar(fontsize=12,
-                                                          fontfamily = "Inter")),
+                                                          fontfamily = "Inter Regular")),
                            grid::rasterGrob(png::readPNG(logo_image_path), x = 0.944))
   return(footer)
 }
@@ -26,14 +26,34 @@ create_footer <- function (source_name, logo_image_path) {
 
 # Finalise plot function --------------------------------------------------
 
+#' Finalise a plot
+#'
+#' This function will format your plot and add a footer containing the data source and a NICE logo.
+#' It will left align your title, subtitle and source, add the NICE logo to the bottom right.
+#'
+#' @param plot_name A ggplot2 object
+#' @param source_name The source of the data within the plot
+#' @param logo A string of either "NICE" to include the NICE logo in the footer,
+#' or "none" to include a blank placeholder. defaults to "NICE"
+#'
+#' @return A formatted ggplot2 object
+#' @export
+#'
+#' @examples
+#' my_plot <- ggplot2::ggplot()
+#'
+#' finalise_plot(plot_name = my_plot,
+#' source = "My data source",
+#' logo = "NICE")
+
 finalise_plot <- function(plot_name,
                           source_name,
                           logo = "NICE") {
 
   if (logo == "NICE"){
-    logo_image_path <- file.path(system.file("data", package = 'niceRplots'),"NICE_short_logo_black.png")
+    logo_image_path <- file.path(system.file("extdata", package = 'niceRplots'),"NICE_short_logo_black.png")
   } else if (logo == "none") {
-    logo_image_path <- file.path(system.file("data", package = 'niceRplots'),"placeholder.png")
+    logo_image_path <- file.path(system.file("extdata", package = 'niceRplots'),"placeholder.png")
   }
 
   source_name <- paste0("Source: ", source_name)

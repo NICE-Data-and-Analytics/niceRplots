@@ -1,12 +1,26 @@
-#' nice_gg_theme
+#' Add the NICE theme to a chart
 #'
-#' @return
+#'This function will style your ggplot2 charts with the NICE theme. This will
+#'adjust the fonts, text hierarchy, background, margins and colour scheme.
+#'
+#' @param base_size The base font size of your plot. Changing this will alter text
+#' sizes throughout the plot. Defaults to size 12.
+#'
+#' @return A NICE styled ggplot2 object
 #' @export
 #'
 #' @examples
-#' line_chart <- ggplot(line_df, aes(x = year, y = people)) +
-#' geom_line(colour = "#228096") +
-#' nice_gg_style()
+#'
+#' iris_bar_df <- iris %>%
+#' group_by(Species) %>%
+#' summarise(Sepal.Width = mean(Sepal.Width)) %>%
+#' ungroup()
+#'
+#' iris_bar <- ggplot(iris_bar_df) +
+#' geom_col(aes(x = Species, y = Sepal.Width), fill = "#228096", colour = "#000000") +
+#' geom_hline(yintercept = 0, linewidth = 1, colour = "#333333") +
+#' scale_y_continuous(expand = c(0, 0), limits = c(0, 4)) +
+#' nice_gg_theme(base_size = 12)
 
 nice_gg_theme <- function(base_size = 12){
 
@@ -15,7 +29,7 @@ nice_gg_theme <- function(base_size = 12){
 
   nice_theme <- ggplot2::theme(
 
-    text = element_text(size = base_size),
+    text = ggplot2::element_text(size = base_size),
 
     # Format the background ---------------------------------------------------
 
@@ -27,11 +41,11 @@ nice_gg_theme <- function(base_size = 12){
     # Format the title and subtitle -------------------------------------------
 
     plot.title = ggplot2::element_text(family = heading_font,
-                                       size = rel(1.5),
+                                       size = ggplot2::rel(1.5),
                                        color = "#000000"),
 
     plot.subtitle = ggplot2::element_text(family = font,
-                                          size = rel(1.2),
+                                          size = ggplot2::rel(1.2),
                                           margin = ggplot2::margin(0,0,15,0)),
 
     # Leave the caption empty, because we add this when finalizing the chart
@@ -41,21 +55,21 @@ nice_gg_theme <- function(base_size = 12){
     # Format the axes ---------------------------------------------------------
 
     axis.title.x = ggplot2::element_text(family = font,
-                                         size = rel(1),
+                                         size = ggplot2::rel(1),
                                          color = "#000000",
                                          margin = ggplot2::margin(t = 8)),
 
     axis.title.y = ggplot2::element_text(family = font,
-                                         size = rel(1),
+                                         size = ggplot2::rel(1),
                                          color = "#000000",
                                          margin = ggplot2::margin(r = 8)),
 
     axis.text = ggplot2::element_text(family = font,
-                                      size = rel(1),
+                                      size = ggplot2::rel(1),
                                       color = "#000000"),
 
     axis.ticks.x = ggplot2::element_line(linewidth = 1),
-    axis.ticks.y = element_blank(),
+    axis.ticks.y = ggplot2::element_blank(),
 
 
     # Format the grid lines ---------------------------------------------------
@@ -72,12 +86,12 @@ nice_gg_theme <- function(base_size = 12){
 
     legend.position = "top",
     legend.justification = "right",
-    legend.box.margin = margin(-10, 0, -10, 0),
+    legend.box.margin = ggplot2::margin(-10, 0, -10, 0),
     legend.background = ggplot2::element_blank(),
     legend.title = ggplot2::element_blank(),
     legend.key = ggplot2::element_blank(),
     legend.text = ggplot2::element_text(family = font,
-                                        size = rel(1),
+                                        size = ggplot2::rel(1),
                                         color = "#000000"),
     legend.text.align = 0,
 
@@ -92,14 +106,14 @@ nice_gg_theme <- function(base_size = 12){
 
     # Make the facet title text white
     strip.text = ggplot2::element_text(family = font,
-                                       size  = rel(1),
+                                       size  = ggplot2::rel(1),
                                        hjust = 0.5,
                                        color = "#FFFFFF"),
 
     # Adjust plot spacing -----------------------------------------------------
 
     # Add spacing around the plot
-    plot.margin = margin(0.25, 0.25, 0.25, 0.25,"cm")
+    plot.margin = ggplot2::margin(0.25, 0.25, 0.25, 0.25,"cm")
 
   )
 

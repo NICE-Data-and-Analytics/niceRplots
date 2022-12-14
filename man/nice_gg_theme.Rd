@@ -2,15 +2,31 @@
 % Please edit documentation in R/nice_gg_theme.R
 \name{nice_gg_theme}
 \alias{nice_gg_theme}
-\title{nice_gg_theme}
+\title{Add the NICE theme to a chart}
 \usage{
 nice_gg_theme(base_size = 12)
 }
+\arguments{
+\item{base_size}{The base font size of your plot. Changing this will alter text
+sizes throughout the plot. Defaults to size 12.}
+}
+\value{
+A NICE styled ggplot2 object
+}
 \description{
-nice_gg_theme
+This function will style your ggplot2 charts with the NICE theme. This will
+adjust the fonts, text hierarchy, background, margins and colour scheme.
 }
 \examples{
-line_chart <- ggplot(line_df, aes(x = year, y = people)) +
-geom_line(colour = "#228096") +
-nice_gg_style()
+
+iris_bar_df <- iris \%>\%
+group_by(Species) \%>\%
+summarise(Sepal.Width = mean(Sepal.Width)) \%>\%
+ungroup()
+
+iris_bar <- ggplot(iris_bar_df) +
+geom_col(aes(x = Species, y = Sepal.Width), fill = "#228096", colour = "#000000") +
+geom_hline(yintercept = 0, linewidth = 1, colour = "#333333") +
+scale_y_continuous(expand = c(0, 0), limits = c(0, 4)) +
+nice_gg_theme(base_size = 12)
 }

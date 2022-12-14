@@ -27,6 +27,14 @@ Imports:
     leaflet,
     grDevices,
     htmltools,
-    knitr
+    knitr,
+    rlang
 URL: https://github.com/GitWray1/niceRplots
 BugReports: https://github.com/GitWray1/niceRplots/issues
+Depends: 
+    R (>= 2.10)
+LazyData: true
+VignetteBuilder: knitr
+Suggests: 
+    rmarkdown,
+    devtools
