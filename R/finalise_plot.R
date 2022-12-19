@@ -17,7 +17,7 @@ create_footer <- function (source_name, logo_image_path) {
                                            y = grid::unit(1.1, "npc")),
                            grid::textGrob(source_name,
                                           x = 0.004, hjust = 0,
-                                          gp = grid::gpar(fontsize=12,
+                                          gp = grid::gpar(fontsize = 12,
                                                           fontfamily = "Inter Regular")),
                            grid::rasterGrob(png::readPNG(logo_image_path), x = 0.944))
   return(footer)
@@ -43,7 +43,7 @@ create_footer <- function (source_name, logo_image_path) {
 #' my_plot <- ggplot2::ggplot()
 #'
 #' finalise_plot(plot_name = my_plot,
-#' source = "My data source",
+#' source_name = "My data source",
 #' logo = "NICE")
 
 finalise_plot <- function(plot_name,
@@ -54,6 +54,8 @@ finalise_plot <- function(plot_name,
     logo_image_path <- file.path(system.file("extdata", package = 'niceRplots'),"NICE_short_logo_black.png")
   } else if (logo == "none") {
     logo_image_path <- file.path(system.file("extdata", package = 'niceRplots'),"placeholder.png")
+  } else {
+    stop('Logo should have a value of "NICE" or "none"')
   }
 
   source_name <- paste0("Source: ", source_name)

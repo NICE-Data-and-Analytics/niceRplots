@@ -25,6 +25,6 @@ It will left align your title, subtitle and source, add the NICE logo to the bot
 my_plot <- ggplot2::ggplot()
 
 finalise_plot(plot_name = my_plot,
-source = "My data source",
+source_name = "My data source",
 logo = "NICE")
 }
