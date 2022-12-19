@@ -30,12 +30,3 @@ If you do not have the `devtools` package installed, you will have to run the fi
 devtools::install_github("GitWray1/niceRplots")
 ```
 
-## Functions to style `ggplot2` charts
-
-The package has two functions to style ggplot2 charts: `nice_gg_theme()` and `finalise_plot()'. 
-
-```{r example}
-library(niceRplots)
-## basic example code
-```
-

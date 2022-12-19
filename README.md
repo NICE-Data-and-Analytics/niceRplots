@@ -24,13 +24,3 @@ run the first line in the code below as well.
 # install.packages("devtools")
 devtools::install_github("GitWray1/niceRplots")
 ```
-
-## Functions to style `ggplot2` charts
-
-The package has two functions to style ggplot2 charts: `nice_gg_theme()`
-and \`finalise_plot()’.
-
-``` r
-library(niceRplots)
-## basic example code
-```
