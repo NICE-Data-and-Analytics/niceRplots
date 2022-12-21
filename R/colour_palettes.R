@@ -1,22 +1,14 @@
+# Setup
 if (!require(pacman)) install.packages("pacman")
 
-pacman::p_load(tidyverse, unikn)
+pacman::p_load(tidyverse, unikn, here)
 
-# Following https://drsimonj.svbtle.com/creating-corporate-colour-palettes-for-ggplot2
+here::i_am("R/colour_palettes.R")
 
-# Import NICE colours
-read_colours <- read_csv("R/nice_new_brand_colours.csv",
-                         col_types = "cc")
+pacman::p_load(here)
 
-  # https://indepth.nice.org.uk/colour-palette/index.html
-  # Soft cream and warm pink are really hard to see
-  # Brand guidelines are that soft cream only be used as a background colour
-  # Yellow and pink should only be used as highlight colours for infographics and illustrations
-
-# Create named vector
-nice_colours <- read_colours$hex_code
-
-names(nice_colours) <- read_colours$colour
+# Load NICE colours
+source(here("R", "load_nice_colours.R"))
 
 # Display colour palette
 seecol(nice_colours)
