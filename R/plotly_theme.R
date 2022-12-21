@@ -9,18 +9,57 @@ pacman::p_load(here)
 # Load NICE colours
 source(here("R", "load_nice_colours.R"))
 
+# Criteria
+# - Font: Inter Regular
+# - White background (already a default) and no border
+# - Axis labels font size 12, black. Margins
+# - Grid lines - horizontal only if vertical bar chart, horizontal only if line chart, vertical only if horizontal bar chart, both if scatter
+# - Tool bar icons - download
+# - y axis label position
+# - Plot margins
+
+# - Black line around bars
+# Title and subtitle and caption and data source as text below graph
+
+
 nice_theme <- function(p,
-                       title_text = "[Insert title]",
-                       subtitle_text = "[Insert subtitle]",
-                       horizontal = FALSE) {
+                       chart_type = "bar",
+                       x_title = "[x axis title]",
+                       y_title = "[y axis title]",
+                       font_size = 12) {
+
+  chart_grids <- list(vertical_bar = list(xgrid = FALSE,
+                                ygrid = TRUE),
+                     horizontal_bar = list(xgrid = TRUE,
+                                           ygrid = FALSE),
+                     scatter = list(xgrid = TRUE,
+                                    ygrid = TRUE),
+                     line = list(xgrid = FALSE,
+                                 ygrid = TRUE))
+
   layout(p,
-         font = list(family = "arial",
-                     sze = 12),
-         title = list(font = list(size = 24),
-                      text = sprintf("<b>%s</b><br><span style='font-size: 14px'>%s</span>", title_text, subtitle_text)),
-         margin = list(t = 80),
-         xaxis = list(showgrid = horizontal),
-         yaxis = list(showgrid = !horizontal))
+         font = list(family = "inter regular",
+                     size = font_size),
+         xaxis = list(showgrid = chart_grids[[chart_type]][["xgrid"]],
+                      title = list(font = list(size = font_size),
+                                   text = x_title,
+                                   standoff = 10),
+                      tickfont = list(size = font_size),
+                      gridwidth = 1.5,
+                      gridcolor = "#e6e6e6",
+                      zerolinewidth = 1.5),
+         yaxis = list(showgrid = chart_grids[[chart_type]][["ygrid"]],
+                      title = list(font = list(size = font_size),
+                                   text = y_title,
+                                   standoff = 5),
+                      tickfont = list(size = font_size),
+                      gridwidth = 1.5,
+                      gridcolor = "#e6e6e6",
+                      zerolinewidth = 1.5),
+         margin = list(pad = 10),
+         legend = list(font = list(size = font_size))) %>%
+    config(modeBarButtonsToRemove = c("zoom", "pan", "select", "lasso", "zoomIn2d", "zoomOut2d", "autoscale", "resetscale", "hovercompare", "hoverclosest"),
+           displaylogo = FALSE)
 }
 
 economics_long %>%
@@ -31,8 +70,19 @@ economics_long %>%
          colors = c("#00436C", "#D07B4D", "#000000", "#37906D"),
          type = "scatter",
          mode = "lines") %>%
-  layout(title = list(text = "Example plot")) %>%
-  nice_theme()
+  nice_theme(chart_type = "line")
+
+plot1 <- mpg %>%
+  filter(manufacturer %in% c("hyundai", "nissan", "toyota")) %>%
+  count(manufacturer) %>%
+  plot_ly(y = ~manufacturer,
+          x = ~n,
+          color = ~manufacturer,
+          type = "bar",
+          orientation = "h",
+          marker = list(line = list(color = '#000000', width = 1.5)))
+
+nice_theme(plot1, chart_type = "horizontal_bar")
 
 mpg %>%
   filter(manufacturer %in% c("hyundai", "nissan", "toyota")) %>%
@@ -41,15 +91,19 @@ mpg %>%
           x = ~n,
           color = ~manufacturer,
           type = "bar",
-          orientation = "h") %>%
-  nice_theme(horizontal = TRUE)
+          orientation = "h",
+          marker = list(line = list(color = '#000000', width = 1.5))) %>%
+  nice_theme(chart_type = "horizontal_bar")
 
 mpg %>%
-  count(cyl) %>%
-  plot_ly(y = ~cyl,
-          x = ~n,
-          type = "bar") %>%
-  nice_theme()
+  filter(manufacturer %in% c("hyundai", "nissan", "toyota")) %>%
+  count(manufacturer) %>%
+  plot_ly(x = ~manufacturer,
+          y = ~n,
+          color = ~manufacturer,
+          type = "bar",
+          marker = list(line = list(color = '#000000', width = 1.5))) %>%
+  nice_theme(chart_type = "vertical_bar")
 
 
 # add source
