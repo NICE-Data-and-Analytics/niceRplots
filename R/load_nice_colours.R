@@ -41,7 +41,8 @@ nice_colours <- read_colours$hex_code
 names(nice_colours) <- read_colours$colour
 
 nice_palettes <- list(
-  discrete_4 = nice_colours[c("deep_blue_100",
+  discrete = nice_colours[c("bold_teal_100",
                               "natural_tan_100",
-                              "black_100",
-                              "balanced_green_100")])
+                              "balanced_green_100",
+                              "deep_blue_100",
+                              "black_100")])
