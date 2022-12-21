@@ -1,0 +1,129 @@
+---
+title: "Test plotly themes"
+author: "Impact team"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Install and load packages
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse, plotly)
+
+# Declare location
+here::i_am("R/plotly_theme.R")
+
+# Load here package
+pacman::p_load(here)
+
+# Load NICE colours
+source(here("R", "load_nice_colours.R"))
+
+# Load Plotly themes
+source(here("R", "plotly_theme.R"))
+```
+
+# Tests
+
+# Iris
+
+```{r}
+# Wrangle data for plotting
+iris_bar_df <- iris %>% 
+  group_by(Species) %>% 
+  summarise(Sepal_Width = mean(Sepal.Width)) %>% 
+  ungroup()
+
+# Create basic bar chart (left)
+iris_bar <- plot_ly(iris_bar_df,
+                    x = ~Species,
+                    y = ~Sepal_Width,
+                    type = "bar")
+
+# Create formatted chart (right)
+iris_bar_formatted <- plot_ly(iris_bar_df,
+                    x = ~Species,
+                    y = ~Sepal_Width,
+                    type = "bar",
+                    marker = list(color = nice_colours[["bold_teal_100"]],
+                                  line = list(color = nice_colours[['black_100']], width = 1.5)))
+
+iris_bar
+iris_bar_formatted
+```
+
+```{r}
+iris_bar_themed <-iris_bar_formatted %>% 
+  nice_theme(chart_type = "vertical_bar",
+             x_title = "Species",
+             y_title = "Sepal Width")
+```
+
+### Formatted chart headline title
+#### Figure x. Formatted chart statistical title
+
+```{r, echo = F}
+iris_bar_themed
+```
+Alt text (text description of message chart is showing. Mark chart as decorative)  
+Source: []  
+Download the data for Figure x (CSV, 5.0KB).
+
+# Own tests
+
+```{r}
+economics_long %>%
+  filter(variable != "pop") %>%
+  plot_ly(x = ~date,
+         y = ~value01,
+         color = ~variable,
+         colors = c("#00436C", "#D07B4D", "#000000", "#37906D"),
+         type = "scatter",
+         mode = "lines") %>%
+  nice_theme(chart_type = "line")
+```
+
+
+```{r}
+plot1 <- mpg %>%
+  filter(manufacturer %in% c("hyundai", "nissan", "toyota")) %>%
+  count(manufacturer) %>%
+  plot_ly(y = ~manufacturer,
+          x = ~n,
+          color = ~manufacturer,
+          type = "bar",
+          orientation = "h",
+          marker = list(line = list(color = '#000000', width = 1.5)))
+
+nice_theme(plot1, chart_type = "horizontal_bar")
+```
+
+
+```{r}
+mpg %>%
+  filter(manufacturer %in% c("hyundai", "nissan", "toyota")) %>%
+  count(manufacturer) %>%
+  plot_ly(y = ~manufacturer,
+          x = ~n,
+          color = ~manufacturer,
+          type = "bar",
+          orientation = "h",
+          marker = list(line = list(color = '#000000', width = 1.5))) %>%
+  nice_theme(chart_type = "horizontal_bar")
+```
+
+
+```{r}
+mpg %>%
+  filter(manufacturer %in% c("hyundai", "nissan", "toyota")) %>%
+  count(manufacturer) %>%
+  plot_ly(x = ~manufacturer,
+          y = ~n,
+          color = ~manufacturer,
+          type = "bar",
+          marker = list(line = list(color = '#000000', width = 1.5))) %>%
+  nice_theme(chart_type = "vertical_bar")
+```
+
