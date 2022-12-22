@@ -86,6 +86,7 @@ Saving in other file formats (e.g. .svg or .jpg) is more complicated and require
 ```{r load_data, message = FALSE, warning = FALSE, eval = FALSE}
 
 # Load in DOACs data
+# here::here("data", "DOACs_data.csv")?
 doacs_df <- readr::read_csv(here::here("DOACs_data.csv"),
                               col_types = "Dcccccdddd")
 
@@ -121,6 +122,49 @@ plotly_hist
 # Category order differs from ggplot but no big difference
 
 ```
+
+#### Bar chart
+
+##### Vertical bar chart
+
+Use chart_type = "vertical_bar".
+
+```{r plotly_vertical_bar, message = FALSE, warning = FALSE}
+
+# Prepare data, get total items dispensed for each medicine in 2021 (in millions)
+bar_df <- doacs_df %>% 
+  filter(between(date, as.Date("2021-01-01"), as.Date("2021-12-31"))) %>% 
+  group_by(chemical) %>% 
+  summarise(items = sum(items)/1000000) %>% 
+  ungroup()
+
+# Create chart
+plotly_vbar_chart <- bar_df %>%
+  mutate() %>% 
+  # Plot bars in decreasing order of items
+  ggplot(aes(y = items, x = reorder(chemical, -items))) +
+  # Add baseline to x axis
+  geom_hline(yintercept = 0, linewidth = 1, colour = "#333333") +
+  # set y-axis limits and remove padding
+  scale_y_continuous(expand = c(0,0), limits = c(0,8)) +
+  # set x-axis labels to wrap to prevent overlapping
+  scale_x_discrete(labels = function(x) {stringr::str_wrap(x, width = 10)}) +
+  # Add bars, add fill and border colours
+  geom_col(fill = nice_colours[1], colour = "#000000") +
+  # Apply NICE theme
+  nice_gg_theme(base_size = 12) +
+  # Remove the x-axis title
+  theme(axis.title.x = ggplot2::element_blank()) +
+  # Add labels
+  labs(title = "Apixaban was the most prescribed DOAC in 2021",
+       subtitle = "Total DOAC medicines dispensed in primary care in England, 2020",
+       y = "Dispensed items (millions)")
+
+bar_chart
+
+```
+
+##### Horizontal bar chart
 
 # Own tests
 
