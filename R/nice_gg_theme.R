@@ -1,103 +1,121 @@
-#' nice_gg_theme
+#' Add the NICE theme to a chart
 #'
-#' @return
+#'This function will style your ggplot2 charts with the NICE theme. This will
+#'adjust the fonts, text hierarchy, background, margins and colour scheme.
+#'
+#' @param base_size The base font size of your plot. Changing this will alter text
+#' sizes throughout the plot. Defaults to size 12.
+#'
+#' @return A NICE styled ggplot2 object
 #' @export
 #'
 #' @examples
-#' line_chart <- ggplot(line_df, aes(x = year, y = people)) +
-#' geom_line(colour = "#228096") +
-#' nice_gg_style()
+#'
+#' iris_bar_df <- iris %>%
+#' group_by(Species) %>%
+#' summarise(Sepal.Width = mean(Sepal.Width)) %>%
+#' ungroup()
+#'
+#' iris_bar <- ggplot(iris_bar_df) +
+#' geom_col(aes(x = Species, y = Sepal.Width), fill = "#228096", colour = "#000000") +
+#' geom_hline(yintercept = 0, linewidth = 1, colour = "#333333") +
+#' scale_y_continuous(expand = c(0, 0), limits = c(0, 4)) +
+#' nice_gg_theme(base_size = 12)
 
-nice_gg_theme <- function(legend = "none"){
+nice_gg_theme <- function(base_size = 12){
 
-    font <- "Helvetica"
+  font <- "Inter Regular"
+  heading_font <- "Lora SemiBold"
 
-    nice_theme <- ggplot2::theme(
+  nice_theme <- ggplot2::theme(
 
-      # Format the text ---------------------------------------------------------
+    text = ggplot2::element_text(size = base_size),
 
-      # This sets the font, size, and colour of text for the chart's title
-      plot.title = ggplot2::element_text(family = font,
-                                         size = 28,
-                                         face = "bold",
-                                         color = "#000000"),
+    # Format the background ---------------------------------------------------
 
-      # This sets the font, size and colour of text for the chart's subtitle, as
-      # well as setting a margin between the title and the subtitle
-      plot.subtitle = ggplot2::element_text(family = font,
-                                            size = 22,
-                                            margin = ggplot2::margin(9,0,9,0)),
-
-      # This leaves the caption text element empty, because it is set elsewhere in
-      #the finalise plot function
-      plot.caption = ggplot2::element_blank(),
+    # Remove the standard grey background
+    panel.background = ggplot2::element_blank(),
+    panel.border = ggplot2::element_blank(),
 
 
-      # Format the axes ---------------------------------------------------------
+    # Format the title and subtitle -------------------------------------------
 
-      # This sets the text font, size and colour for the axis test, as well as
-      # setting the margins and removes lines and ticks. In some cases, axis lines
-      # and axis ticks are things we would want to have in the chart
+    plot.title = ggplot2::element_text(family = heading_font,
+                                       size = ggplot2::rel(1.5),
+                                       color = "#000000"),
 
-      axis.title = ggplot2::element_blank(),
-      axis.text = ggplot2::element_text(family = font,
-                                        size = 14,
+    plot.subtitle = ggplot2::element_text(family = font,
+                                          size = ggplot2::rel(1.2),
+                                          margin = ggplot2::margin(0,0,15,0)),
+
+    # Leave the caption empty, because we add this when finalizing the chart
+    plot.caption = ggplot2::element_blank(),
+
+
+    # Format the axes ---------------------------------------------------------
+
+    axis.title.x = ggplot2::element_text(family = font,
+                                         size = ggplot2::rel(1),
+                                         color = "#000000",
+                                         margin = ggplot2::margin(t = 8)),
+
+    axis.title.y = ggplot2::element_text(family = font,
+                                         size = ggplot2::rel(1),
+                                         color = "#000000",
+                                         margin = ggplot2::margin(r = 8)),
+
+    axis.text = ggplot2::element_text(family = font,
+                                      size = ggplot2::rel(1),
+                                      color = "#000000"),
+
+    axis.ticks.x = ggplot2::element_line(linewidth = 1),
+    axis.ticks.y = ggplot2::element_blank(),
+
+
+    # Format the grid lines ---------------------------------------------------
+
+    # Adjust major grid lines
+    panel.grid.major.x = ggplot2::element_blank(),
+    panel.grid.major.y = ggplot2::element_line(color = "#BFBFBF"),
+
+    # Adjust minor grid lines
+    panel.grid.minor = ggplot2::element_blank(),
+
+
+    # Format the legend -----------------------------------------------------
+
+    legend.position = "top",
+    legend.justification = "right",
+    legend.box.margin = ggplot2::margin(-10, 0, -10, 0),
+    legend.background = ggplot2::element_blank(),
+    legend.title = ggplot2::element_blank(),
+    legend.key = ggplot2::element_blank(),
+    legend.text = ggplot2::element_text(family = font,
+                                        size = ggplot2::rel(1),
                                         color = "#000000"),
-      axis.text.x = ggplot2::element_text(margin = ggplot2::margin(5, b = 10)),
-      axis.ticks = ggplot2::element_blank(),
-      axis.line = ggplot2::element_blank(),
+    legend.text.align = 0,
 
 
-      # Format the grid lines ---------------------------------------------------
+    # Set up faceting options ------------------------------------------------
 
-      # This removes all minor grid lines and adds major y grid lines. In many cases
-      # you will want to change this to remove y grid lines and add x grid lines
-      panel.grid.minor = ggplot2::element_blank(),
-      panel.grid.major.y = ggplot2::element_line(color = "#BFBFBF"),
-      panel.grid.major.x = ggplot2::element_line(color = "#BFBFBF"), #ggplot2::element_blank(),
+    # Set the background of the facet titles to NICE teal
+    strip.background = ggplot2::element_rect(fill = "#228096",
+                                             color = "#000000",
+                                             linewidth = 1,
+                                             linetype = "solid"),
 
+    # Make the facet title text white
+    strip.text = ggplot2::element_text(family = font,
+                                       size  = ggplot2::rel(1),
+                                       hjust = 0.5,
+                                       color = "#FFFFFF"),
 
-      # Format the background ---------------------------------------------------
+    # Adjust plot spacing -----------------------------------------------------
 
-      #This sets the panel background as blank, removing the standard grey
-      panel.background = ggplot2::element_blank(),
+    # Add spacing around the plot
+    plot.margin = ggplot2::margin(0.25, 0.25, 0.25, 0.25,"cm")
 
+  )
 
-      # Format the legend -----------------------------------------------------
-
-      # This will position the legend according to the users input, and
-      # remove it's background/title/key
-
-      legend.position = legend,
-      legend.text.align = 0,
-      legend.background = ggplot2::element_blank(),
-      legend.title = ggplot2::element_blank(),
-      legend.key = ggplot2::element_blank(),
-      legend.text = ggplot2::element_text(family = font,
-                                          size = 12,
-                                          color = "#000000"),
-
-
-      # Set up faceting options ------------------------------------------------
-
-      #This sets the panel background for facet-wrapped plots to Bold teal, and
-      # makes the text white
-
-      strip.background = ggplot2::element_rect(fill = "#228096",
-                                               color = "#000000",
-                                               size = 1,
-                                               linetype = "solid"),
-
-      strip.text = ggplot2::element_text(family = font,
-                                         size  = 14,
-                                         hjust = 0.5,
-                                         color = "#FFFFFF"),
-
-      panel.border = ggplot2::element_rect(color = "#000000",
-                                           size = 0.5,
-                                           fill = NA)
-
-    )
-
-    return(nice_theme)
+  return(nice_theme)
 }

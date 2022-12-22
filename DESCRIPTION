@@ -12,7 +12,29 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
 Imports: 
     dplyr,
+    readr,
     ggplot2,
-    plotly
+    plotly,
+    stringr,
+    scales,
+    sf,
+    janitor,
+    here,
+    ggpubr,
+    png,
+    systemfonts,
+    grid,
+    leaflet,
+    grDevices,
+    htmltools,
+    knitr,
+    rlang
 URL: https://github.com/GitWray1/niceRplots
 BugReports: https://github.com/GitWray1/niceRplots/issues
+Depends: 
+    R (>= 2.10)
+LazyData: true
+VignetteBuilder: knitr
+Suggests: 
+    rmarkdown,
+    devtools
