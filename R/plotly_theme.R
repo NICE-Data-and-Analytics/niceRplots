@@ -22,7 +22,7 @@ source(here("R", "load_nice_colours.R"))
 # Title and subtitle and caption and data source as text below graph
 
 
-nice_theme <- function(p,
+nice_plotly_theme <- function(p,
                        chart_type = "bar",
                        x_title = "[x axis title]",
                        y_title = "[y axis title]",

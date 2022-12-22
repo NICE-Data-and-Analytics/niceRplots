@@ -25,11 +25,13 @@ source(here("R", "load_nice_colours.R"))
 source(here("R", "plotly_theme.R"))
 ```
 
-# Tests
+# Interactive charts
 
-# Iris
+## Plotly
 
-```{r}
+### Styling a Plotly chart
+
+```{r format_plotly, fig.show = "hold", out.width = "50%"}
 # Wrangle data for plotting
 iris_bar_df <- iris %>% 
   group_by(Species) %>% 
@@ -37,39 +39,88 @@ iris_bar_df <- iris %>%
   ungroup()
 
 # Create basic bar chart (left)
-iris_bar <- plot_ly(iris_bar_df,
+plotly_iris_bar <- plot_ly(iris_bar_df,
                     x = ~Species,
                     y = ~Sepal_Width,
                     type = "bar")
 
 # Create formatted chart (right)
-iris_bar_formatted <- plot_ly(iris_bar_df,
+plotly_iris_bar_formatted <- plot_ly(iris_bar_df,
                     x = ~Species,
                     y = ~Sepal_Width,
                     type = "bar",
                     marker = list(color = nice_colours[["bold_teal_100"]],
                                   line = list(color = nice_colours[['black_100']], width = 1.5)))
 
-iris_bar
-iris_bar_formatted
+plotly_iris_bar
+plotly_iris_bar_formatted
+
+# fig.show = "hold" not working for Plotly?
 ```
 
-```{r}
-iris_bar_themed <-iris_bar_formatted %>% 
-  nice_theme(chart_type = "vertical_bar",
+```{r theme_plotly}
+plotly_iris_bar_themed <- plotly_iris_bar_formatted %>% 
+  nice_plotly_theme(chart_type = "vertical_bar",
              x_title = "Species",
              y_title = "Sepal Width")
 ```
 
-### Formatted chart headline title
-#### Figure x. Formatted chart statistical title
+#### Formatted chart headline title
+##### Figure x. Formatted chart statistical title
 
-```{r, echo = F}
-iris_bar_themed
+```{r theme_plotly_output, echo = FALSE}
+plotly_iris_bar_themed
 ```
 Alt text (text description of message chart is showing. Mark chart as decorative)  
 Source: []  
 Download the data for Figure x (CSV, 5.0KB).
+
+### How to save your plot
+
+To download the plot as a static PNG image, click on the camera icon at the top right of the plot.
+
+Saving in other file formats (e.g. .svg or .jpg) is more complicated and requires installation of another piece of software. Read the [Plotly documentation on exporting graphs as static images in R](https://plotly.com/r/static-image-export/).
+
+### Chart types
+
+```{r load_data, message = FALSE, warning = FALSE, eval = FALSE}
+
+# Load in DOACs data
+doacs_df <- readr::read_csv(here::here("DOACs_data.csv"),
+                              col_types = "Dcccccdddd")
+
+```
+
+#### Histogram
+
+Use chart_type = "horizontal_bar" for histograms.
+
+```{r plotly_histogram}
+# Create chart
+plotly_hist <- iris %>%
+  plot_ly(x = ~Sepal.Width,
+          color = ~Species,
+          # Use NICE colours - remove colour names so it maps correctly
+          colors = unname(nice_palettes[["discrete"]][1:3]),
+          type = "histogram",
+          # Black outline for bars
+          marker = list(line = list(color = nice_colours[['black_100']], width = 1.5)),
+          # Set bin width
+          xbins = list(size = 0.2,
+                       start = 1.9,
+                       end = 4.5)) %>% 
+  # Stack bars
+  layout(barmode = "stack") %>% 
+  # Add NICE theme and set axis titles
+  nice_plotly_theme(chart_type = "vertical_bar",
+             x_title = "Sepal width",
+             y_title = "Frequency")
+
+plotly_hist
+
+# Category order differs from ggplot but no big difference
+
+```
 
 # Own tests
 
@@ -82,7 +133,7 @@ economics_long %>%
          colors = c("#00436C", "#D07B4D", "#000000", "#37906D"),
          type = "scatter",
          mode = "lines") %>%
-  nice_theme(chart_type = "line")
+  nice_plotly_theme(chart_type = "line")
 ```
 
 
@@ -97,7 +148,7 @@ plot1 <- mpg %>%
           orientation = "h",
           marker = list(line = list(color = '#000000', width = 1.5)))
 
-nice_theme(plot1, chart_type = "horizontal_bar")
+nice_plotly_theme(plot1, chart_type = "horizontal_bar")
 ```
 
 
@@ -111,7 +162,7 @@ mpg %>%
           type = "bar",
           orientation = "h",
           marker = list(line = list(color = '#000000', width = 1.5))) %>%
-  nice_theme(chart_type = "horizontal_bar")
+  nice_plotly_theme(chart_type = "horizontal_bar")
 ```
 
 
@@ -124,6 +175,6 @@ mpg %>%
           color = ~manufacturer,
           type = "bar",
           marker = list(line = list(color = '#000000', width = 1.5))) %>%
-  nice_theme(chart_type = "vertical_bar")
+  nice_plotly_theme(chart_type = "vertical_bar")
 ```
 
