@@ -26,7 +26,8 @@ nice_plotly_theme <- function(p,
                        chart_type = "bar",
                        x_title = "[x axis title]",
                        y_title = "[y axis title]",
-                       font_size = 12) {
+                       font_size = 12,
+                       pad_axes = TRUE) {
 
   chart_grids <- list(vertical_bar = list(xgrid = FALSE,
                                 ygrid = TRUE),
@@ -39,7 +40,8 @@ nice_plotly_theme <- function(p,
 
   layout(p,
          font = list(family = "inter regular",
-                     size = font_size),
+                     size = font_size,
+                     color = "#000000"),
          xaxis = list(showgrid = chart_grids[[chart_type]][["xgrid"]],
                       title = list(font = list(size = font_size),
                                    text = x_title,
@@ -56,7 +58,7 @@ nice_plotly_theme <- function(p,
                       gridwidth = 1.5,
                       gridcolor = "#e6e6e6",
                       zerolinewidth = 1.5),
-         margin = list(pad = 10),
+         margin = list(pad = 10*pad_axes),
          legend = list(font = list(size = font_size))) %>%
     config(modeBarButtonsToRemove = c("zoom", "pan", "select", "lasso", "zoomIn2d", "zoomOut2d", "autoscale", "resetscale", "hovercompare", "hoverclosest"),
            displaylogo = FALSE)

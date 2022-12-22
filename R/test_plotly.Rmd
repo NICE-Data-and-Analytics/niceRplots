@@ -81,14 +81,14 @@ To download the plot as a static PNG image, click on the camera icon at the top 
 
 Saving in other file formats (e.g. .svg or .jpg) is more complicated and requires installation of another piece of software. Read the [Plotly documentation on exporting graphs as static images in R](https://plotly.com/r/static-image-export/).
 
+### Tooltip
+
 ### Chart types
 
-```{r load_data, message = FALSE, warning = FALSE, eval = FALSE}
+```{r load_data, message = FALSE, warning = FALSE}
 
 # Load in DOACs data
-# here::here("data", "DOACs_data.csv")?
-doacs_df <- readr::read_csv(here::here("DOACs_data.csv"),
-                              col_types = "Dcccccdddd")
+load(file = here::here("data", "doacs_df.rda"))
 
 ```
 
@@ -130,7 +130,6 @@ plotly_hist
 Use chart_type = "vertical_bar".
 
 ```{r plotly_vertical_bar, message = FALSE, warning = FALSE}
-
 # Prepare data, get total items dispensed for each medicine in 2021 (in millions)
 bar_df <- doacs_df %>% 
   filter(between(date, as.Date("2021-01-01"), as.Date("2021-12-31"))) %>% 
@@ -138,33 +137,121 @@ bar_df <- doacs_df %>%
   summarise(items = sum(items)/1000000) %>% 
   ungroup()
 
+
 # Create chart
 plotly_vbar_chart <- bar_df %>%
-  mutate() %>% 
-  # Plot bars in decreasing order of items
-  ggplot(aes(y = items, x = reorder(chemical, -items))) +
-  # Add baseline to x axis
-  geom_hline(yintercept = 0, linewidth = 1, colour = "#333333") +
-  # set y-axis limits and remove padding
-  scale_y_continuous(expand = c(0,0), limits = c(0,8)) +
-  # set x-axis labels to wrap to prevent overlapping
-  scale_x_discrete(labels = function(x) {stringr::str_wrap(x, width = 10)}) +
-  # Add bars, add fill and border colours
-  geom_col(fill = nice_colours[1], colour = "#000000") +
-  # Apply NICE theme
-  nice_gg_theme(base_size = 12) +
-  # Remove the x-axis title
-  theme(axis.title.x = ggplot2::element_blank()) +
-  # Add labels
-  labs(title = "Apixaban was the most prescribed DOAC in 2021",
-       subtitle = "Total DOAC medicines dispensed in primary care in England, 2020",
-       y = "Dispensed items (millions)")
+  # Reorder chemical factor levels in decreasing order of items
+  mutate(chemical = reorder(chemical, -items)) %>% 
+  plot_ly(x = ~chemical,
+          y = ~items,
+          type = "bar",
+          # Bold teal bars with black outline
+          marker = list(color = nice_colours[["bold_teal_100"]],
+                        line = list(color = nice_colours[['black_100']], width = 1.5))) %>% 
+  # Add NICE theme and set axis titles
+  nice_plotly_theme(chart_type = "vertical_bar",
+             x_title = "",
+             y_title = "Dispensed items (millions)")
+```
 
-bar_chart
+**Apixaban was the most prescribed DOAC in 2021**  
 
+Figure x. Total DOAC medicines dispensed in primary care in England, 2020
+
+```{r plotly_vertical_bar_output, message = FALSE, warning = FALSE, echo = FALSE}
+plotly_vbar_chart
 ```
 
 ##### Horizontal bar chart
+
+Use chart_type = "horizontal_bar".
+
+```{r plotly_horizontal_bar}
+# Create chart
+plotly_vbar_chart <- bar_df %>%
+  # Reorder chemical factor levels in decreasing order of items
+  mutate(chemical = reorder(chemical, items)) %>% 
+  plot_ly(x = ~items,
+          y = ~chemical,
+          type = "bar",
+          # Make horizontal
+          orientation = "h",
+          # Bold teal bars with black outline
+          marker = list(color = nice_colours[["bold_teal_100"]],
+                        line = list(color = nice_colours[['black_100']], width = 1.5))) %>% 
+  # Add NICE theme and set axis titles
+  nice_plotly_theme(chart_type = "horizontal_bar",
+             x_title = "Dispensed items (millions)",
+             y_title = "")
+
+plotly_vbar_chart
+```
+##### Line chart
+
+Use chart_type = "line".
+
+```{r plotly_line, message = FALSE, warning = FALSE}
+# Prepare data
+line_df <- doacs_df %>%
+  filter(chemical == "Edoxaban") %>% 
+  group_by(date, chemical) %>%
+  summarise(items = sum(items)) %>%
+  ungroup()
+
+# Create chart
+plotly_line_chart <- line_df %>%
+  plot_ly(x = ~date,
+          y = ~items,
+          type = "scatter",
+          # Line with marker dot at each data point
+          mode = "lines+markers",
+          # Make line and dots teal
+          marker = list(color = nice_colours[["bold_teal_100"]])) %>%
+  # Add the vertical dashed line to show lockdown date. Added this before plotting the 
+  # data so that it sits on a layer behind the line and points
+  add_lines(x = as.Date("2020-03-01"),
+            y = ~c(0, max(items)),
+            line = list(dash = "dash",
+                        color = "#000000",
+                        width = 1.5),
+            # Don't inherit properties of previous trace
+            inherit = FALSE) %>% 
+  layout(showlegend = FALSE,
+         # Y axis ticks with commas as thousands separators
+         xaxis = list(type = "date", # Specify x axis is date
+                      # Show x axis ticks
+                      ticks = "outside", 
+                      # Format ticks as abbreviated month name and full year, e.g. Jan 2018
+                      tickformat = "%b\n%Y",
+                      # Set first tick
+                      tick0 = "2017-07-01",
+                      # Tick every 6 months
+                      dtick = "M6"),
+         yaxis = list(tickformat = ",",
+                      range = ~c(0, max(items)+10000)),
+         annotations = list(x = as.Date("2020-03-01"),
+                            xshift = -60,
+                            y = 180000,
+                            text = "National lockdown\non 23 March",
+                            xref = "x",
+                            yref = "y",
+                            showarrow = FALSE, 
+                            align = "right")) %>% 
+  # Add NICE theme and set axis titles
+  nice_plotly_theme(chart_type = "line",
+             x_title = "",
+             y_title = "Dispensed items",
+             # Don't pad the axes, as ticks shown. Do not want gap between axis line and ticks
+             pad_axes = FALSE)
+```
+
+**Edoxaban prescribing has increased since 2017**  
+Figure x. Edoxaban prescribing in England, 2017-2022
+
+```{r plotly_line_output, message = FALSE, warning = FALSE, echo = FALSE}
+plotly_line_chart
+```
+
 
 # Own tests
 
