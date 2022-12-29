@@ -107,13 +107,15 @@ plotly_hist <- iris %>%
           # Set bin width
           xbins = list(size = 0.2,
                        start = 1.9,
-                       end = 4.5)) %>% 
+                       end = 4.5),
+          hovertemplate = paste0("Sepal width: %{x}<br>",
+                                 "Count: %{y}")) %>% 
   # Stack bars
   layout(barmode = "stack") %>% 
   # Add NICE theme and set axis titles
   nice_plotly_theme(chart_type = "vertical_bar",
              x_title = "Sepal width",
-             y_title = "Frequency")
+             y_title = "Count")
 
 plotly_hist
 
@@ -176,7 +178,7 @@ plotly_vbar_chart <- bar_df %>%
 
 plotly_vbar_chart
 ```
-##### Line chart
+#### Line chart
 
 Use chart_type = "line".
 
@@ -234,7 +236,7 @@ Figure x. Edoxaban prescribing in England, 2017-2022
 ```{r plotly_line_output, message = FALSE, warning = FALSE, echo = FALSE}
 plotly_line_chart
 ```
-##### Scatter plot
+#### Scatter plot
 
 ```{r plotly_scatter, message = FALSE, warning = FALSE}
 
@@ -265,7 +267,7 @@ Items of apixaban dispensed in primary care compared to sub-ICB location list si
 plotly_scatter_chart
 ```
 
-##### Faceted charts
+#### Faceted charts
 
 The easiest way to [make faceted charts in Plotly is to make it in ggplot](https://plotly.com/ggplot2/facet-plots/) and then convert it into a Plotly chart using the function ggplotly. 
 
