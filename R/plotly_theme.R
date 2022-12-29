@@ -6,7 +6,7 @@
 #' - Changing the font to Inter
 #' - Setting the minimum font size
 #' - Adding or removing grid lines depending on the chart type
-#' - Reminds users to add x and y axis titles
+#' - Reminds users to edit the x and y axis titles
 #' - Removes icons from the default Plotly tool bar
 #'
 #' @param p Plotly chart object.
@@ -18,7 +18,8 @@
 #' - `"scatter"`: For scatter plots. Shows both horizontal and vertical grid
 #' lines.
 #' - `"line"`: For line charts. Only shows horizontal grid lines.
-#' @param x_title,y_title String to use as X or y axis title.
+#' @param x_title,y_title String to use as x or y axis title. Defaults to
+#'     `"[x axis title]"` and `"[y axis title]"` respectively.
 #' @param font_size Minimum font size. Default is `12`.
 #' @param pad_axes Add space between the axis lines and the axis title or tick
 #'    marks? If `TRUE` (default), adds some space between the tick labels and

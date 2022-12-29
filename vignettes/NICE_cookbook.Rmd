@@ -28,7 +28,7 @@ Within this cookbook, we will demonstrate how to use the functions included with
 
 ## Load the relevant packages
 
-Before we can start making charts, we first need to load all of the relevant packages. We wont load every package here, just the ones that we will use the most often. It is good practice to limit the number of loaded packages to prevent masking conflicts. For this reason, we will often use double colons `::` to access specific functions within a package (e.g. `readr::read_csv()`), rather than loading the full package using `library(pkg)`.
+Before we can start making charts, we first need to load all of the relevant packages. We won't load every package here, just the ones that we will use the most often. It is good practice to limit the number of loaded packages to prevent masking conflicts. For this reason, we will often use double colons `::` to access specific functions within a package (e.g. `readr::read_csv()`), rather than loading the full package using `library(pkg)`.
 
 ```{r pkg_load, message = FALSE}
 
@@ -36,6 +36,7 @@ Before we can start making charts, we first need to load all of the relevant pac
 library(dplyr)
 library(ggplot2)
 library(leaflet)
+library(plotly)
 
 devtools::load_all()
 
@@ -450,7 +451,61 @@ choropleth_chart
 ```
 <br>
 
-# Interactive charts
+# Interactive charts 
+
+## Plotly
+
+The [Plotly package](https://plotly.com/r/) can be used to create interactive charts in R. Like with `nice_gg_theme()` and ggplot, the `niceRplots` package contains the `nice_plotly_theme()` function which can be applied to apply a NICE theme to a Plotly chart.
+
+The `nice_plotly_theme()` function alters the following aspects of the chart to make it more consistent with the [NICE brand guidelines](https://indepth.nice.org.uk/our-brand/index.html):
+
+* **Fonts**: changes all text to Inter Regular and sets the minimum font size to the `font_size` argument (default is `12`).
+
+* **Grid lines**: the horizontal and/or vertical grid lines are displayed according to the graph type selected in the `chart_type` argument (options are `"vertical_bar"`, `"horizontal_bar"`, `"scatter`" and `"line"`).
+
+* **Margins**: adds space between the axis lines and the tick labels. The default Plotly theme has no axis tick marks, just tick labels, and this function adds a gap betweent the axis lines and the tick labels for better spacing. If tick marks are desired, turn the padding off with `pad_axes = FALSE`, otherwise there will be a gap between the tick marks and the axis lines.
+
+* **Modebar**: removes all modebar buttons from the chart, e.g. zoom, select, pan, except for the camera icon allowing the graph to be saved as a PNG.
+
+Like with `nice_gg_theme()`, you will need to manually specify the use of NICE colours in the graph elements, e.g. with `line = list(color = "#228096")` for line charts or `marker = list(color = "#228096", line = list(color = "#000000"))` for bar charts. 
+
+`nice_plotly_theme()` only makes basic adjustments to make graphs more aesthetically consistent. You may need to make additional changes.
+
+### Styling a Plotly chart
+
+Using the `iris` dataset, we first create a basic chart (top), then recreate the chart with a NICE colour applied to the fill colour of the bars and adding a black border to the bars (bottom).
+
+```{r format_plotly, fig.show = "hold", out.width = "50%"}
+# Create basic bar chart (top)
+plotly_iris_bar <- plot_ly(iris_bar_df,
+                    x = ~Species,
+                    y = ~Sepal_Width,
+                    type = "bar")
+
+# Create formatted chart (bottom)
+plotly_iris_bar_formatted <- plot_ly(iris_bar_df,
+                    x = ~Species,
+                    y = ~Sepal_Width,
+                    type = "bar",
+                    marker = list(color = nice_colours_full[["bold_teal_100"]],
+                                  line = list(color = nice_colours_full[['black_100']], width = 1.5)))
+
+plotly_iris_bar
+plotly_iris_bar_formatted
+
+# fig.show = "hold" not working for Plotly?
+```
+
+We then apply the NICE plotly theme using `nice_plotly_theme()`, providing axis titles and specifying `chart_type = "vertical_bar"`. 
+
+```{r theme_plotly}
+plotly_iris_bar_themed <- plotly_iris_bar_formatted %>% 
+  nice_plotly_theme(chart_type = "vertical_bar",
+             x_title = "Species",
+             y_title = "Sepal Width")
+
+plotly_iris_bar_themed
+```
 
 ## Choropleth map (Leaflet)
 
