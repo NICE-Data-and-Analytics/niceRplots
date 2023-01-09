@@ -157,35 +157,19 @@ iris_bar_themed
 ```
 <br>
 
-## How to finalise your charts
+## How to save your plots
 
-Once a plot has been created and styled using `nice_gg_theme()`, the next step is to apply the `finalise_plot()` function. This function will create a footer containing information on the data source, as well as adding the NICE logo to the bottom right. It will then left-align the title, subtitle and footer. The `finalise_plot()` function has 3 arguments:
+Once we have styled our chart, we can save it using the `ggsave()` function. It is best practice to use the Scalable Vector Graphic (SVG) format when saving and publishing charts. This is because SVGs retain the same quality no matter what screen resolution or size they are viewed at. This improves accessibility as it allows users to zoom in and out, whilst retaining the image quality. To save a chart as an SVG, add ".svg" to the file name within the `ggsave()` function.
 
-* `plot_name`: the name of the plot object, in the example below we have saved ours as `iris_bar_themed`.
-
-* `source_name`: the source of the underlying data. We have used data from the `iris` dataset.
-
-* `logo`: this will determine whether the NICE logo is included in the footer. It can have a value of "NICE" to include the logo, or "none" to leave it blank.
-
-```{r finalise}
-
-# Apply the finalise plot function
-finalised_plot <- finalise_plot(iris_bar_themed,
-                                source_name = "Iris dataset",
-                                logo = "NICE")
-
-finalised_plot
-```
-<br>
-
-## How to save your finalised plots
-
-After applying the `finalise_plot()` function, the chart can be saved using the `ggsave()` function. It is best practice to use the Scalable Vector Graphic (SVG) format when saving and publishing charts. This is because SVGs retain the same quality no matter what screen resolution or size they are viewed at. This improves accessibility as it allows users to zoom in and out, whilst retaining the image quality. To save a chart as an SVG, simply add ".svg" to the file name within the `ggsave()` function.
+If a PNG or JPG is needed, simply replace ".svg" with the relevant extension.
 
 ```{r save_plot, eval = FALSE}
 
-# Save plot using the ggsave() function 
-ggsave("finalised_plot.svg", finalised_plot)
+# Save plot as SVG using the ggsave() function 
+ggsave("final_plot.svg", iris_bar_themed)
+
+# Save plot as png
+ggsave("final_plot.png", iris_bar_themed)
 
 ```
 
@@ -214,8 +198,6 @@ nice_hist <- iris %>%
        y = "Frequency")
 
 nice_hist
-
-#finalise_plot(example_plot, source_name = "Source: Iris dataset")
 
 ```
 <br>
