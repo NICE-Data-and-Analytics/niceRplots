@@ -13,24 +13,40 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 knitr::opts_chunk$set(dev = "ragg_png")
 here::i_am("vignettes/NICE_cookbook.Rmd")
 
 ```
 
 
-# How to create NICE style graphics
+# Introduction and set up
 
 The `niceRplots` package and cookbook make the process of creating publication-ready graphics in the NICE style a more reproducible process, as well as making it easier for people new to R to create graphics. 
 
-Within this cookbook, we will demonstrate how to use the functions included within the `niceRplots` package. We will also provide examples of plots that have been created in the NICE style. 
+Within this cookbook, we will demonstrate how to use the functions included within the `niceRplots` package. We will also provide examples of plots that have been created in the NICE style. The cookbook has been created using two graphing packages. The `ggplot2` package is used to create static plots, while the `plotly` package has been used to create interactive plots. We have also included an example choropleth map (heatmap) that has been created using the `leaflet` package. Navigate to the relevant section to view the code used to create these charts.
+
+## Installing the niceRplots package
+
+The `niceRplots` is not on CRAN, so you will have to install it directly from [GitHub](https://github.com/) using the `devtools` package.
+
+If you do not have the `devtools` package installed, you will have to run the first line in the code below as well.
+
+```{r pkg_install, eval = FALSE}
+
+# Install the devtools package if you don't already have it installed
+install.packages("devtools")
+
+# Install the niceRplots package
+devtools::install_github("GitWray1/niceRplots")
+
+```
 
 ## Load the relevant packages
 
 Before we can start making charts, we first need to load all of the relevant packages. We won't load every package here, just the ones that we will use the most often. It is good practice to limit the number of loaded packages to prevent masking conflicts. For this reason, we will often use double colons `::` to access specific functions within a package (e.g. `readr::read_csv()`), rather than loading the full package using `library(pkg)`.
 
-```{r pkg_load, message = FALSE}
+```{r pkg_load}
 
 # Load in the relevant packages
 library(dplyr)
@@ -49,11 +65,33 @@ nice_pal <- nice_colours_full[c("bold_teal_100", "natural_tan_100",
 ```
 <br>
 
+## Load in data
+
+Throughout this cookbook we will use two main datasets for our example charts. The first is R's built in `iris` dataset, which you can find information on by typing `?iris` into the R console. The second is the `doacs_df` dataframe that comes built into the `niceRplots` package. This contains data on the monthly Sub-ICB location level prescribing of 5 direct oral anticoagulants (DOACS) in England between February 2017 and January 2022. This was downloaded from [OpenPrescribing.net](https://openprescribing.net/).
+
+As the `doacs_df` comes pre-loaded with the `niceRplots` package, we don't need to load this in. The code below demonstrates how we would usually load data into R.
+
+```{r load_data, eval = FALSE}
+
+# Load in data and specify column types 
+# (D = date, d = double, i = integer, c = character, l = logical) 
+
+doacs_df <- readr::read_csv("example_data.csv",
+                            col_types = "Dccdd")
+
+```
+
+# Static charts
+
+## The ggplot2 package
+
+The `ggplot2` package can be used to create static charts in R. The sections below will demonstrate how to create a range of chart types using ggplot2 and apply the NICE theme.
+
 ## How to style your charts
 
-As an example we will create a simple bar chart using the `iris` dataset. We will first create a basic chart, and then add some additional formatting. We can see the two charts below with and without formatting.
+As an example we will create a simple bar chart using the `iris` dataset. We will first create a basic chart, and then add some formatting. We can see the two charts below with and without formatting.
 
-```{r format_chart, echo = TRUE, fig.show = "hold", out.width = "50%"}
+```{r format_chart, fig.show = "hold", out.width = "50%"}
 
 # Wrangle data for plotting
 iris_bar_df <- iris %>% 
@@ -89,14 +127,13 @@ iris_bar_formatted
 ```
 <br>
 
-
 We can now apply the NICE theme using the `nice_gg_theme()` function from the `niceRplots` package, specifying the base font for the plot to be of size 12. The `nice_gg_theme()` function alters several aspects of the chart to make it consistent with the [NICE brand guidelines](https://indepth.nice.org.uk/our-brand/index.html). These are as follows:
 
 * **Fonts**: changes the title font to Lora SemiBold, and all other text to Inter Regular. 
 
 * **Text scaling**: applies a text hierarchy to the chart using relative text sizes. Changing the optional `base_size` argument will change the text size throughout the plot. Titles and subtitles will be automatically scaled relative to this base_size to maintain the text hierarchy. This is useful if you want to change the chart size, as all text can be simply adjusted by changing the `base_size` argument. 
 
-* **Colour scheme**: changes line and text colours to be consistent with the NICE brand colour palette. This is particularly noticeable when creating faceted charts (shown later in cookbook). It should be noted that this will not add colour to the plotted data, this will still need to be added manually when creating the chart. For instance, a fill colour was added in the `geom_col()` argument in the above example. 
+* **Colour scheme**: changes line and text colours to be consistent with the NICE brand colour palette. This is particularly noticeable when creating faceted charts (shown later in cookbook). It should be noted that this will not add colour to the plotted data, which will still need to be added manually when creating the chart. For instance, a fill colour was added in the `geom_col()` argument in the above example. 
 
 * **Margins**: adjusts the margins around the title, subtitle, and axis titles to give everything space to breathe.
 
@@ -107,7 +144,7 @@ We can now apply the NICE theme using the `nice_gg_theme()` function from the `n
 
 The `nice_gg_theme()` function isn't designed to modify every aspect of the chart, but to apply a general theme that will maintain consistency with the NICE style guide across all charts. Many aspects of the chart will still need to be modified manually. For example, in the below chart we may choose to apply an additional theme argument to remove the x-axis title. 
 
-```{r theme_chart, echo = TRUE}
+```{r theme_chart}
 
 iris_bar_themed <- iris_bar_formatted +
   # Apply NICE theme, set base text size to 12
@@ -130,7 +167,7 @@ Once a plot has been created and styled using `nice_gg_theme()`, the next step i
 
 * `logo`: this will determine whether the NICE logo is included in the footer. It can have a value of "NICE" to include the logo, or "none" to leave it blank.
 
-```{r finalise, echo = TRUE}
+```{r finalise}
 
 # Apply the finalise plot function
 finalised_plot <- finalise_plot(iris_bar_themed,
@@ -143,35 +180,20 @@ finalised_plot
 
 ## How to save your finalised plots
 
-After applying the `finalise_plot()` function, the chart can be saved using the `ggsave()` function. It is best practice to use the Scalable Vector Graphic (SVG) format when publishing charts. This is because SVGs retain the same quality no matter what screen resolution or size they are viewed at. This increases accessibility as it allows users to zoom in and out, whilst retaining the image quality. To save a chart as an SVG, simply add ".svg" to the file name within the `ggsave()` function.
+After applying the `finalise_plot()` function, the chart can be saved using the `ggsave()` function. It is best practice to use the Scalable Vector Graphic (SVG) format when saving and publishing charts. This is because SVGs retain the same quality no matter what screen resolution or size they are viewed at. This improves accessibility as it allows users to zoom in and out, whilst retaining the image quality. To save a chart as an SVG, simply add ".svg" to the file name within the `ggsave()` function.
 
-```{r save_plot, echo = TRUE, eval = FALSE}
+```{r save_plot, eval = FALSE}
 
 # Save plot using the ggsave() function 
 ggsave("finalised_plot.svg", finalised_plot)
 
 ```
-<br>
 
-# Static charts using ggplot2
+## Chart examples
 
-The sections below provide examples of how to make different types of static chart using the ggplot2 package. These will demonstrate how to format different charts and apply the NICE theme. For some examples we will continue to use R's built in `iris` dataset, and in other we will use the `doacs_df` dataframe that comes built into the `niceRplots` package. This contains data on the monthly Sub-ICB location level prescribing of 5 direct oral anticoagulants (DOACS) in England between February 2017 and January 2022. This was downloaded from [OpenPrescribing.net](https://openprescribing.net/).
+### Histogram
 
-As the `doacs_df` comes pre-loaded with the `niceRplots` package, we don't need to load this in. The code below demonstrates how we would usually load data into R.
-
-```{r load_data, echo = TRUE, message = FALSE, warning = FALSE, eval = FALSE}
-
-# Load in data
-doacs_df <- readr::read_csv("example_data.csv",
-# Specify column types (D = date, d = double, i = integer, c = character, l = logical)                          
-                            col_types = "Dccdd")
-
-```
-<br>
-
-## Histogram
-
-```{r gg_histogram, echo = TRUE}
+```{r gg_histogram}
 
 # Create chart
 nice_hist <- iris %>%
@@ -198,9 +220,9 @@ nice_hist
 ```
 <br>
 
-## Bar chart
+### Bar chart
 
-```{r gg_bar, echo = TRUE, message = FALSE, warning = FALSE}
+```{r gg_bar}
 
 # Prepare data, get total items dispensed for each medicine in 2021 (in millions)
 bar_df <- doacs_df %>% 
@@ -238,7 +260,7 @@ bar_chart
 
 Transposing a bar chart is a useful way to make long axis labels easier to read. This has the added benefit of making the y-axis title horizontal, thereby making it easier to read.
 
-```{r gg_hbar, echo = TRUE, message = FALSE, warning = FALSE}
+```{r gg_hbar}
 
 # Using same data as above
 
@@ -272,9 +294,9 @@ horizontal_bar_chart
 ```
 <br>
 
-## Line chart
+### Line chart
 
-```{r gg_line, echo= TRUE, message = FALSE, warning = FALSE}
+```{r gg_line}
 
 # Prepare data
 line_df <- doacs_df %>%
@@ -315,9 +337,9 @@ line_chart
 ```
 <br>
 
-## Scatter plot
+### Scatter plot
 
-```{r gg_scatter, echo = TRUE, message = FALSE, warning = FALSE}
+```{r gg_scatter}
 
 # Prepare data
 scatter_df <- doacs_df %>%
@@ -353,9 +375,9 @@ scatter_chart
 ```
 <br>
 
-## Faceted chart
+### Faceted chart
 
-```{r gg_facet, echo = TRUE, message = FALSE, warning = FALSE}
+```{r gg_facet}
 
 # Prepare data
 facet_df <- doacs_df %>%
@@ -399,9 +421,9 @@ facet_chart
 ```
 <br>
 
-## Choropleth map (heatmap)
+### Choropleth map (heatmap)
 
-### Prepare .geoJSON files
+#### Prepare .geoJSON files
 
 In the example below we will prepare a choropleth map of Apixaban prescribing across Sub-ICB locations in 2021. To prepare this chart we need two files, a dataframe containing the data we want to visualise, and a dataframe containing the shapes for our relevant health geographies. For these examples we will use the `doacs_df` and `sub_icb_shapes_2022` files that come built into the `niceRplots` package.
 
@@ -411,7 +433,7 @@ These `.geoJSON` files from ONS come with different levels of accuracy, with mor
 
 The code below provides examples of how to load in a `.geoJSON` file as a dataframe, how to load and simplify a file using the `rmapshaper` package, and how to combine multiple shapes into a single shape (useful to give the map a darker outside boundary). 
 
-```{r gg_choropleth_prep, echo = TRUE, message = FALSE, warning = FALSE, eval = FALSE}
+```{r gg_choropleth_prep, eval = FALSE}
 
 # Load in the a .geoJSON file containing the relevant geographical shapes
 sub_icb_shapes_2022 <- sf::read_sf("EXAMPLE_SHAPES.geojson")
@@ -430,9 +452,11 @@ england_shape_2022 <- sub_icb_shapes_2022 %>%
 
 ```
 
+#### Create choropleth map
+
 Now that we have prepared our `.geoJSON` files, we can go ahead and prepare our choropleth map.
 
-```{r gg_choropleth, echo = TRUE, message = FALSE, warning = FALSE}
+```{r gg_choropleth}
 
 # Prepare the data
 map_df <- doacs_df %>% 
@@ -613,7 +637,7 @@ Use `chart_type = "vertical_bar"`.
 
 Add a black outline around the bars so adjacent colours of stacked bars are better distinguished.
 
-```{r plotly_vertical_bar, message = FALSE, warning = FALSE}
+```{r plotly_vertical_bar}
 # Create chart
 plotly_vbar_chart <- bar_df %>%
   # Reorder chemical factor levels in decreasing order of items
@@ -638,7 +662,7 @@ plotly_vbar_chart <- bar_df %>%
 
 Figure x. Total DOAC medicines dispensed in primary care in England, 2020
 
-```{r plotly_vertical_bar_output, message = FALSE, warning = FALSE, echo = FALSE}
+```{r plotly_vertical_bar_output, echo = FALSE}
 plotly_vbar_chart
 ```
 
@@ -677,7 +701,7 @@ Use `chart_type = "line"`.
 
 `pad_axes = FALSE` here in `nice_plotly_theme()` as we do not want a gap between the x axis tick marks and the x axis line.
 
-```{r plotly_line, message = FALSE, warning = FALSE}
+```{r plotly_line}
 # Create chart
 plotly_line_chart <- line_df %>%
   plot_ly(x = ~date,
@@ -738,7 +762,7 @@ plotly_line_chart <- line_df %>%
 **Edoxaban prescribing has increased since 2017**  
 Figure x. Edoxaban prescribing in England, 2017-2022
 
-```{r plotly_line_output, message = FALSE, warning = FALSE, echo = FALSE}
+```{r plotly_line_output, echo = FALSE}
 plotly_line_chart
 ```
 
@@ -746,7 +770,7 @@ plotly_line_chart
 
 Use `chart_type = "scatter"`.
 
-```{r plotly_scatter, message = FALSE, warning = FALSE}
+```{r plotly_scatter}
 
 # Create chart
 plotly_scatter_chart <- scatter_df %>%
@@ -774,7 +798,7 @@ plotly_scatter_chart <- scatter_df %>%
 **Apixaban prescribing**  
 Items of apixaban dispensed in primary care compared to sub-ICB location list size, July 2021
 
-```{r plotly_scatter_output, echo = FALSE, message = FALSE, warning = FALSE}
+```{r plotly_scatter_output, echo = FALSE}
 plotly_scatter_chart
 ```
 
@@ -782,7 +806,7 @@ plotly_scatter_chart
 
 The easiest way to make NICE-themed [faceted charts in Plotly is to make it in ggplot](https://plotly.com/ggplot2/facet-plots/), apply the `nice_gg_theme()` and then convert it into a Plotly chart using the function ggplotly. 
 
-```{r ggplotly_facet, message = FALSE, warning = FALSE}
+```{r ggplotly_facet}
 # Create chart
 ggplotly(facet_chart)
 ```
@@ -791,7 +815,7 @@ It is possible to do it [entirely in Plotly using subplots](https://plotly.com/r
 
 ## Choropleth map (Leaflet)
 
-```{r leaflet, echo = TRUE, message = FALSE, warning = FALSE}
+```{r leaflet}
 
 # Using same data as above
 
