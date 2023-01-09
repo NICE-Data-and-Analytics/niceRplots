@@ -2,6 +2,7 @@
 
 export(finalise_plot)
 export(nice_gg_theme)
+export(nice_plotly_theme)
 importFrom(dplyr,"%>%")
 importFrom(plotly,config)
 importFrom(plotly,layout)
