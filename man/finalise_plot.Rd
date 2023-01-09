@@ -2,10 +2,29 @@
 % Please edit documentation in R/finalise_plot.R
 \name{finalise_plot}
 \alias{finalise_plot}
-\title{finalise_plot}
+\title{Finalise a plot}
 \usage{
-finalise_plot()
+finalise_plot(plot_name, source_name, logo = "NICE")
+}
+\arguments{
+\item{plot_name}{A ggplot2 object}
+
+\item{source_name}{The source of the data within the plot}
+
+\item{logo}{A string of either "NICE" to include the NICE logo in the footer,
+or "none" to include a blank placeholder. defaults to "NICE"}
+}
+\value{
+A formatted ggplot2 object
 }
 \description{
-finalise_plot
+This function will format your plot and add a footer containing the data source and a NICE logo.
+It will left align your title, subtitle and source, add the NICE logo to the bottom right.
+}
+\examples{
+my_plot <- ggplot2::ggplot()
+
+finalise_plot(plot_name = my_plot,
+source_name = "My data source",
+logo = "NICE")
 }
