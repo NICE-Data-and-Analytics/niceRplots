@@ -35,17 +35,16 @@ Before we can start making charts, we first need to load all of the relevant pac
 # Load in the relevant packages
 library(dplyr)
 library(svglite)
+library(sf)
 library(ggplot2)
 library(leaflet)
 library(plotly)
-
-devtools::load_all()
+library(niceRplots)
 
 # Set up a NICE colour palette
 nice_pal <- nice_colours_full[c("bold_teal_100", "natural_tan_100", 
                                 "balanced_green_100", "deep_blue_100")] %>% 
   unname()
-
 
 ```
 <br>
