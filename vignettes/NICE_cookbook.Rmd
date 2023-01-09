@@ -34,6 +34,7 @@ Before we can start making charts, we first need to load all of the relevant pac
 
 # Load in the relevant packages
 library(dplyr)
+library(svglite)
 library(ggplot2)
 library(leaflet)
 library(plotly)
@@ -143,12 +144,12 @@ finalised_plot
 
 ## How to save your finalised plots
 
-After applying the `finalise_plot()` function, the chart can be saved using the `ggsave()` function.
+After applying the `finalise_plot()` function, the chart can be saved using the `ggsave()` function. It is best practice to use the Scalable Vector Graphic (SVG) format when publishing charts. This is because SVGs retain the same quality no matter what screen resolution or size they are viewed at. This increases accessibility as it allows users to zoom in and out, whilst retaining the image quality. To save a chart as an SVG, simply add ".svg" to the file name within the `ggsave()` function.
 
 ```{r save_plot, echo = TRUE, eval = FALSE}
 
 # Save plot using the ggsave() function 
-ggsave("finalised_plot.png", finalised_plot)
+ggsave("finalised_plot.svg", finalised_plot)
 
 ```
 <br>
