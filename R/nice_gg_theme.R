@@ -7,9 +7,14 @@
 #' sizes throughout the plot. Defaults to size 12.
 #'
 #' @return A NICE styled ggplot2 object
+#'
 #' @export
 #'
+#' @importFrom dplyr %>%
+#'
 #' @examples
+#' library(dplyr)
+#' library(ggplot2)
 #'
 #' iris_bar_df <- iris %>%
 #' group_by(Species) %>%

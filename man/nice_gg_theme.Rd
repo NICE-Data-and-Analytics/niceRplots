@@ -18,6 +18,8 @@ This function will style your ggplot2 charts with the NICE theme. This will
 adjust the fonts, text hierarchy, background, margins and colour scheme.
 }
 \examples{
+library(dplyr)
+library(ggplot2)
 
 iris_bar_df <- iris \%>\%
 group_by(Species) \%>\%
