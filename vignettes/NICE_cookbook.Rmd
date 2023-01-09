@@ -156,13 +156,16 @@ ggsave("finalised_plot.svg", finalised_plot)
 
 # Static charts using ggplot2
 
-The sections below provide examples of how to make different types of static chart using the ggplot2 package. These will demonstrate how to format different charts and apply the NICE theme. For some examples we will continue to use R's built in `iris` dataset. For others we will use data on the monthly Sub-ICB location level prescribing of 5 direct oral anticoagulants (DOACS) in England between February 2017 and January 2022. This was downloaded from [OpenPrescribing.net](https://openprescribing.net/).
+The sections below provide examples of how to make different types of static chart using the ggplot2 package. These will demonstrate how to format different charts and apply the NICE theme. For some examples we will continue to use R's built in `iris` dataset, and in other we will use the `doacs_df` dataframe that comes built into the `niceRplots` package. This contains data on the monthly Sub-ICB location level prescribing of 5 direct oral anticoagulants (DOACS) in England between February 2017 and January 2022. This was downloaded from [OpenPrescribing.net](https://openprescribing.net/).
+
+As the `doacs_df` comes pre-loaded with the `niceRplots` package, we don't need to load this in. The code below demonstrates how we would usually load data into R.
 
 ```{r load_data, echo = TRUE, message = FALSE, warning = FALSE, eval = FALSE}
 
-# Load in DOACs data
-doacs_df <- readr::read_csv(here::here("DOACs_data.csv"),
-                              col_types = "Dcccccdddd")
+# Load in data
+doacs_df <- readr::read_csv("example_data.csv",
+# Specify column types (D = date, d = double, i = integer, c = character, l = logical)                          
+                            col_types = "Dccdd")
 
 ```
 <br>
