@@ -217,7 +217,7 @@ bar_chart <- bar_df %>%
   geom_col(fill = nice_colours_full[["bold_teal_100"]], 
            colour = nice_colours_full[["white_100"]], linewidth = 0.2) +
   # Add baseline to x axis
-  geom_hline(yintercept = 0, linewidth = 1, colour = nice_colours_full[["white_100"]]) +
+  geom_hline(yintercept = 0, linewidth = 1, colour = nice_colours_full[["black_100"]]) +
   # set y-axis limits and remove padding
   scale_y_continuous(expand = c(0,0), limits = c(0,8)) +
   # set x-axis labels to wrap to prevent overlapping
@@ -232,6 +232,42 @@ bar_chart <- bar_df %>%
        y = "Dispensed items (millions)")
 
 bar_chart
+
+```
+<br>
+
+Transposing a bar chart is a useful way to make long axis labels easier to read. This has the added benefit of making the y-axis title horizontal, thereby making it easier to read.
+
+```{r gg_hbar, echo = TRUE, message = FALSE, warning = FALSE}
+
+# Using same data as above
+
+# Create chart
+horizontal_bar_chart <- bar_df %>%
+  # Plot bars in decreasing order of items
+  ggplot(aes(y = items, x = reorder(chemical, -items))) +
+  # Add bars, add fill and border colours
+  geom_col(fill = nice_colours_full[["bold_teal_100"]], 
+           colour = nice_colours_full[["white_100"]], linewidth = 0.2) +
+  # Add baseline to x axis
+  geom_hline(yintercept = 0, linewidth = 1, colour = nice_colours_full[["black_100"]]) +
+  # set y-axis limits and remove padding
+  scale_y_continuous(expand = c(0,0), limits = c(0,8)) +
+  # set x-axis labels to wrap to prevent overlapping
+  #scale_x_discrete(labels = function(x) {stringr::str_wrap(x, width = 10)}) +
+  # Apply NICE theme
+  nice_gg_theme(base_size = 12) +
+  # Remove the x-axis title
+  theme(axis.title.y = ggplot2::element_blank(),
+        panel.grid.major.y = ggplot2::element_blank(),
+        panel.grid.major.x = ggplot2::element_line(color = "#BFBFBF"),
+        axis.ticks.y = ggplot2::element_line(linewidth = 1),
+        axis.ticks.x = ggplot2::element_blank()) +
+  coord_flip() +
+  # Add labels
+  labs(y = "Dispensed items (millions)")
+
+horizontal_bar_chart
 
 ```
 <br>
@@ -251,7 +287,7 @@ line_df <- doacs_df %>%
 line_chart <- line_df %>%
   ggplot(aes(x = date, y = items)) +
   # Add baseline to x axis
-  geom_hline(yintercept = 0, linewidth = 1, colour = nice_colours_full[["white_100"]]) +
+  geom_hline(yintercept = 0, linewidth = 1, colour = nice_colours_full[["black_100"]]) +
   # Add the vertical dashed line to show lockdown date. Added this before plotting the 
   # data so that it sits on a layer behind the line and points
   geom_vline(xintercept = as.Date("2020-03-01"), linewidth = 0.6, linetype = "dashed") +
