@@ -28,6 +28,10 @@
 #'
 #' @returns A Plotly chart object.
 #'
+#' @importFrom dplyr %>%
+#' @importFrom plotly layout
+#' @importFrom plotly config
+#'
 #' @examples
 #'# Load data
 #' iris_bar_df <- iris %>%

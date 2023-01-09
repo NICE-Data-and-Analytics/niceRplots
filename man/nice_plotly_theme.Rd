@@ -27,7 +27,8 @@ lines.
 \item \code{"line"}: For line charts. Only shows horizontal grid lines.
 }}
 
-\item{x_title, y_title}{String to use as X or y axis title.}
+\item{x_title, y_title}{String to use as x or y axis title. Defaults to
+\code{"[x axis title]"} and \code{"[y axis title]"} respectively.}
 
 \item{font_size}{Minimum font size. Default is \code{12}.}
 
@@ -46,7 +47,7 @@ some basic changes, including:
 \item Changing the font to Inter
 \item Setting the minimum font size
 \item Adding or removing grid lines depending on the chart type
-\item Reminds users to add x and y axis titles
+\item Reminds users to edit the x and y axis titles
 \item Removes icons from the default Plotly tool bar
 }
 }

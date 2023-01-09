@@ -59,6 +59,7 @@
 #' <https://geoportal.statistics.gov.uk>
 "england_shape_2022"
 
+
 #' NICE brand colours
 #'
 #' A named vector of NICE brand colours for use in plots
