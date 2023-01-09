@@ -27,6 +27,7 @@
 #'    the axis lines and the tick marks.
 #'
 #' @returns A Plotly chart object.
+#' @export
 #'
 #' @importFrom dplyr %>%
 #' @importFrom plotly layout
