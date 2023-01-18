@@ -81,6 +81,17 @@ doacs_df <- readr::read_csv("example_data.csv",
 
 ```
 
+# Chart accessibility
+
+## Accesibility legislation 
+
+## Titles and alternative text
+
+## Colour usage
+
+## Other accessibility considerations
+
+
 # Static charts
 
 ## The ggplot2 package
