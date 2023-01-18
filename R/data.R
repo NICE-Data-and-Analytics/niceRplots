@@ -5,7 +5,7 @@
 #' shown as monthly usage for all 106 sub-ICB locations in England between
 #' October 2017 and September 2022.
 #'
-#' @format ## `doacs_df`
+#' @format ## `anticoag_df`
 #' A data frame with 31,792 rows and 10 columns:
 #' \describe{
 #'   \item{date}{data month, first day of month specified}
@@ -22,7 +22,7 @@
 #' @source
 #' <https://openprescribing.net/>
 #' <https://geoportal.statistics.gov.uk/search?collection=Dataset&sort=-created&tags=all(NAC_LOC)>
-"doacs_df"
+"anticoag_df"
 
 
 #' Polygons for sub-ICB locations
@@ -64,8 +64,8 @@
 #'
 #' A named vector of NICE brand colours for use in plots
 #'
-#' @format ## `nice_colours_full`
+#' @format ## `nice_colours`
 #' A named vector with 33 brand colours and associated HEX codes
 #' @source
 #' <https://indepth.nice.org.uk/our-brand/index.html>
-"nice_colours_full"
+"nice_colours"
