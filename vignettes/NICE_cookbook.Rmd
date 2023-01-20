@@ -57,11 +57,6 @@ library(leaflet)
 library(plotly)
 library(niceRplots)
 
-# Set up a NICE colour palette
-nice_pal <- nice_colours[c("bold_teal_100", "natural_tan_100", 
-                                "balanced_green_100", "deep_blue_100")] %>% 
-  unname()
-
 ```
 <br>
 
@@ -83,7 +78,15 @@ anticoag_df <- readr::read_csv("example_data.csv",
 
 # Chart accessibility
 
-## Accesibility legislation 
+Since 2020 all content published on public sector websites must meet the level A and AA success criterion in the [Web Content Accessibility Guidelines (WCAG) 2.1.](https://www.w3.org/TR/WCAG21/), including charts and data visualisations. 
+
+This guide will not go into great detail on the principles of chart accessibility as this has been thoroughly covered elsewhere. Listed below are several useful resources to help design accessible charts. 
+
+- [Government Analysis Function - Data visualisation: charts](https://analysisfunction.civilservice.gov.uk/policy-store/data-visualisation-charts/)
+- [Government Analysis Function - Data visualisation: colours](https://analysisfunction.civilservice.gov.uk/policy-store/data-visualisation-colours-in-charts/)
+- [Office for National Statistics - Guidance for presenting data](https://style.ons.gov.uk/category/data-visualisation/)
+
+Many of the principles highlighted in these guides have been considered when developing the `niceRplots` package and visualisation cookbook. 
 
 ## Titles and alternative text
 
@@ -91,6 +94,8 @@ anticoag_df <- readr::read_csv("example_data.csv",
 
 ## Other accessibility considerations
 
+- SVG download
+- Avoid only using colour
 
 # Static charts
 
@@ -113,24 +118,20 @@ iris_bar_df <- iris %>%
 # Create basic bar chart (left)
 iris_bar <- ggplot(iris_bar_df) + 
   geom_col(aes(x = Species, y = Sepal_Width), ) +
-  labs(title = "Basic chart title",
-       subtitle = "Basic chart subtitle",
-       x = "Species",
+  labs(x = "Species",
        y = "Sepal Width")
 
 # Create formatted chart (right)
 iris_bar_formatted <- ggplot(iris_bar_df) + 
   # Adjust bar fill and outline colour
-  geom_col(aes(x = Species, y = Sepal_Width), fill = nice_colours[["bold_teal_100"]], 
-           colour = "#FFFFFF", linewidth = 0.2)+
+  geom_col(aes(x = Species, y = Sepal_Width), fill = nice_cols("bold_teal_100"), 
+           colour = nice_cols("white_100"), linewidth = 0.2)+
   # Add baseline to x axis
-  geom_hline(yintercept = 0, linewidth = 1, colour = nice_colours[["black_100"]]) +
+  geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
   # set y-axis limits and remove padding
   scale_y_continuous(expand = c(0, 0), limits = c(0, 4)) +
   # Add labels 
-  labs(title = "Formatted chart title",
-       subtitle = "Formatted chart subtitle ",
-       y = "Sepal width")
+  labs(y = "Sepal width")
 
 iris_bar
 iris_bar_formatted
@@ -194,22 +195,27 @@ ggsave("final_plot.png", iris_bar_themed)
 nice_hist <- iris %>%
   ggplot() +
   geom_histogram(aes(x = Sepal.Width, fill = Species), 
-                 binwidth = 0.2, linewidth = 0.2, color = nice_colours[["white_100"]]) +
+                 binwidth = 0.2, linewidth = 0.2, color = nice_cols("white_100")) +
   # Add a line on the x axis
-  geom_hline(yintercept = 0, linewidth = 1, colour = nice_colours[["black_100"]]) +
+  geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
   # Remove extra spacing and set y axis limits
   scale_y_continuous(expand = c(0,0), limits = c(0,40)) +
   # Use NICE colours
-  scale_fill_manual(values = nice_pal) +
+  scale_fill_manual(values = nice_pal("cat")) +
   # Add NICE theme and set labels
   nice_gg_theme() +
-  labs(title = "Species setosa has the longest sepal length",
-       subtitle = "Distribution of sepal width by species",
-       x = "Sepal Width",
+  labs(x = "Sepal Width",
        y = "Frequency")
 
-nice_hist
+```
 
+
+#### **Species setosa has the longest sepal length**{.unlisted .unnumbered}  
+
+##### Figure x: Distribution of sepal width by species
+
+```{r gg_histogram_out, echo = FALSE}
+nice_hist
 ```
 <br>
 
@@ -229,10 +235,10 @@ bar_chart <- bar_df %>%
   # Plot bars in decreasing order of items
   ggplot(aes(y = items, x = reorder(chemical, -items))) +
   # Add bars, add fill and border colours
-  geom_col(fill = nice_colours[["bold_teal_100"]], 
-           colour = nice_colours[["white_100"]], linewidth = 0.2) +
+  geom_col(fill = nice_cols("bold_teal_100"), 
+           colour = nice_cols("white_100"), linewidth = 0.2) +
   # Add baseline to x axis
-  geom_hline(yintercept = 0, linewidth = 1, colour = nice_colours[["black_100"]]) +
+  geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
   # set y-axis limits and remove padding
   scale_y_continuous(expand = c(0,0), limits = c(0,8)) +
   # set x-axis labels to wrap to prevent overlapping
@@ -242,12 +248,16 @@ bar_chart <- bar_df %>%
   # Remove the x-axis title
   theme(axis.title.x = ggplot2::element_blank()) +
   # Add labels
-  labs(title = "Apixaban was the most prescribed anticoagulant in 2021",
-       subtitle = "Total anticoagulant medicines dispensed in primary care in England, 2020",
-       y = "Dispensed items (millions)")
+  labs(y = "Dispensed items (millions)")
+```
 
+
+#### **Apixaban was the most prescribed anticoagulant in 2021**{.unlisted .unnumbered}  
+
+##### Figure x: Total anticoagulant medicines dispensed in primary care in England, 2020
+
+```{r gg_bar_out, echo = FALSE}
 bar_chart
-
 ```
 <br>
 
@@ -262,10 +272,10 @@ horizontal_bar_chart <- bar_df %>%
   # Plot bars in decreasing order of items
   ggplot(aes(y = items, x = reorder(chemical, -items))) +
   # Add bars, add fill and border colours
-  geom_col(fill = nice_colours[["bold_teal_100"]], 
-           colour = nice_colours[["white_100"]], linewidth = 0.2) +
+  geom_col(fill = nice_cols("bold_teal_100"), 
+           colour = nice_cols("white_100"), linewidth = 0.2) +
   # Add baseline to x axis
-  geom_hline(yintercept = 0, linewidth = 1, colour = nice_colours[["black_100"]]) +
+  geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
   # set y-axis limits and remove padding
   scale_y_continuous(expand = c(0,0), limits = c(0,8)) +
   # set x-axis labels to wrap to prevent overlapping
@@ -275,15 +285,21 @@ horizontal_bar_chart <- bar_df %>%
   # Remove the x-axis title
   theme(axis.title.y = ggplot2::element_blank(),
         panel.grid.major.y = ggplot2::element_blank(),
-        panel.grid.major.x = ggplot2::element_line(color = "#BFBFBF"),
+        panel.grid.major.x = ggplot2::element_line(color = nice_cols("black_25")),
         axis.ticks.y = ggplot2::element_line(linewidth = 1),
         axis.ticks.x = ggplot2::element_blank()) +
   coord_flip() +
   # Add labels
   labs(y = "Dispensed items (millions)")
+```
 
+
+#### **Apixaban was the most prescribed anticoagulant in 2021**{.unlisted .unnumbered}  
+
+##### Figure x: Total anticoagulant medicines dispensed in primary care in England, 2020
+
+```{r gg_hbar_out, echo = FALSE}
 horizontal_bar_chart
-
 ```
 <br>
 
@@ -302,13 +318,13 @@ line_df <- anticoag_df %>%
 line_chart <- line_df %>%
   ggplot(aes(x = date, y = items)) +
   # Add baseline to x axis
-  geom_hline(yintercept = 0, linewidth = 1, colour = nice_colours[["black_100"]]) +
+  geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
   # Add the vertical dashed line to show lockdown date. Added this before plotting the 
   # data so that it sits on a layer behind the line and points
   geom_vline(xintercept = as.Date("2020-03-01"), linewidth = 0.6, linetype = "dashed") +
   # Add the line and points, make both teal
-  geom_line(linewidth = 0.8, colour = nice_colours[["bold_teal_100"]]) +
-  geom_point(size = 1.5, colour = nice_colours[["bold_teal_100"]]) +
+  geom_line(linewidth = 0.8, colour = nice_cols("bold_teal_100")) +
+  geom_point(size = 1.5, colour = nice_cols("bold_teal_100")) +
   # Set y-axis limits and remove padding, add commas to axis labels
   scale_y_continuous(expand = c(0,0), limits = c(0,200000), label = scales::comma) +
   # Set x-axis labels to show as month year, and to occur at 6-monthly intervals
@@ -318,15 +334,19 @@ line_chart <- line_df %>%
   # Remove x-axis title
   theme(axis.title.x = ggplot2::element_blank()) +
   # Add labels
-  labs(title = "Edoxaban prescribing has increased since 2017",
-       subtitle = "Edoxaban prescribing in England, 2017-2022",
-       y = "Dispensed items") +
+  labs(y = "Dispensed items") +
   # Add annotation for dashed line
   annotate("text", x = as.Date("2020-02-01"), y = 180000, 
            label = "National lockdown\non 23 March", hjust = "right")
+```
 
+
+#### **Edoxaban prescribing has increased since 2017**{.unlisted .unnumbered}  
+
+##### Figure x: Edoxaban prescribing in England, 2017-2022
+
+```{r gg_line_out, echo = FALSE}
 line_chart
-
 ```
 <br>
 
@@ -344,7 +364,7 @@ scatter_df <- anticoag_df %>%
 scatter_chart <- scatter_df %>%
   ggplot(aes(x = total_list_size, y = items)) +
   # Add the points and make them teal
-  geom_point(colour = nice_colours[["bold_teal_100"]], size = 3) +
+  geom_point(colour = nice_cols("bold_teal_100"), size = 3) +
   # set x-axis limits, adjust padding and add commas to axis labels
   scale_x_continuous(expand = expansion(mult = c(0, 0.05)), 
                      limits = c(0,3000), label = scales::comma) +
@@ -353,20 +373,25 @@ scatter_chart <- scatter_df %>%
   # Apply NICE theme
   nice_gg_theme() +
   # Add a panel border and vertical grid lines
-  theme(panel.border = ggplot2::element_rect(color = nice_colours[["black_100"]],
+  theme(panel.border = ggplot2::element_rect(color = nice_cols("black_100"),
                                              linewidth = 0.3,
                                              fill = NA),
-        panel.grid.major.x = ggplot2::element_line(color = nice_colours[["black_25"]])) +
+        panel.grid.major.x = ggplot2::element_line(color = nice_cols("black_25"))) +
   # Add labels
-  labs(title = "Apixaban prescribing",
-       subtitle = "Items of apixaban dispensed in primary care compared to\nsub-ICB location list size, July 2021",
-       x = "Primary care list size (x1000)",
+  labs(x = "Primary care list size (x1000)",
        y = "Dispensed items")
+```
 
+
+#### **Apixaban prescribing**{.unlisted .unnumbered}  
+
+##### Figure x: Items of apixaban dispensed in primary care compared to sub-ICB location list size, July 2021
+
+```{r gg_scatter_out, echo = FALSE}
 scatter_chart
-
 ```
 <br>
+
 
 ### Faceted chart
 
@@ -392,25 +417,32 @@ facet_chart <- facet_df %>%
   # set x-axis labels to show as month year, and to occur at 6-monthly intervals
   scale_x_date(date_labels = "%b\n%Y", date_breaks = "6 months") +
   # Manually set the colour of the lines and points
-  scale_color_manual(values = nice_pal) +
+  scale_color_manual(values = nice_pal("cat")) +
   # APply facet wrapping to put each chemical into an individual plot
   facet_wrap(~chemical) +
   # Apply the NICE theme
   nice_gg_theme() +
   # Add a panel border, remove x axis title and legend
-  theme(panel.border = ggplot2::element_rect(color = nice_colours[["black_100"]],
+  theme(panel.border = ggplot2::element_rect(color = nice_cols("black_100"),
                                                linewidth = 0.3,
                                                fill = NA),
         axis.title.x = ggplot2::element_blank(),
         legend.position = "none") +
   # Add labels
-  labs(title = "Trends in anti-coagulant prescribing",
-       subtitle = "Prescribing of 3 anti-coagulants in England, 2020-2021",
-       x = "Sepal Length",
+  labs(x = "Sepal Length",
        y = "Dispensed items (thousands)")
 
-facet_chart
 
+
+```
+
+
+#### **Trends in anti-coagulant prescribing**{.unlisted .unnumbered}  
+
+##### Figure x: Prescribing of 3 anti-coagulants in England, 2020-2021
+
+```{r gg_facet_out, echo = FALSE}
+facet_chart
 ```
 <br>
 
@@ -466,8 +498,8 @@ map_df <- anticoag_df %>%
 map_df <- left_join(sub_icb_shapes_2022, map_df, by = c("sicbl22cd" = "gss_code"))
 
 # Set up the colour palette 
-pal <- colorRampPalette((c(nice_colours[["black_25"]], 
-                           nice_colours[["bold_teal_100"]])))(5)       # Sequential palette
+pal <- colorRampPalette((c(nice_cols("black_25"), 
+                           nice_cols("bold_teal_100"))))(5)       # Sequential palette
 #pal <- viridis::viridis(5) # Alternative sequential palette
 
 # Create chart 
@@ -478,17 +510,17 @@ choropleth_chart <- map_df %>%
                                   labels = c("<5","5-10", "10-15", "15-20", "20+"))) %>% 
   ggplot() +
   # Plot the shapes. Add white borders for accessibility
-  geom_sf(aes(fill = items_per_1000_bin), color = nice_colours[["white_100"]], lwd = 0.05) +
+  geom_sf(aes(fill = items_per_1000_bin), color = nice_cols("white_100"), lwd = 0.05) +
   # Apply our palette and adjust the legend
   scale_fill_manual(values = pal, 
-                    na.value = nice_colours[["black_50"]],
+                    na.value = nice_cols("black_50"),
                     guide = guide_legend(
                       title = "Items per 1000\npopulation",
                       title.hjust = 0.5,
                       label.position = "left",
                       reverse = TRUE)) +
   # Add another layer with the England shape to add an outline
-  geom_sf(data = england_shape_2022, fill = NA, color = nice_colours[["black_100"]], lwd = 0.1) +
+  geom_sf(data = england_shape_2022, fill = NA, color = nice_cols("black_100"), lwd = 0.1) +
   # Add the NICE theme
   nice_gg_theme() +
   # Alter some theme elements - remove axes, move the legend and add title
@@ -497,14 +529,17 @@ choropleth_chart <- map_df %>%
         axis.ticks.x = ggplot2::element_blank(),
         legend.title = ggplot2::element_text(family = "Inter Regular",
                                              size = 12,
-                                             color = nice_colours[["black_100"]]),
-        legend.text.align = 1) +
-  # Add labels
-  labs(title = "Apixaban prescribing in England, 2021",
-       subtitle = "Plotted by sub-ICB location")
+                                             color = nice_cols("black_100")),
+        legend.text.align = 1)
+```
 
+
+#### **Apixaban prescribing in England**{.unlisted .unnumbered}  
+
+##### Figure x: Plotted by sub-ICB location, England 2021
+
+```{r gg_choropleth_out, echo = FALSE}
 choropleth_chart
-
 ```
 <br>
 
@@ -546,8 +581,8 @@ plotly_iris_bar_formatted <- plot_ly(iris_bar_df,
                     x = ~Species,
                     y = ~Sepal_Width,
                     type = "bar",
-                    marker = list(color = nice_colours[["bold_teal_100"]],
-                                  line = list(color = nice_colours[['white_100']], width = 0.2)),
+                    marker = list(color = nice_cols("bold_teal_100"),
+                                  line = list(color = nice_cols("white_100"), width = 0.2)),
                     hovertemplate = paste0("Species: %{x}<br>",
                                            "Sepal width: %{y:.2f}",
                                            "<extra></extra>"))
@@ -598,10 +633,10 @@ plotly_hist <- iris %>%
   plot_ly(x = ~Sepal.Width,
           color = ~Species,
           # Use NICE colours - remove colour names so it maps correctly
-          colors = nice_pal[1:3],
+          colors = nice_pal("cat")[1:3],
           type = "histogram",
           # Black outline for bars
-          marker = list(line = list(color = nice_colours[['white_100']], width = 0.4)),
+          marker = list(line = list(color = nice_cols("white_100"), width = 0.4)),
           # Set bin width
           xbins = list(size = 0.2,
                        start = 1.9,
@@ -639,8 +674,8 @@ plotly_vbar_chart <- bar_df %>%
           y = ~items,
           type = "bar",
           # Bold teal bars with black outline
-          marker = list(color = nice_colours[["bold_teal_100"]],
-                        line = list(color = nice_colours[['white_100']], width = 0.2)),
+          marker = list(color = nice_cols("bold_teal_100"),
+                        line = list(color = nice_cols("white_100"), width = 0.2)),
           # Edit hover text
           hovertemplate = paste0("%{x}<br>",
                                  "%{y:.2f} million items dispensed",
@@ -674,8 +709,8 @@ plotly_vbar_chart <- bar_df %>%
           # Make horizontal
           orientation = "h",
           # Bold teal bars with black outline
-          marker = list(color = nice_colours[["bold_teal_100"]],
-                        line = list(color = nice_colours[['white_100']], width = 0.2)),
+          marker = list(color = nice_cols("bold_teal_100"),
+                        line = list(color = nice_cols("white_100"), width = 0.2)),
           # Edit hover text
           hovertemplate = paste0("%{y}<br>",
                                  "%{x:.2f} million items dispensed",
@@ -703,7 +738,7 @@ plotly_line_chart <- line_df %>%
           # Line with marker dot at each data point
           mode = "lines+markers",
           # Make line and dots teal
-          marker = list(color = nice_colours[["bold_teal_100"]]),
+          marker = list(color = nice_cols("bold_teal_100")),
           # Edit hover text. Use hovertext instead of hovertemplate as date
           # tick labels edited to show month and year in two separate lines, 
           # layout(tickformat = "%b\n%Y"), but don't want new line for year in 
@@ -717,7 +752,7 @@ plotly_line_chart <- line_df %>%
   add_lines(x = as.Date("2020-03-01"),
             y = ~c(0, max(items)),
             line = list(dash = "dash",
-                        color = nice_colours[["black_100"]],
+                        color = nice_cols("black_100"),
                         width = 1.5),
             # Remove hover text
             hoverinfo = "none",
@@ -771,7 +806,7 @@ plotly_scatter_chart <- scatter_df %>%
           y = ~items,
           type = "scatter",
           mode = "markers",
-          marker = list(color = nice_colours[["bold_teal_100"]]),
+          marker = list(color = nice_cols("bold_teal_100")),
           hoverinfo = "text",
           hovertext = ~paste0("List size: ", scales::label_comma()(total_list_size*1000),
                               "<br>", scales::label_comma()(items), " items dispensed")
@@ -816,7 +851,7 @@ It is possible to do it [entirely in Plotly using subplots](https://plotly.com/r
 pal <- colorBin("plasma",
                 domain = map_df$items_per_1000,
                 bins = 5,
-                na.color = nice_colours[["black_50"]])
+                na.color = nice_cols("black_50"))
 
 leaflet_map <- map_df %>% 
     # Set up width and degree of zoom per click
@@ -832,13 +867,13 @@ leaflet_map <- map_df %>%
     # Add shapes
     addPolygons(fillColor = ~pal(items_per_1000),
                 fillOpacity = 0.3,
-                color = nice_colours[["black_100"]],
+                color = nice_cols("black_100"),
                 weight = 1.5,
                 opacity = 1,
                 layerId = ~ods_code,
                 # Add functionality to highlight shape when hovered over
                 highlight = highlightOptions(weight = 3,
-                                             color = nice_colours[["black_100"]],
+                                             color = nice_cols("black_100"),
                                              fillOpacity = 0.7,
                                              bringToFront = TRUE),
                 # Add labels upon hover

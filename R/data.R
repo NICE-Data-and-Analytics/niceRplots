@@ -69,3 +69,14 @@
 #' @source
 #' <https://indepth.nice.org.uk/our-brand/index.html>
 "nice_colours"
+
+
+#' NICE brand colours
+#'
+#' A named vector of Government Analysis Function (GAF) colours for use in plots
+#'
+#' @format ## `gaf_colours`
+#' A named vector with 9 colours and associated HEX codes
+#' @source
+#' <https://analysisfunction.civilservice.gov.uk/policy-store/data-visualisation-colours-in-charts/>
+"gaf_colours"
