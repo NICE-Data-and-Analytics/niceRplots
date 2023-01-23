@@ -82,20 +82,29 @@ Since 2020 all content published on public sector websites must meet the level A
 
 This guide will not go into great detail on the principles of chart accessibility as this has been thoroughly covered elsewhere. Listed below are several useful resources to help design accessible charts. 
 
-- [Government Analysis Function - Data visualisation: charts](https://analysisfunction.civilservice.gov.uk/policy-store/data-visualisation-charts/)
-- [Government Analysis Function - Data visualisation: colours](https://analysisfunction.civilservice.gov.uk/policy-store/data-visualisation-colours-in-charts/)
-- [Office for National Statistics - Guidance for presenting data](https://style.ons.gov.uk/category/data-visualisation/)
+* [Government Analysis Function - Data visualisation: charts](https://analysisfunction.civilservice.gov.uk/policy-store/data-visualisation-charts/)
+* [Government Analysis Function - Data visualisation: colours](https://analysisfunction.civilservice.gov.uk/policy-store/data-visualisation-colours-in-charts/)
+* [Office for National Statistics - Guidance for presenting data](https://style.ons.gov.uk/category/data-visualisation/)
 
 Many of the principles highlighted in these guides have been considered when developing the `niceRplots` package and visualisation cookbook. 
 
 ## Titles and alternative text
 
+When publishing charts on the web it is important to include all necessary information alongside the chart. These should be provided in the body of the page, rather than within the chart itself. All charts should be supplied with following 6 key elements:
+
+* **Title** - This should be ten words or less and convey the main message of the chart.
+
+* **Statistical title** - This should have information on what the data is, the geography the data relates to and the time period. This should also include a figure number. 
+
+* **Alternative text** - This should be text shown alongside the chart that describes what you want the user to understand from the chart. Ideally this should live in the body of the page, directly above or below the chart. In this situation the figure itself should be marked as decorative.
+
+* **Source** - If all charts come from the same data source, this does not need to be repeated under each figure. If different data sources are used then you should provide the source in the following format: [organisation] – [publication or source of data]. e.g. NHS Digital - Hospital Episode Statistics.
+
+* **Data download** - It is best practice to provide a way to download the data displayed in each chart, This should be displayed under that chart and include information on file type and size. The text used for the link should be specific to the chart e.g. ‘Download the data for figure 1’.
+
+More detailed information can be found in the [Government Analysis Function - Data visualisation guide](https://analysisfunction.civilservice.gov.uk/policy-store/data-visualisation-charts/).
+
 ## Colour usage
-
-## Other accessibility considerations
-
-- SVG download
-- Avoid only using colour
 
 # Static charts
 
