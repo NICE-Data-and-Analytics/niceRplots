@@ -253,9 +253,7 @@ bar_chart <- bar_df %>%
   # set x-axis labels to wrap to prevent overlapping
   scale_x_discrete(labels = function(x) {stringr::str_wrap(x, width = 10)}) +
   # Apply NICE theme
-  nice_gg_theme(base_size = 12) +
-  # Remove the x-axis title
-  theme(axis.title.x = ggplot2::element_blank()) +
+  nice_gg_theme(x_title = FALSE) +
   # Add labels
   labs(y = "Dispensed items (millions)")
 ```
@@ -287,16 +285,10 @@ horizontal_bar_chart <- bar_df %>%
   geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
   # set y-axis limits and remove padding
   scale_y_continuous(expand = c(0,0), limits = c(0,8)) +
-  # set x-axis labels to wrap to prevent overlapping
-  #scale_x_discrete(labels = function(x) {stringr::str_wrap(x, width = 10)}) +
   # Apply NICE theme
-  nice_gg_theme(base_size = 12) +
-  # Remove the x-axis title
-  theme(axis.title.y = ggplot2::element_blank(),
-        panel.grid.major.y = ggplot2::element_blank(),
-        panel.grid.major.x = ggplot2::element_line(color = nice_cols("black_25")),
-        axis.ticks.y = ggplot2::element_line(linewidth = 1),
-        axis.ticks.x = ggplot2::element_blank()) +
+  nice_gg_theme(y_title = FALSE,
+                grid_lines = "x",
+                axis_ticks = "y") +
   coord_flip() +
   # Add labels
   labs(y = "Dispensed items (millions)")
@@ -339,9 +331,7 @@ line_chart <- line_df %>%
   # Set x-axis labels to show as month year, and to occur at 6-monthly intervals
   scale_x_date(date_labels = "%b\n%Y", date_breaks = "6 months") +
   # Apply NICE theme
-  nice_gg_theme() +
-  # Remove x-axis title
-  theme(axis.title.x = ggplot2::element_blank()) +
+  nice_gg_theme(x_title = FALSE) +
   # Add labels
   labs(y = "Dispensed items") +
   # Add annotation for dashed line
@@ -380,12 +370,9 @@ scatter_chart <- scatter_df %>%
   # set y-axis limits and remove padding, add commas to axis labels
   scale_y_continuous(expand = c(0,0), limits = c(0, 25000), label = scales::comma) +
   # Apply NICE theme
-  nice_gg_theme() +
-  # Add a panel border and vertical grid lines
-  theme(panel.border = ggplot2::element_rect(color = nice_cols("black_100"),
-                                             linewidth = 0.3,
-                                             fill = NA),
-        panel.grid.major.x = ggplot2::element_line(color = nice_cols("black_25"))) +
+  nice_gg_theme(grid_lines = "x+y",
+                panel_border = TRUE,
+                axis_ticks = "none") +
   # Add labels
   labs(x = "Primary care list size (x1000)",
        y = "Dispensed items")
@@ -430,18 +417,12 @@ facet_chart <- facet_df %>%
   # APply facet wrapping to put each chemical into an individual plot
   facet_wrap(~chemical) +
   # Apply the NICE theme
-  nice_gg_theme() +
-  # Add a panel border, remove x axis title and legend
-  theme(panel.border = ggplot2::element_rect(color = nice_cols("black_100"),
-                                               linewidth = 0.3,
-                                               fill = NA),
-        axis.title.x = ggplot2::element_blank(),
-        legend.position = "none") +
+  nice_gg_theme(x_title = FALSE,
+                panel_border = TRUE,
+                legend = FALSE) +
   # Add labels
   labs(x = "Sepal Length",
        y = "Dispensed items (thousands)")
-
-
 
 ```
 
@@ -531,11 +512,9 @@ choropleth_chart <- map_df %>%
   # Add another layer with the England shape to add an outline
   geom_sf(data = england_shape_2022, fill = NA, color = nice_cols("black_100"), lwd = 0.1) +
   # Add the NICE theme
-  nice_gg_theme() +
-  # Alter some theme elements - remove axes, move the legend and add title
+  nice_gg_theme(remove_axes = TRUE) +
+  # Alter some theme elements move the legend and add title
   theme(legend.position = c(0.23, 0.5),
-        axis.text = element_blank(),
-        axis.ticks.x = ggplot2::element_blank(),
         legend.title = ggplot2::element_text(family = "Inter Regular",
                                              size = 12,
                                              color = nice_cols("black_100")),

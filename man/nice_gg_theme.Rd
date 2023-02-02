@@ -8,9 +8,11 @@ nice_gg_theme(
   base_size = 12,
   x_title = TRUE,
   y_title = TRUE,
-  panel_border = FALSE,
   grid_lines = "y",
-  legend = TRUE
+  axis_ticks = "x",
+  legend = TRUE,
+  panel_border = FALSE,
+  remove_axes = FALSE
 )
 }
 \arguments{
@@ -24,17 +26,26 @@ title will be present and can be renamed using the \code{labs()} function. If se
 title will be present and can be renamed using the \code{labs()} function. If set to
 \code{FALSE}, the y axis title will be removed.}
 
-\item{panel_border}{Option to add a panel border. If \code{FALSE}(default), no border
-will be present. If set to \code{TRUE}, a panel border will be added.}
-
 \item{grid_lines}{determines which major grid lines are shown:
 -\code{"y"} (default): show y axis grid lines
 -\code{"x"}: show x axis grid lines
 -\code{"x+y"}: show both x and y axis grid lines
 -\code{"none"}: remove grid lines}
 
+\item{axis_ticks}{determines whether axes ticks are shown:
+-\code{"x"} (default): show ticks on x axis
+-\code{"y"}: show ticks on y axis
+-\code{"x+y"}: show ticks on both x and y axes
+-\code{"none"}: remove ticks}
+
 \item{legend}{Option to remove the chart legend. If \code{TRUE}(default), the legend
 will be present above the chart. If set to \code{FALSE}, the legend will be removed.}
+
+\item{panel_border}{Option to add a panel border. If \code{FALSE}(default), no border
+will be present. If set to \code{TRUE}, a panel border will be added.}
+
+\item{remove_axes}{Option to remove the axes. If \code{FALSE}(default), chart axes
+will be present. If set to \code{TRUE}, the axes will be removed.}
 }
 \value{
 A NICE styled ggplot2 object
@@ -50,8 +61,10 @@ consistent with the NICE style. It makes some basic changes, including:
 \item Adjusts the chart colour scheme
 \item Provides an option to remove axis titles
 \item Provides an option to alter grid lines
-\item Provides an option to add a panel border
+\item Provides an option to alter axis ticks
 \item Provides an option to remove the legend
+\item Provides an option to add a panel border
+\item Provides an option to remove the axes
 }
 }
 \examples{
