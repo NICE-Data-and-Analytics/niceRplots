@@ -2,20 +2,57 @@
 % Please edit documentation in R/nice_gg_theme.R
 \name{nice_gg_theme}
 \alias{nice_gg_theme}
-\title{Add the NICE theme to a chart}
+\title{Apply the NICE theme to a chart}
 \usage{
-nice_gg_theme(base_size = 12)
+nice_gg_theme(
+  base_size = 12,
+  x_title = TRUE,
+  y_title = TRUE,
+  panel_border = FALSE,
+  grid_lines = "y",
+  legend = TRUE
+)
 }
 \arguments{
-\item{base_size}{The base font size of your plot. Changing this will alter text
-sizes throughout the plot. Defaults to size 12.}
+\item{base_size}{Minimum font size. Default is \code{12}.}
+
+\item{x_title}{Option to remove the x axis title. If \code{TRUE}(default), the x axis
+title will be present and can be renamed using the \code{labs()} function. If set to
+\code{FALSE}, the x axis title will be removed.}
+
+\item{y_title}{Option to remove the y axis title. If \code{TRUE}(default), the y axis
+title will be present and can be renamed using the \code{labs()} function. If set to
+\code{FALSE}, the y axis title will be removed.}
+
+\item{panel_border}{Option to add a panel border. If \code{FALSE}(default), no border
+will be present. If set to \code{TRUE}, a panel border will be added.}
+
+\item{grid_lines}{determines which major grid lines are shown:
+-\code{"y"} (default): show y axis grid lines
+-\code{"x"}: show x axis grid lines
+-\code{"x+y"}: show both x and y axis grid lines
+-\code{"none"}: remove grid lines}
+
+\item{legend}{Option to remove the chart legend. If \code{TRUE}(default), the legend
+will be present above the chart. If set to \code{FALSE}, the legend will be removed.}
 }
 \value{
 A NICE styled ggplot2 object
 }
 \description{
-This function will style your ggplot2 charts with the NICE theme. This will
-adjust the fonts, text hierarchy, background, margins and colour scheme.
+\code{nice_gg_theme()}applies a nice theme to a ggplot2 chart object to make it
+consistent with the NICE style. It makes some basic changes, including:
+\itemize{
+\item Changing the chart title font to Lora SemiBold
+\item changing the base font to Inter Regular
+\item Applies a hierarchy for text size
+\item Adjusts the chart background and margins
+\item Adjusts the chart colour scheme
+\item Provides an option to remove axis titles
+\item Provides an option to alter grid lines
+\item Provides an option to add a panel border
+\item Provides an option to remove the legend
+}
 }
 \examples{
 library(dplyr)
@@ -30,5 +67,12 @@ iris_bar <- ggplot(iris_bar_df) +
 geom_col(aes(x = Species, y = Sepal.Width), fill = "#228096", colour = "#000000") +
 geom_hline(yintercept = 0, linewidth = 1, colour = "#333333") +
 scale_y_continuous(expand = c(0, 0), limits = c(0, 4)) +
-nice_gg_theme(base_size = 12)
+nice_gg_theme(
+  base_size = 12,
+  x_title = FALSE,
+  y_title = TRUE,
+  panel_border = FALSE,
+  grid_lines = "y",
+  legend = TRUE
+)
 }
