@@ -19,12 +19,12 @@ here::i_am("vignettes/NICE_cookbook.Rmd")
 
 ```
 
-
 # Introduction and set up
 
 The `niceRplots` package and cookbook make the process of creating publication-ready graphics in the NICE style a more reproducible process, as well as making it easier for people new to R to create graphics. 
 
 Within this cookbook, we will demonstrate how to use the functions included within the `niceRplots` package. We will also provide examples of plots that have been created in the NICE style. The cookbook has been created using two graphing packages. The `ggplot2` package is used to create static plots, while the `plotly` package has been used to create interactive plots. We have also included an example choropleth map (heatmap) that has been created using the `leaflet` package. Navigate to the relevant section to view the code used to create these charts.
+<br>
 
 ## Installing the niceRplots package
 
@@ -42,24 +42,29 @@ devtools::install_github("GitWray1/niceRplots")
 
 ```
 
-The `niceRplots` package contains four main functions. These are summarised below:
+## Contents of the niceRplots package
+
+The `niceRplots` package contains 4 functions and 5 data objects. These are summarised below:
+
+**Functions**
 
 * `nice_gg_theme()` - applies a theme to a `ggplot2` chart object to make it consistent with the NICE style.
 * `nice_plotly_theme()` - applies a theme to a `plotly` chart object to make it consistent with the NICE style.
 * `nice_cols()` - used to select colours from the [NICE brand palette](https://indepth.nice.org.uk/our-brand/index.html) by name.
 * `nice_pal()` - used to select primary palettes created using the NICE brand colours, or secondary palettes recommended by the Government Analysis Function.
 
-Detailed information on each of these functions can be found by typing `?function_name()` into the R console e.g. `?nice_gg_theme()`
+**Data objects**
 
-The `niceRplots` package also contains three data objects which have been included as examples for use in the present cookbook. These are summarised as below:
+* `anticoag_df` - A data frame showing monthly primary care dispensing of 5 anticoagulant medicines for all 106 sub-ICB locations in England between October 2017 and September 2022.
+* `sub_icb_shapes_2022` - A data frame containing the April 2022 polygon boundaries for all 106 sub-ICB location in England. 
+* `england_shape_2022` - A single polygon containing the boundary for England, created by merging the polygons for all sub_ICB locations.
+* `nice_colours` - A named vector of names and hex codes for all NICE brand colours. 
+* `gaf_colours` - A named vector of names and hex codes for Government Analysis Function (GAF) chart colours.
 
-* `anticoag_df` - data frame showing monthly primary care dispensing of 5 anticoagulant medicines for all 106 sub-ICB locations in England between October 2017 and September 2022.
-* `sub_icb_shapes_2022` - Data frame containing the April 2022 polygon boundaries for all 106 sub-ICB location in England. 
-* `england_shape_2022` -Single polygon containing the boundary for England, created by merging the polygons for all sub_ICB locations.
+Detailed information on each of these functions and data objects can be found by typing `?name` into the R console e.g. `?nice_gg_theme()` or `?anticoag_df`.
+<br>
 
-Similarly, further information on each of these data objects can be found by typing `?name` into the R console e.g. `?anticoag_df`
-
-## Load the relevant packages
+## Load in relevant packages
 
 Before we can start making charts, we first need to load all of the relevant packages. We won't load every package here, just the ones that we will use the most often. It is good practice to limit the number of loaded packages to prevent masking conflicts. For this reason, we will often use double colons `::` to access specific functions within a package (e.g. `readr::read_csv()`), rather than loading the full package using `library(pkg)`.
 
@@ -75,7 +80,6 @@ library(plotly)
 library(niceRplots)
 
 ```
-<br>
 
 ## Load in data
 
@@ -122,6 +126,39 @@ When publishing charts on the web it is important to include all necessary infor
 More detailed information can be found in the [Government Analysis Function - Data visualisation guide](https://analysisfunction.civilservice.gov.uk/policy-store/data-visualisation-charts/).
 
 ## Colour usage
+
+Text about color accessibility legislation 
+
+### NICE colours
+
+### NICE Palettes
+
+Five color palettes have been included in the `niceRplots` package, which can be accessed using the `nice_pal()` function. The three primary palettes have been created using the NICE brand colours, and include categorical, sequential and diverging schemes. Secondary categorical and sequential palettes using colours recommended by the Government Analysis Function (GAF) have also been included. These palettes have been visualized below:
+
+```{r nice_cols, out.width="50%", echo = FALSE}
+
+colorspace::swatchplot(
+  'NICE categorical ("cat")'  = nice_pal("cat"),
+  cvd = c("protan", "deutan", "tritan", "desaturate")
+)
+colorspace::swatchplot(
+  'NICE sequential ("seq")' = colorRampPalette(nice_pal("seq"))(5),
+  cvd = c("protan", "deutan", "tritan", "desaturate")
+)
+colorspace::swatchplot(
+  'NICE divergent ("div")' = colorRampPalette(nice_pal("div"))(5),
+  cvd = c("protan", "deutan", "tritan", "desaturate")
+)
+colorspace::swatchplot(
+  'GAF categorical ("cat_gaf")' = nice_pal("cat_gaf"),
+  cvd = c("protan", "deutan", "tritan", "desaturate")
+)
+colorspace::swatchplot(
+  'GAF sequential ("seq_gaf")' = colorRampPalette(nice_pal("seq_gaf"))(5),
+  cvd = c("protan", "deutan", "tritan", "desaturate")
+)
+```
+
 
 # Static charts
 

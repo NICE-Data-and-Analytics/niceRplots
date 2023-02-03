@@ -128,7 +128,7 @@ nice_cols <- function(...) {
 #' nice_pal("seq")
 #' nice_pal("cat_gaf", reverse = TRUE)
 #' nice_pal("seq_gaf")
-nice_pal <- function(palette = "cat", reverse = FALSE) {
+nice_pal <- function(palette = "cat", reverse = FALSE){
   pal <- nice_palettes[[palette]]
 
   if (reverse) pal <- rev(pal)
