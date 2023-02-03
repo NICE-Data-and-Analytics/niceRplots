@@ -488,9 +488,7 @@ map_df <- anticoag_df %>%
 map_df <- left_join(sub_icb_shapes_2022, map_df, by = c("sicbl22cd" = "gss_code"))
 
 # Set up the colour palette 
-pal <- colorRampPalette((c(nice_cols("black_25"), 
-                           nice_cols("bold_teal_100"))))(5)       # Sequential palette
-#pal <- viridis::viridis(5) # Alternative sequential palette
+pal <- colorRampPalette(nice_pal("seq"))(5)
 
 # Create chart 
 choropleth_chart <- map_df %>% 
@@ -831,53 +829,50 @@ It is possible to do it [entirely in Plotly using subplots](https://plotly.com/r
 
 ## Choropleth map (Leaflet)
 
-```{r leaflet}
+```{r leaflet, out.width="100%"}
 
 # Using same data as above
 
 # Create chart
-pal <- colorBin("plasma",
+pal <- colorBin(colorRampPalette(nice_pal("seq"))(5),   
                 domain = map_df$items_per_1000,
                 bins = 5,
                 na.color = nice_cols("black_50"))
 
 leaflet_map <- map_df %>% 
-    # Set up width and degree of zoom per click
-    leaflet(width = 800, 
-            options = leafletOptions(zoomDelta = 0.25,
-                                     zoomSnap = 0.25)) %>% 
-    # Set view to centre on England
-    setView(lat = 53,
-            lng = -1.5,
-            zoom = 6) %>%
-    # Add basic base tile
-    addProviderTiles(provider = "CartoDB.Positron") %>%
-    # Add shapes
-    addPolygons(fillColor = ~pal(items_per_1000),
-                fillOpacity = 0.3,
-                color = nice_cols("black_100"),
-                weight = 1.5,
-                opacity = 1,
-                layerId = ~ods_code,
-                # Add functionality to highlight shape when hovered over
-                highlight = highlightOptions(weight = 3,
-                                             color = nice_cols("black_100"),
-                                             fillOpacity = 0.7,
-                                             bringToFront = TRUE),
-                # Add labels upon hover
-                label = ~lapply(paste0("<strong>Name: </strong>", sicbl22nm,
-                                       "<br><strong>Items per 1000 population: </strong> ", 
-                                       round(items_per_1000, 2)),
-                                htmltools::HTML),
-                labelOptions = labelOptions(textsize = "12px",
-                                            style = list("font-family" = "Arial"))) %>%
-    clearControls() %>%
-    addLegend(position = "bottomleft",
-              pal = pal,
-              values = ~items_per_1000,
-              title = "Items per 1000 population",
-              opacity = 0.7)
-
+  # Set up degree of zoom using controls and scroll
+  leaflet(options = leafletOptions(zoomDelta = 0.25,
+                                 zoomSnap = 0.25)) %>% 
+  # Set view to centre on England and set appropriate zoom
+  setView(lat = 53,
+          lng = -1.5,
+          zoom = 6) %>%
+  # Add the base map tile
+  addProviderTiles(provider = "CartoDB.Positron") %>% 
+  # Add our shapes
+  addPolygons(fillColor = ~pal(items_per_1000),
+              fillOpacity = 1,
+              color = nice_cols("white_100"),
+              weight = 0.5,
+              opacity = 1,
+              # Add functionality to highlight shape when hovered over
+              highlight = highlightOptions(weight = 3,
+                                           color = nice_cols("positive_yellow_100"),
+                                           fillOpacity = 1,
+                                           bringToFront = TRUE),
+              # Add hover labels to the shapes
+              label = ~lapply(paste0("<strong>Name: </strong>", map_df$name,
+                                     "<br><strong>Items per 1000 people:</strong> ", round(map_df$items_per_1000),2),
+                              htmltools::HTML),
+              # Set font options
+              labelOptions = labelOptions(textsize = "12px",
+                                          style = list("font-family" = "Inter Regular"))) %>%
+  addLegend(position = "bottomleft",
+            pal = pal,
+            values = ~map_df$items_per_1000,
+            title = "Items per 1000",
+            opacity = 1)
+  
 leaflet_map
 
 ```

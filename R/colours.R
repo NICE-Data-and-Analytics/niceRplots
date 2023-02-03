@@ -67,9 +67,9 @@ nice_palettes <- list(
                             "dark grey",
                             "light purple")],
 
-  "seq_gaf" = gaf_colours[c("dark blue",
+  "seq_gaf" = gaf_colours[c("light blue",
                             "mid blue",
-                            "light blue")]
+                            "dark blue")]
 )
 
 
@@ -82,7 +82,7 @@ nice_palettes <- list(
 #'
 #' @param ... Colour names
 #'
-#' @returns A named vector containing specified colours
+#' @returns A vector containing specified hex colours
 #' @export
 #'
 #' @examples
@@ -98,7 +98,7 @@ nice_cols <- function(...) {
   if (is.null(cols))
     return (nice_colours)
 
-  return(nice_colours[cols])
+  return(unname(nice_colours[cols]))
 }
 
 
@@ -133,5 +133,5 @@ nice_pal <- function(palette = "cat", reverse = FALSE) {
 
   if (reverse) pal <- rev(pal)
 
-  unname(pal)
+  return(unname(pal))
 }

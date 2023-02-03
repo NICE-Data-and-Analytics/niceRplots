@@ -10,7 +10,7 @@ nice_cols(...)
 \item{...}{Colour names}
 }
 \value{
-A named vector containing specified colours
+A vector containing specified hex colours
 }
 \description{
 \code{nice_cols()} is used to select individual colours from the NICE brand colours.
