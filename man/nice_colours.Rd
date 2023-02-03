@@ -5,10 +5,7 @@
 \alias{nice_colours}
 \title{NICE brand colours}
 \format{
-\subsection{\code{nice_colours}}{
-
 A named vector with 33 brand colours and associated HEX codes
-}
 }
 \source{
 \url{https://indepth.nice.org.uk/our-brand/index.html}

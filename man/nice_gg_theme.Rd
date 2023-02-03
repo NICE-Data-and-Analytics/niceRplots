@@ -27,16 +27,20 @@ title will be present and can be renamed using the \code{labs()} function. If se
 \code{FALSE}, the y axis title will be removed.}
 
 \item{grid_lines}{determines which major grid lines are shown:
--\code{"y"} (default): show y axis grid lines
--\code{"x"}: show x axis grid lines
--\code{"x+y"}: show both x and y axis grid lines
--\code{"none"}: remove grid lines}
+\itemize{
+\item \code{"y"} (default): show y axis grid lines
+\item \code{"x"}: show x axis grid lines
+\item \code{"x+y"}: show both x and y axis grid lines
+\item \code{"none"}: remove grid lines
+}}
 
 \item{axis_ticks}{determines whether axes ticks are shown:
--\code{"x"} (default): show ticks on x axis
--\code{"y"}: show ticks on y axis
--\code{"x+y"}: show ticks on both x and y axes
--\code{"none"}: remove ticks}
+\itemize{
+\item \code{"x"} (default): show ticks on x axis
+\item \code{"y"}: show ticks on y axis
+\item \code{"x+y"}: show ticks on both x and y axes
+\item \code{"none"}: remove ticks
+}}
 
 \item{legend}{Option to remove the chart legend. If \code{TRUE}(default), the legend
 will be present above the chart. If set to \code{FALSE}, the legend will be removed.}
@@ -48,14 +52,14 @@ will be present. If set to \code{TRUE}, a panel border will be added.}
 will be present. If set to \code{TRUE}, the axes will be removed.}
 }
 \value{
-A NICE styled ggplot2 object
+A ggplot2 chart object
 }
 \description{
-\code{nice_gg_theme()}applies a nice theme to a ggplot2 chart object to make it
-consistent with the NICE style. It makes some basic changes, including:
+\code{nice_gg_theme()}applies a theme to a ggplot2 chart object to make it
+consistent with the NICE style. Changes made are listed below:
 \itemize{
-\item Changing the chart title font to Lora SemiBold
-\item changing the base font to Inter Regular
+\item Changes the chart title font to Lora SemiBold
+\item Changes the base font to Inter Regular
 \item Applies a hierarchy for text size
 \item Adjusts the chart background and margins
 \item Adjusts the chart colour scheme

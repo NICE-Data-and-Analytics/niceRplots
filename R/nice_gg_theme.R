@@ -2,10 +2,10 @@
 #'
 #'@description
 #'
-#' `nice_gg_theme()`applies a nice theme to a ggplot2 chart object to make it
-#' consistent with the NICE style. It makes some basic changes, including:
-#' - Changing the chart title font to Lora SemiBold
-#' - changing the base font to Inter Regular
+#' `nice_gg_theme()`applies a theme to a ggplot2 chart object to make it
+#' consistent with the NICE style. Changes made are listed below:
+#' - Changes the chart title font to Lora SemiBold
+#' - Changes the base font to Inter Regular
 #' - Applies a hierarchy for text size
 #' - Adjusts the chart background and margins
 #' - Adjusts the chart colour scheme
@@ -24,15 +24,15 @@
 #' title will be present and can be renamed using the `labs()` function. If set to
 #' `FALSE`, the y axis title will be removed.
 #' @param grid_lines determines which major grid lines are shown:
-#' -`"y"` (default): show y axis grid lines
-#' -`"x"`: show x axis grid lines
-#' -`"x+y"`: show both x and y axis grid lines
-#' -`"none"`: remove grid lines
+#' - `"y"` (default): show y axis grid lines
+#' - `"x"`: show x axis grid lines
+#' - `"x+y"`: show both x and y axis grid lines
+#' - `"none"`: remove grid lines
 #' @param axis_ticks determines whether axes ticks are shown:
-#' -`"x"` (default): show ticks on x axis
-#' -`"y"`: show ticks on y axis
-#' -`"x+y"`: show ticks on both x and y axes
-#' -`"none"`: remove ticks
+#' - `"x"` (default): show ticks on x axis
+#' - `"y"`: show ticks on y axis
+#' - `"x+y"`: show ticks on both x and y axes
+#' - `"none"`: remove ticks
 #' @param legend Option to remove the chart legend. If `TRUE`(default), the legend
 #' will be present above the chart. If set to `FALSE`, the legend will be removed.
 #' @param panel_border Option to add a panel border. If `FALSE`(default), no border
@@ -40,7 +40,7 @@
 #' @param remove_axes Option to remove the axes. If `FALSE`(default), chart axes
 #' will be present. If set to `TRUE`, the axes will be removed.
 #'
-#' @return A NICE styled ggplot2 object
+#' @return A ggplot2 chart object
 #' @export
 #'
 #' @importFrom dplyr %>%
@@ -240,7 +240,7 @@ nice_gg_theme <- function(base_size = 12,
 
     nice_theme <- nice_theme +
       ggplot2::theme(
-        axis.ticks.x = ggplot2::element_line(linewidth = 1),
+        axis.ticks.x = ggplot2::element_line(linewidth = 0.7),
         axis.ticks.y = ggplot2::element_blank()
       )
 
@@ -249,15 +249,15 @@ nice_gg_theme <- function(base_size = 12,
     nice_theme <- nice_theme +
       ggplot2::theme(
         axis.ticks.x = ggplot2::element_blank(),
-        axis.ticks.y = ggplot2::element_line(linewidth = 1)
+        axis.ticks.y = ggplot2::element_line(linewidth = 0.7)
         )
 
   } else if(axis_ticks == "x+y"){
 
     nice_theme <- nice_theme +
       ggplot2::theme(
-        axis.ticks.x = ggplot2::element_line(linewidth = 1),
-        axis.ticks.y = ggplot2::element_line(linewidth = 1)
+        axis.ticks.x = ggplot2::element_line(linewidth = 0.7),
+        axis.ticks.y = ggplot2::element_line(linewidth = 0.7)
       )
 
   } else if(axis_ticks == "none"){

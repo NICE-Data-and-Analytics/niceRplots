@@ -42,6 +42,23 @@ devtools::install_github("GitWray1/niceRplots")
 
 ```
 
+The `niceRplots` package contains four main functions. These are summarised below:
+
+* `nice_gg_theme()` - applies a theme to a `ggplot2` chart object to make it consistent with the NICE style.
+* `nice_plotly_theme()` - applies a theme to a `plotly` chart object to make it consistent with the NICE style.
+* `nice_cols()` - used to select colours from the [NICE brand palette](https://indepth.nice.org.uk/our-brand/index.html) by name.
+* `nice_pal()` - used to select primary palettes created using the NICE brand colours, or secondary palettes recommended by the Government Analysis Function.
+
+Detailed information on each of these functions can be found by typing `?function_name()` into the R console e.g. `?nice_gg_theme()`
+
+The `niceRplots` package also contains three data objects which have been included as examples for use in the present cookbook. These are summarised as below:
+
+* `anticoag_df` - data frame showing monthly primary care dispensing of 5 anticoagulant medicines for all 106 sub-ICB locations in England between October 2017 and September 2022.
+* `sub_icb_shapes_2022` - Data frame containing the April 2022 polygon boundaries for all 106 sub-ICB location in England. 
+* `england_shape_2022` -Single polygon containing the boundary for England, created by merging the polygons for all sub_ICB locations.
+
+Similarly, further information on each of these data objects can be found by typing `?name` into the R console e.g. `?anticoag_df`
+
 ## Load the relevant packages
 
 Before we can start making charts, we first need to load all of the relevant packages. We won't load every package here, just the ones that we will use the most often. It is good practice to limit the number of loaded packages to prevent masking conflicts. For this reason, we will often use double colons `::` to access specific functions within a package (e.g. `readr::read_csv()`), rather than loading the full package using `library(pkg)`.

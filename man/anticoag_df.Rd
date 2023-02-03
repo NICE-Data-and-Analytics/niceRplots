@@ -3,10 +3,8 @@
 \docType{data}
 \name{anticoag_df}
 \alias{anticoag_df}
-\title{Anticoagulant medicine prescribing data}
+\title{Anticoagulant medicine dispensing data}
 \format{
-\subsection{\code{anticoag_df}}{
-
 A data frame with 31,792 rows and 10 columns:
 \describe{
 \item{date}{data month, first day of month specified}
@@ -21,7 +19,6 @@ A data frame with 31,792 rows and 10 columns:
 \item{total_list_size}{Number of people registered at GP in Sub-ICB location}
 }
 }
-}
 \source{
 \url{https://openprescribing.net/}
 \url{https://geoportal.statistics.gov.uk/search?collection=Dataset&sort=-created&tags=all(NAC_LOC)}
@@ -30,7 +27,7 @@ A data frame with 31,792 rows and 10 columns:
 anticoag_df
 }
 \description{
-Data showing the monthly primary care usage of 5 anticoagulant medicines: apixaban,
+Data showing the monthly primary care dispensing of 5 anticoagulant medicines: apixaban,
 dabigatran etexilate, rivaroxaban, edoxaban, and warfarin sodium. Data is
 shown as monthly usage for all 106 sub-ICB locations in England between
 October 2017 and September 2022.

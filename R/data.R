@@ -1,12 +1,11 @@
-#' Anticoagulant medicine prescribing data
+#' Anticoagulant medicine dispensing data
 #'
-#' Data showing the monthly primary care usage of 5 anticoagulant medicines: apixaban,
+#' Data showing the monthly primary care dispensing of 5 anticoagulant medicines: apixaban,
 #' dabigatran etexilate, rivaroxaban, edoxaban, and warfarin sodium. Data is
 #' shown as monthly usage for all 106 sub-ICB locations in England between
 #' October 2017 and September 2022.
 #'
-#' @format ## `anticoag_df`
-#' A data frame with 31,792 rows and 10 columns:
+#' @format A data frame with 31,792 rows and 10 columns:
 #' \describe{
 #'   \item{date}{data month, first day of month specified}
 #'   \item{chemical}{Anticoagulant medicine}
@@ -27,14 +26,13 @@
 
 #' Polygons for sub-ICB locations
 #'
-#' Data frame containing the April 2022 polygon boundaries for all 106 sub-ICB location
+#' Data frame containing the April 2022 polygon boundaries for all 106 sub-ICB locations
 #' in England. Data taken directly from the Open Geography Portal as a .geoJSON file.
 #'
-#' @format ## `sub_icb_shapes_2022`
-#' A data frame with 106 rows and 9 columns:
+#' @format A data frame with 106 rows and 9 columns:
 #' \describe{
-#'   \item{sicbl22cd}{Sub-icb location Government Statistical Service code}
-#'   \item{sicbl22nm}{Sub-icb location name}
+#'   \item{sicbl22cd}{Sub-ICB location Government Statistical Service code}
+#'   \item{sicbl22nm}{Sub-ICB location name}
 #'   \item{bng_e}{Eastings}
 #'   \item{bng_n}{Northings}
 #'   \item{long}{Longtitude}
@@ -51,10 +49,9 @@
 #' Polygon for England
 #'
 #' Single polygon containing the boundary for England, created by merging the polygons
-#' for all sub_ICB locations.
+#' for all sub-ICB locations.
 #'
-#' @format ## `england_shape_2022`
-#' A single SFC_multipolygon shape
+#' @format A single SFC_multipolygon shape
 #' @source
 #' <https://geoportal.statistics.gov.uk>
 "england_shape_2022"
@@ -64,8 +61,7 @@
 #'
 #' A named vector of NICE brand colours for use in plots
 #'
-#' @format ## `nice_colours`
-#' A named vector with 33 brand colours and associated HEX codes
+#' @format A named vector with 33 brand colours and associated HEX codes
 #' @source
 #' <https://indepth.nice.org.uk/our-brand/index.html>
 "nice_colours"
@@ -75,8 +71,7 @@
 #'
 #' A named vector of Government Analysis Function (GAF) colours for use in plots
 #'
-#' @format ## `gaf_colours`
-#' A named vector with 9 colours and associated HEX codes
+#' @format A named vector with 9 colours and associated HEX codes
 #' @source
 #' <https://analysisfunction.civilservice.gov.uk/policy-store/data-visualisation-colours-in-charts/>
 "gaf_colours"

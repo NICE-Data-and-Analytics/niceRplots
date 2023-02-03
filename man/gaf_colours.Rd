@@ -5,10 +5,7 @@
 \alias{gaf_colours}
 \title{NICE brand colours}
 \format{
-\subsection{\code{gaf_colours}}{
-
 A named vector with 9 colours and associated HEX codes
-}
 }
 \source{
 \url{https://analysisfunction.civilservice.gov.uk/policy-store/data-visualisation-colours-in-charts/}
