@@ -23,14 +23,14 @@ here::i_am("vignettes/NICE_cookbook.Rmd")
 
 The `niceRplots` package and cookbook make the process of creating publication-ready graphics in the NICE style a more reproducible process, as well as making it easier for people new to R to create graphics. 
 
-Within this cookbook, we will demonstrate how to use the functions included within the `niceRplots` package. We will also provide examples of plots that have been created in the NICE style. The cookbook has been created using two graphing packages. The `ggplot2` package is used to create static plots, while the `plotly` package has been used to create interactive plots. We have also included an example choropleth map (heatmap) that has been created using the `leaflet` package. Navigate to the relevant section to view the code used to create these charts.
+Within this cookbook, we will demonstrate how to use the functions included within the `niceRplots` package, and provide examples of plots that have been created in the NICE style. The plots in this cookbook has been created using two graphing packages. The `ggplot2` package is used to create static plots, while the `plotly` package is used to create interactive plots. We have also included an example choropleth map (heatmap) that has been created using the `leaflet` package. Navigate to the relevant section to view the code used to create these charts.
 <br>
 
 ## Installing the niceRplots package
 
-The `niceRplots` is not on CRAN, so you will have to install it directly from [GitHub](https://github.com/) using the `devtools` package.
+The `niceRplots` package is not on CRAN, so it will need to be installed directly from [GitHub](https://github.com/) using the `devtools` package.
 
-If you do not have the `devtools` package installed, you will have to run the first line in the code below as well.
+If you do not have the `devtools` package installed, you will also need to run the first line in the code below.
 
 ```{r pkg_install, eval = FALSE}
 
@@ -44,7 +44,7 @@ devtools::install_github("GitWray1/niceRplots")
 
 ## Contents of the niceRplots package
 
-The `niceRplots` package contains 4 functions and 5 data objects. These are summarised below:
+The `niceRplots` package contains four functions and five data objects:
 
 **Functions**
 
@@ -55,9 +55,11 @@ The `niceRplots` package contains 4 functions and 5 data objects. These are summ
 
 **Data objects**
 
-* `anticoag_df` - A data frame showing monthly primary care dispensing of 5 anticoagulant medicines for all 106 sub-ICB locations in England between October 2017 and September 2022.
-* `sub_icb_shapes_2022` - A data frame containing the April 2022 polygon boundaries for all 106 sub-ICB location in England. 
-* `england_shape_2022` - A single polygon containing the boundary for England, created by merging the polygons for all sub_ICB locations.
+These have been included primarily for demonstration purposes in the present cookbook.
+
+* `anticoag_df` - A data frame showing monthly primary care dispensing of 5 anticoagulant medicines for all 106 sub-ICB locations in England between October 2017 and September 2022.This was downloaded from [OpenPrescribing.net](https://openprescribing.net/).
+* `sub_icb_shapes_2022` - A data frame containing the April 2022 polygon boundaries for all 106 sub-ICB locations in England. 
+* `england_shape_2022` - A single polygon containing the boundary for England, created by merging the polygons for all sub-ICB locations.
 * `nice_colours` - A named vector of names and hex codes for all NICE brand colours. 
 * `gaf_colours` - A named vector of names and hex codes for Government Analysis Function (GAF) chart colours.
 
@@ -83,7 +85,7 @@ library(niceRplots)
 
 ## Load in data
 
-Throughout this cookbook we will use two datasets for our example charts. The first is R's built in `iris` dataset, which you can find information on by typing `?iris` into the R console. The second is the `anticoag_df` dataframe that comes built into the `niceRplots` package. This contains data on the monthly Sub-ICB location level prescribing of 5 anticoagulant medicines in England between February 2017 and January 2022. This was downloaded from [OpenPrescribing.net](https://openprescribing.net/).
+Throughout this cookbook we will use two datasets for our example charts. The first is R's built in `iris` dataset, and the second is the `anticoag_df` dataframe that comes built into the `niceRplots` package. You can find detailed information on these datasets by typing `?iris` or `anticoag_df` into the R console.
 
 As the `anticoag_df` comes pre-loaded with the `niceRplots` package, we don't need to load this in. The code below demonstrates how we would usually load data into R.
 
@@ -92,20 +94,20 @@ As the `anticoag_df` comes pre-loaded with the `niceRplots` package, we don't ne
 # Load in data and specify column types 
 # (D = date, d = double, i = integer, c = character, l = logical) 
 
-anticoag_df <- readr::read_csv("example_data.csv",
+example_df <- readr::read_csv("example_data.csv",
                             col_types = "Dccdd")
 
 ```
 
 # Chart accessibility
 
-Since 2020 all content published on public sector websites must meet the level A and AA success criterion in the [Web Content Accessibility Guidelines (WCAG) 2.1.](https://www.w3.org/TR/WCAG21/), including charts and data visualisations. 
+By law, all content published on public sector websites must meet the level A and AA success criterion in the [Web Content Accessibility Guidelines (WCAG) 2.1.](https://www.w3.org/TR/WCAG21/). This includes charts and data visualisations. 
 
-This guide will not go into great detail on the principles of chart accessibility as this has been thoroughly covered elsewhere. Listed below are several useful resources to help design accessible charts. 
+This guide will not go into detail on the principles of chart accessibility as this has been thoroughly covered elsewhere. Listed below are several useful resources designed to help create accessible charts. 
 
 * [Government Analysis Function - Data visualisation: charts](https://analysisfunction.civilservice.gov.uk/policy-store/data-visualisation-charts/)
-* [Government Analysis Function - Data visualisation: colours](https://analysisfunction.civilservice.gov.uk/policy-store/data-visualisation-colours-in-charts/)
 * [Office for National Statistics - Guidance for presenting data](https://style.ons.gov.uk/category/data-visualisation/)
+* [Office for National Statistics - Accesibility guidance](https://style.ons.gov.uk/category/accessibility/)
 
 Many of the principles highlighted in these guides have been considered when developing the `niceRplots` package and visualisation cookbook. 
 
@@ -115,25 +117,66 @@ When publishing charts on the web it is important to include all necessary infor
 
 * **Title** - This should be ten words or less and convey the main message of the chart.
 
-* **Statistical title** - This should have information on what the data is, the geography the data relates to and the time period. This should also include a figure number. 
+* **Statistical title** - This should have information on the statistical measure, the geographical coverage and the time period. This should also include a figure number if appropriate. 
 
-* **Alternative text** - This should be text shown alongside the chart that describes what you want the user to understand from the chart. Ideally this should live in the body of the page, directly above or below the chart. In this situation the figure itself should be marked as decorative.
+* **Alternative text** - This should describe what you want users to understand from the chart. Ideally this should live in the body of the page, directly above or below the chart. In this situation the figure itself should be marked as decorative to be hidden from screen reader software. Refer to the [Office for National Statistics Alt text page](https://style.ons.gov.uk/category/accessibility/alt-text/) for guidance on writing informative alt text. 
 
-* **Source** - If all charts come from the same data source, this does not need to be repeated under each figure. If different data sources are used then you should provide the source in the following format: [organisation] – [publication or source of data]. e.g. NHS Digital - Hospital Episode Statistics.
+* **Source** - This should detail the source of the data in the following format: [organisation] – [publication or source of data]. e.g. NHS Digital - Hospital Episode Statistics. If all charts come from the same data source, this does not need to be repeated under each figure.
 
-* **Data download** - It is best practice to provide a way to download the data displayed in each chart, This should be displayed under that chart and include information on file type and size. The text used for the link should be specific to the chart e.g. ‘Download the data for figure 1’.
+* **Data download** - It is best practice to provide a way to download the data displayed in each chart, This should be displayed under that chart and include information on file type and size. The text used for the link should be specific to the chart e.g. ‘Download the data for figure 1 (5kb CSV)’.
 
-More detailed information can be found in the [Government Analysis Function - Data visualisation guide](https://analysisfunction.civilservice.gov.uk/policy-store/data-visualisation-charts/).
+The figure below provides an example of how a chart should look when published:
+
+<br>
+
+#### **Apixaban was the most prescribed anticoagulant in 2021**{.unlisted .unnumbered}  
+
+##### Figure x: Total anticoagulant medicines dispensed in primary care in England, 2021
+
+```{r access_eg, echo = FALSE}
+
+anticoag_df %>% 
+  filter(between(date, as.Date("2021-01-01"), as.Date("2021-12-31"))) %>% 
+  group_by(chemical) %>% 
+  summarise(items = sum(items)/1000000) %>% 
+  ungroup() %>% 
+  # Plot bars in decreasing order of items
+  ggplot(aes(y = items, x = reorder(chemical, -items))) +
+  # Add bars, add fill and border colours
+  geom_col(fill = nice_cols("bold_teal_100"), 
+           colour = nice_cols("white_100"), linewidth = 0.2) +
+  # Add baseline to x axis
+  geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
+  # set y-axis limits and remove padding
+  scale_y_continuous(expand = c(0,0), limits = c(0,8)) +
+  # set x-axis labels to wrap to prevent overlapping
+  scale_x_discrete(labels = function(x) {stringr::str_wrap(x, width = 10)}) +
+  # Apply NICE theme
+  nice_gg_theme(x_title = FALSE) +
+  # Add labels
+  labs(y = "Dispensed items (millions)")
+
+```
+
+A bar chart showing that apixaban was the most prescribed anticoagulant medicine in 2021 with close to 8 million items dispensed. 
+
+Source: Bennett Institute for Applied Data Science – [OpenPrescribing](https://openprescribing.net/)
+
+[Download data for figure x (5kb CSV)]
 
 ## Colour usage
 
-Text about color accessibility legislation 
+For guidance on colour usage in charts, please refer to the below links:
 
-### NICE colours
+* [Government Analysis Function - Data visualisation: colours](https://analysisfunction.civilservice.gov.uk/policy-store/data-visualisation-colours-in-charts/)
+* [Office for National Statistics - Using colours](https://style.ons.gov.uk/category/data-visualisation/using-colours/)
 
-### NICE Palettes
+### NICE colours and palettes
 
-Five color palettes have been included in the `niceRplots` package, which can be accessed using the `nice_pal()` function. The three primary palettes have been created using the NICE brand colours, and include categorical, sequential and diverging schemes. Secondary categorical and sequential palettes using colours recommended by the Government Analysis Function (GAF) have also been included. These palettes have been visualized below:
+The `niceRplots` package includes two function to assist with colour usage: 
+
+* `nice_cols()` - used to select individual colours from the NICE brand guidelines e.g. `nice_cols("bold_teal_100")`
+* `nice_pal()` - used to select one of five colour palettes e.g. `nice_pal("seq")`. Three primary palettes have been created using the NICE brand colours, and include categorical, sequential and diverging schemes. Secondary categorical and sequential palettes have also been included, using colours recommended by the Government Analysis Function (GAF). These palettes have been visualized below, showing the original colors, and how they look with different color vision deficiencies:
 
 ```{r nice_cols, out.width="50%", echo = FALSE}
 
@@ -146,7 +189,7 @@ colorspace::swatchplot(
   cvd = c("protan", "deutan", "tritan", "desaturate")
 )
 colorspace::swatchplot(
-  'NICE divergent ("div")' = colorRampPalette(nice_pal("div"))(5),
+  'NICE d ivergent ("div")' = colorRampPalette(nice_pal("div"))(5),
   cvd = c("protan", "deutan", "tritan", "desaturate")
 )
 colorspace::swatchplot(
@@ -159,6 +202,7 @@ colorspace::swatchplot(
 )
 ```
 
+<br>
 
 # Static charts
 
@@ -523,17 +567,20 @@ england_shape_2022 <- sub_icb_shapes_2022 %>%
 
 #### Create choropleth map
 
-Now that we have prepared our `.geoJSON` files, we can go ahead and prepare our choropleth map.
+Now that we have prepared our `.geoJSON` files, we can go ahead and prepare our choropleth map. The example below uses the NICE sequential colour palette, accessed using `nice_pal("seq")`
 
-```{r gg_choropleth}
+```{r gg_choropleth_seq}
 
 # Prepare the data
 map_df <- anticoag_df %>% 
   filter(between(date, as.Date("2021-01-01"), as.Date("2021-12-31")),
          chemical == "Apixaban") %>% 
   group_by(chemical, name, ods_code, gss_code) %>% 
+  # Calculate items_per_100 population, and set up a column with categorical labels for each bin
   summarise(items_per_1000 = sum(items)/(sum(total_list_size)/1000),
-            items = sum(items)) %>% 
+            items_per_1000_bin = cut(items_per_1000,
+                                     breaks = c(0,5,10,15,20,Inf),
+                                     labels = c("<5","5-10", "10-15", "15-20", "20+"))) %>% 
   ungroup()
 
 # Join our data to the dataframe containing the relevant Sub ICB location shapes. Ensure the 
@@ -541,15 +588,11 @@ map_df <- anticoag_df %>%
 # the class of this table. If not the geometry column containing the shapes will be dropped.
 map_df <- left_join(sub_icb_shapes_2022, map_df, by = c("sicbl22cd" = "gss_code"))
 
-# Set up the colour palette 
+# Set up the sequential colour palette 
 pal <- colorRampPalette(nice_pal("seq"))(5)
 
 # Create chart 
-choropleth_chart <- map_df %>% 
-  # Set up a column with categorical labels for each bin
-  mutate(items_per_1000_bin = cut(items_per_1000,
-                                  breaks = c(0,5,10,15,20,Inf),
-                                  labels = c("<5","5-10", "10-15", "15-20", "20+"))) %>% 
+choropleth_chart_seq <- map_df %>% 
   ggplot() +
   # Plot the shapes. Add white borders for accessibility
   geom_sf(aes(fill = items_per_1000_bin), color = nice_cols("white_100"), lwd = 0.05) +
@@ -576,10 +619,55 @@ choropleth_chart <- map_df %>%
 
 #### **Apixaban prescribing in England**{.unlisted .unnumbered}  
 
-##### Figure x: Plotted by sub-ICB location, England 2021
+##### Figure xa: Plotted by sub-ICB location, England 2021
 
-```{r gg_choropleth_out, echo = FALSE}
-choropleth_chart
+```{r gg_choropleth_seq_out, echo = FALSE}
+choropleth_chart_seq
+```
+<br>
+
+
+Using a diverging palette can be helpful if you want to draw attention to the extremes of the scale, or show variation around a mean. The example below uses the NICE diverging colour palette, accessed using `nice_pal("div")`
+
+```{r gg_choropleth_div}
+
+# Using same map data as previous choropleth
+
+# Set up the divergingcolour palette 
+pal <- colorRampPalette(nice_pal("div"))(5)
+
+# Create chart 
+choropleth_chart_div <- map_df %>% 
+  ggplot() +
+  # Plot the shapes. Add white borders for accessibility
+  geom_sf(aes(fill = items_per_1000_bin), color = nice_cols("white_100"), lwd = 0.05) +
+  # Apply our palette and adjust the legend
+  scale_fill_manual(values = pal, 
+                    na.value = nice_cols("black_50"),
+                    guide = guide_legend(
+                      title = "Items per 1000\npopulation",
+                      title.hjust = 0.5,
+                      label.position = "left",
+                      reverse = TRUE)) +
+  # Add another layer with the England shape to add an outline
+  geom_sf(data = england_shape_2022, fill = NA, color = nice_cols("black_100"), lwd = 0.1) +
+  # Add the NICE theme
+  nice_gg_theme(remove_axes = TRUE) +
+  # Alter some theme elements move the legend and add title
+  theme(legend.position = c(0.23, 0.5),
+        legend.title = ggplot2::element_text(family = "Inter Regular",
+                                             size = 12,
+                                             color = nice_cols("black_100")),
+        legend.text.align = 1)
+
+```
+
+#### **Apixaban prescribing in England**{.unlisted .unnumbered}  
+
+##### Figure xb: Plotted by sub-ICB location, England 2021
+
+```{r gg_choropleth_div_out, echo = FALSE}
+choropleth_chart_div
 ```
 <br>
 
@@ -883,9 +971,11 @@ It is possible to do it [entirely in Plotly using subplots](https://plotly.com/r
 
 ## Choropleth map (Leaflet)
 
+It is also possible to create an interactive choropleth map using the `leaflet` package, which provides additional zoom, drag and labeling functionality to allow users to explore the data. 
+
 ```{r leaflet, out.width="100%"}
 
-# Using same data as above
+# Using same map data as previous choropleths
 
 # Create chart
 pal <- colorBin(colorRampPalette(nice_pal("seq"))(5),   
