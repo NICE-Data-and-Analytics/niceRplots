@@ -173,10 +173,10 @@ For guidance on colour usage in charts, please refer to the below links:
 
 ### NICE colours and palettes
 
-The `niceRplots` package includes two function to assist with colour usage: 
+The `niceRplots` package includes two functions to assist with colour usage: 
 
 * `nice_cols()` - used to select individual colours from the NICE brand guidelines e.g. `nice_cols("bold_teal_100")`
-* `nice_pal()` - used to select one of five colour palettes e.g. `nice_pal("seq")`. Three primary palettes have been created using the NICE brand colours, and include categorical, sequential and diverging schemes. Secondary categorical and sequential palettes have also been included, using colours recommended by the Government Analysis Function (GAF). These palettes have been visualized below, showing the original colors, and how they look with different color vision deficiencies:
+* `nice_pal()` - used to select one of five colour palettes e.g. `nice_pal("seq")`. Three primary palettes have been created using the NICE brand colours, and include categorical, sequential and diverging schemes. Secondary categorical and sequential palettes have also been included, using colours recommended by the Government Analysis Function (GAF). These palettes have been visualized below, showing the original colors, and how they would look to people with various colour vision deficiencies.
 
 ```{r nice_cols, out.width="50%", echo = FALSE}
 
@@ -189,7 +189,7 @@ colorspace::swatchplot(
   cvd = c("protan", "deutan", "tritan", "desaturate")
 )
 colorspace::swatchplot(
-  'NICE d ivergent ("div")' = colorRampPalette(nice_pal("div"))(5),
+  'NICE divergent ("div")' = colorRampPalette(nice_pal("div"))(5),
   cvd = c("protan", "deutan", "tritan", "desaturate")
 )
 colorspace::swatchplot(
@@ -201,20 +201,19 @@ colorspace::swatchplot(
   cvd = c("protan", "deutan", "tritan", "desaturate")
 )
 ```
-
 <br>
 
 # Static charts
 
 ## The ggplot2 package
 
-The `ggplot2` package can be used to create static charts in R. The sections below will demonstrate how to create a range of chart types using ggplot2 and apply the NICE theme.
+The `ggplot2` package can be used to create static charts in R. The sections below will demonstrate how to create a range of chart types using `ggplot2` and apply the NICE theme.
 
 ## How to style your charts
 
 As an example we will create a simple bar chart using the `iris` dataset. We will first create a basic chart, and then add some formatting. We can see the two charts below with and without formatting.
 
-```{r format_chart, fig.show = "hold", out.width = "50%"}
+```{r format_chart}
 
 # Wrangle data for plotting
 iris_bar_df <- iris %>% 
@@ -224,7 +223,7 @@ iris_bar_df <- iris %>%
 
 # Create basic bar chart (left)
 iris_bar <- ggplot(iris_bar_df) + 
-  geom_col(aes(x = Species, y = Sepal_Width), ) +
+  geom_col(aes(x = Species, y = Sepal_Width)) +
   labs(x = "Species",
        y = "Sepal Width")
 
@@ -233,20 +232,36 @@ iris_bar_formatted <- ggplot(iris_bar_df) +
   # Adjust bar fill and outline colour
   geom_col(aes(x = Species, y = Sepal_Width), fill = nice_cols("bold_teal_100"), 
            colour = nice_cols("white_100"), linewidth = 0.2)+
-  # Add baseline to x axis
+  # Add baseline to x-axis
   geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
-  # set y-axis limits and remove padding
+  # Set y-axis limits and remove padding
   scale_y_continuous(expand = c(0, 0), limits = c(0, 4)) +
   # Add labels 
   labs(y = "Sepal width")
-
+```
+<br>
+```{r format_chart_out, echo = FALSE, fig.show = "hold", out.width = "50%"}
 iris_bar
 iris_bar_formatted
-
 ```
 <br>
 
-We can now apply the NICE theme using the `nice_gg_theme()` function from the `niceRplots` package, specifying the base font for the plot to be of size 12. The `nice_gg_theme()` function alters several aspects of the chart to make it consistent with the [NICE brand guidelines](https://indepth.nice.org.uk/our-brand/index.html). These are as follows:
+
+We can now apply the NICE theme using the `nice_gg_theme()` function from the `niceRplots` package, specifying that we want to remove the x-axis title using the `x_title` argument.
+
+```{r gg_theme_chart}
+
+iris_bar_themed <- iris_bar_formatted +
+  # Apply NICE theme, remove x-axis title
+  nice_gg_theme(x_title = FALSE)
+```
+<br>
+```{r gg_theme_chart_out, echo = FALSE}
+iris_bar_themed
+```
+<br>
+
+The `nice_gg_theme()` function alters several aspects of the chart to make it consistent with the [NICE brand guidelines](https://indepth.nice.org.uk/our-brand/index.html). These are as follows:
 
 * **Fonts**: text throughout the plot will be changed to the Inter Regular font. If a title is present, this will be changed to Lora SemiBold.
 
@@ -256,7 +271,7 @@ We can now apply the NICE theme using the `nice_gg_theme()` function from the `n
 
 * **Margins**: adjusts the margins around the title, subtitle, and axis titles to give everything space to breathe.
 
-* **Grid lines**:  grid lines can be added or removed from the axes using the optional `grid_lines` argument (options are `"y"` (default), `"x"`, `"x+y`" and `"none"`). A panel border can be added by setting the `panel_border` argument to `TRUE`. 
+* **Grid lines**:  grid lines can be added or removed from the axes using the optional `grid_lines` argument (options are `"y"` (default), `"x"`, `"x+y`" and `"none"`). A panel border can also be added by setting the `panel_border` argument to `TRUE`. 
 
 * **Axes**: axes ticks can be added or removed using the optional `axis_ticks` argument (options are `"x"` (default), `"y"`, `"x+y`" and `"none"`). Axes can be removed entirely by setting the `remove_axes` argument to `TRUE`. 
 
@@ -264,16 +279,6 @@ We can now apply the NICE theme using the `nice_gg_theme()` function from the `n
 
 The `nice_gg_theme()` function isn't designed to modify every aspect of the chart, but to apply a general consistent theme and provide options for the most common chart modifications. When making complex charts, many aspects of the chart will still need to be modified manually (see choropleth example). The remaining chart examples in this section will demonstrate several use cases of the `nice_gg_theme()` function.
 
-```{r theme_chart}
-
-iris_bar_themed <- iris_bar_formatted +
-  # Apply NICE theme, set base text size to 12
-  nice_gg_theme(base_size = 12)
-
-iris_bar_themed
-
-```
-<br>
 
 ## How to save your plots
 
@@ -304,7 +309,7 @@ nice_hist <- iris %>%
                  binwidth = 0.2, linewidth = 0.2, color = nice_cols("white_100")) +
   # Add a line on the x axis
   geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
-  # Remove extra spacing and set y axis limits
+  # Remove extra spacing and set y-axis limits
   scale_y_continuous(expand = c(0,0), limits = c(0,40)) +
   # Use NICE categorical colour palette
   scale_fill_manual(values = nice_pal("cat")) +
@@ -312,22 +317,17 @@ nice_hist <- iris %>%
   nice_gg_theme() +
   labs(x = "Sepal Width",
        y = "Frequency")
-
 ```
-
-
-#### **Species setosa has the longest sepal length**{.unlisted .unnumbered}  
-
-##### Figure x: Distribution of sepal width by species
-
-```{r gg_histogram_out, echo = FALSE}
+<br>
+```{r gg_hist_out, echo = FALSE}
 nice_hist
 ```
 <br>
 
-### Bar chart
 
-```{r gg_bar}
+### Vertical bar chart
+
+```{r gg_vbar}
 
 # Prepare data, get total items dispensed for each medicine in 2021 (in millions)
 bar_df <- anticoag_df %>% 
@@ -347,23 +347,21 @@ bar_chart <- bar_df %>%
   geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
   # set y-axis limits and remove padding
   scale_y_continuous(expand = c(0,0), limits = c(0,8)) +
-  # set x-axis labels to wrap to prevent overlapping
+  # Set x-axis labels to wrap to prevent overlapping
   scale_x_discrete(labels = function(x) {stringr::str_wrap(x, width = 10)}) +
   # Apply NICE theme
   nice_gg_theme(x_title = FALSE) +
   # Add labels
   labs(y = "Dispensed items (millions)")
 ```
-
-
-#### **Apixaban was the most prescribed anticoagulant in 2021**{.unlisted .unnumbered}  
-
-##### Figure x: Total anticoagulant medicines dispensed in primary care in England, 2020
-
-```{r gg_bar_out, echo = FALSE}
+<br>
+```{r gg_vbar_out, echo = FALSE}
 bar_chart
 ```
 <br>
+
+
+### Horizontal  bar chart
 
 Transposing a bar chart is a useful way to make long axis labels easier to read. This has the added benefit of making the y-axis title horizontal, thereby making it easier to read.
 
@@ -380,7 +378,7 @@ horizontal_bar_chart <- bar_df %>%
            colour = nice_cols("white_100"), linewidth = 0.2) +
   # Add baseline to x axis
   geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
-  # set y-axis limits and remove padding
+  # Set y-axis limits and remove padding
   scale_y_continuous(expand = c(0,0), limits = c(0,8)) +
   # Apply NICE theme
   nice_gg_theme(y_title = FALSE,
@@ -390,16 +388,12 @@ horizontal_bar_chart <- bar_df %>%
   # Add labels
   labs(y = "Dispensed items (millions)")
 ```
-
-
-#### **Apixaban was the most prescribed anticoagulant in 2021**{.unlisted .unnumbered}  
-
-##### Figure x: Total anticoagulant medicines dispensed in primary care in England, 2020
-
+<br>
 ```{r gg_hbar_out, echo = FALSE}
 horizontal_bar_chart
 ```
 <br>
+
 
 ### Line chart
 
@@ -435,16 +429,12 @@ line_chart <- line_df %>%
   annotate("text", x = as.Date("2020-02-01"), y = 180000, 
            label = "National lockdown\non 23 March", hjust = "right")
 ```
-
-
-#### **Edoxaban prescribing has increased since 2017**{.unlisted .unnumbered}  
-
-##### Figure x: Edoxaban prescribing in England, 2017-2022
-
+<br>
 ```{r gg_line_out, echo = FALSE}
 line_chart
 ```
 <br>
+
 
 ### Scatter plot
 
@@ -461,10 +451,10 @@ scatter_chart <- scatter_df %>%
   ggplot(aes(x = total_list_size, y = items)) +
   # Add the points and make them teal
   geom_point(colour = nice_cols("bold_teal_100"), size = 3) +
-  # set x-axis limits, adjust padding and add commas to axis labels
+  # Set x-axis limits, adjust padding and add commas to axis labels
   scale_x_continuous(expand = expansion(mult = c(0, 0.05)), 
                      limits = c(0,3000), label = scales::comma) +
-  # set y-axis limits and remove padding, add commas to axis labels
+  # Set y-axis limits and remove padding, add commas to axis labels
   scale_y_continuous(expand = c(0,0), limits = c(0, 25000), label = scales::comma) +
   # Apply NICE theme
   nice_gg_theme(grid_lines = "x+y",
@@ -474,12 +464,7 @@ scatter_chart <- scatter_df %>%
   labs(x = "Primary care list size (x1000)",
        y = "Dispensed items")
 ```
-
-
-#### **Apixaban prescribing**{.unlisted .unnumbered}  
-
-##### Figure x: Items of apixaban dispensed in primary care compared to sub-ICB location list size, July 2021
-
+<br>
 ```{r gg_scatter_out, echo = FALSE}
 scatter_chart
 ```
@@ -505,13 +490,13 @@ facet_chart <- facet_df %>%
   geom_line(linewidth = 0.8) +
   # Add points
   geom_point(size = 1.5) +
-  ## set y-axis limits and remove padding
+  # Set y-axis limits and remove padding
   scale_y_continuous(expand = c(0,0), limits = c(0,800)) +
-  # set x-axis labels to show as month year, and to occur at 6-monthly intervals
+  # Set x-axis labels to show as month year, and to occur at 6-monthly intervals
   scale_x_date(date_labels = "%b\n%Y", date_breaks = "6 months") +
   # Manually set the colour of the lines and points
   scale_color_manual(values = nice_pal("cat")) +
-  # APply facet wrapping to put each chemical into an individual plot
+  # Apply facet wrapping to put each chemical into an individual plot
   facet_wrap(~chemical) +
   # Apply the NICE theme
   nice_gg_theme(x_title = FALSE,
@@ -520,24 +505,19 @@ facet_chart <- facet_df %>%
   # Add labels
   labs(x = "Sepal Length",
        y = "Dispensed items (thousands)")
-
 ```
-
-
-#### **Trends in anti-coagulant prescribing**{.unlisted .unnumbered}  
-
-##### Figure x: Prescribing of 3 anti-coagulants in England, 2020-2021
-
+<br>
 ```{r gg_facet_out, echo = FALSE}
 facet_chart
 ```
 <br>
 
+
 ### Choropleth map (heatmap)
 
 #### Prepare .geoJSON files
 
-In the example below we will prepare a choropleth map of Apixaban prescribing across Sub-ICB locations in 2021. To prepare this chart we need two files, a dataframe containing the data we want to visualise, and a dataframe containing the shapes for our relevant health geographies. For these examples we will use the `anticoag_df` and `sub_icb_shapes_2022` files that come built into the `niceRplots` package.
+In the example below we will prepare a choropleth map of apixaban prescribing across sub-ICB locations in 2021. To prepare this chart we need two files, a dataframe containing the data we want to visualise, and a dataframe containing the shapes for our relevant health geographies. For these examples we will use the `anticoag_df` and `sub_icb_shapes_2022` files that come built into the `niceRplots` package.
 
 There will be many situations where you will want to visualise data across other geographies. The files containing shapes for other geographies can be downloaded in `.geoJSON` format from the Office for National Statistics (ONS) [Open Geography Portal](https://geoportal.statistics.gov.uk/). 
 
@@ -563,6 +543,7 @@ england_shape_2022 <- sub_icb_shapes_2022 %>%
   sf::st_union()
 
 ```
+<br>
 
 #### Create choropleth map
 
@@ -575,19 +556,19 @@ map_df <- anticoag_df %>%
   filter(between(date, as.Date("2021-01-01"), as.Date("2021-12-31")),
          chemical == "Apixaban") %>% 
   group_by(chemical, name, ods_code, gss_code) %>% 
-  # Calculate items_per_100 population, and set up a column with categorical labels for each bin
+  # Calculate items_per_1000 population, and set up a column with categorical labels for each bin
   summarise(items_per_1000 = sum(items)/(sum(total_list_size)/1000),
             items_per_1000_bin = cut(items_per_1000,
                                      breaks = c(0,5,10,15,20,Inf),
                                      labels = c("<5","5-10", "10-15", "15-20", "20+"))) %>% 
   ungroup()
 
-# Join our data to the dataframe containing the relevant Sub ICB location shapes. Ensure the 
+# Join our data to the dataframe containing the relevant sub-ICB location shapes. Ensure the 
 # dataframe containing the shapes is the first argument in the join, as we want to preserve 
 # the class of this table. If not the geometry column containing the shapes will be dropped.
 map_df <- left_join(sub_icb_shapes_2022, map_df, by = c("sicbl22cd" = "gss_code"))
 
-# Set up the sequential colour palette 
+# Set up the sequential colour palette for our 5 bins
 pal <- colorRampPalette(nice_pal("seq"))(5)
 
 # Create chart 
@@ -603,7 +584,7 @@ choropleth_chart_seq <- map_df %>%
                       title.hjust = 0.5,
                       label.position = "left",
                       reverse = TRUE)) +
-  # Add another layer with the England shape to add an outline
+  # Add another layer with the England shape to provide a black outline
   geom_sf(data = england_shape_2022, fill = NA, color = nice_cols("black_100"), lwd = 0.1) +
   # Add the NICE theme
   nice_gg_theme(remove_axes = TRUE) +
@@ -614,25 +595,20 @@ choropleth_chart_seq <- map_df %>%
                                              color = nice_cols("black_100")),
         legend.text.align = 1)
 ```
-
-
-#### **Apixaban prescribing in England**{.unlisted .unnumbered}  
-
-##### Figure xa: Plotted by sub-ICB location, England 2021
-
+<br>
 ```{r gg_choropleth_seq_out, echo = FALSE}
 choropleth_chart_seq
 ```
 <br>
 
 
-Using a diverging palette can be helpful if you want to draw attention to the extremes of the scale, or show variation around a mean. The example below uses the NICE diverging colour palette, accessed using `nice_pal("div")`
+Using a diverging palette can be helpful if you want to draw attention to the extremes of the scale, or show variation around a mean. The example below uses the NICE diverging colour palette, accessed using `nice_pal("div")`.
 
 ```{r gg_choropleth_div}
 
 # Using same map data as previous choropleth
 
-# Set up the divergingcolour palette 
+# Set up the diverging colour palette 
 pal <- colorRampPalette(nice_pal("div"))(5)
 
 # Create chart 
@@ -658,17 +634,13 @@ choropleth_chart_div <- map_df %>%
                                              size = 12,
                                              color = nice_cols("black_100")),
         legend.text.align = 1)
-
 ```
-
-#### **Apixaban prescribing in England**{.unlisted .unnumbered}  
-
-##### Figure xb: Plotted by sub-ICB location, England 2021
-
+<br>
 ```{r gg_choropleth_div_out, echo = FALSE}
 choropleth_chart_div
 ```
 <br>
+
 
 # Interactive charts 
 
