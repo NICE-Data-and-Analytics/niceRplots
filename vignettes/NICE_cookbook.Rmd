@@ -248,28 +248,27 @@ iris_bar_formatted
 
 We can now apply the NICE theme using the `nice_gg_theme()` function from the `niceRplots` package, specifying the base font for the plot to be of size 12. The `nice_gg_theme()` function alters several aspects of the chart to make it consistent with the [NICE brand guidelines](https://indepth.nice.org.uk/our-brand/index.html). These are as follows:
 
-* **Fonts**: changes the title font to Lora SemiBold, and all other text to Inter Regular. 
+* **Fonts**: text throughout the plot will be changed to the Inter Regular font. If a title is present, this will be changed to Lora SemiBold.
 
-* **Text scaling**: applies a text hierarchy to the chart using relative text sizes. Changing the optional `base_size` argument will change the text size throughout the plot. Titles and subtitles will be automatically scaled relative to this base_size to maintain the text hierarchy. This is useful if you want to change the chart size, as all text can be simply adjusted by changing the `base_size` argument. 
+* **Text sizing**: text throughout the chart can be resized using optional `base_size` argument (default is `12`). Any titles or subtitles will be automatically scaled relative to this base_size to maintain the text hierarchy. 
 
-* **Colour scheme**: changes line and text colours to be consistent with the NICE brand colour palette. This is particularly noticeable when creating faceted charts (shown later in cookbook). It should be noted that this will not add colour to the plotted data, which will still need to be added manually when creating the chart. For instance, a fill colour was added in the `geom_col()` argument in the above example. 
+* **Colour scheme**: removes the grey background. Changes line and text colours to be consistent with the NICE brand colour palette. This is particularly noticeable when creating faceted charts (shown later in cookbook). It should be noted that this will not add colour to the plotted data, which will still need to be added manually when creating the chart. For instance, a fill colour was added in the `geom_col()` argument in the above example. 
 
 * **Margins**: adjusts the margins around the title, subtitle, and axis titles to give everything space to breathe.
 
-* **Background**: removes the panel background and borders.
+* **Grid lines**:  grid lines can be added or removed from the axes using the optional `grid_lines` argument (options are `"y"` (default), `"x"`, `"x+y`" and `"none"`). A panel border can be added by setting the `panel_border` argument to `TRUE`. 
 
-* **Other**: Applies major grid lines along the y-axis. This will be appropriate for most charts, but may need to be disabled in others by applying `theme(panel.grid.major.y = ggplot2::element_blank())`
+* **Axes**: axes ticks can be added or removed using the optional `axis_ticks` argument (options are `"x"` (default), `"y"`, `"x+y`" and `"none"`). Axes can be removed entirely by setting the `remove_axes` argument to `TRUE`. 
 
+* **Legend**: remove the chart legend by setting the `legend` argument to `FALSE`. 
 
-The `nice_gg_theme()` function isn't designed to modify every aspect of the chart, but to apply a general theme that will maintain consistency with the NICE style guide across all charts. Many aspects of the chart will still need to be modified manually. For example, in the below chart we may choose to apply an additional theme argument to remove the x-axis title. 
+The `nice_gg_theme()` function isn't designed to modify every aspect of the chart, but to apply a general consistent theme and provide options for the most common chart modifications. When making complex charts, many aspects of the chart will still need to be modified manually (see choropleth example). The remaining chart examples in this section will demonstrate several use cases of the `nice_gg_theme()` function.
 
 ```{r theme_chart}
 
 iris_bar_themed <- iris_bar_formatted +
   # Apply NICE theme, set base text size to 12
-  nice_gg_theme(base_size = 12) +
-  # remove x axis title as this is not needed
-  theme(axis.title.x = ggplot2::element_blank())
+  nice_gg_theme(base_size = 12)
 
 iris_bar_themed
 
@@ -307,7 +306,7 @@ nice_hist <- iris %>%
   geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
   # Remove extra spacing and set y axis limits
   scale_y_continuous(expand = c(0,0), limits = c(0,40)) +
-  # Use NICE colours
+  # Use NICE categorical colour palette
   scale_fill_manual(values = nice_pal("cat")) +
   # Add NICE theme and set labels
   nice_gg_theme() +

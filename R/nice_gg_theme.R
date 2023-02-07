@@ -17,10 +17,10 @@
 #' - Provides an option to remove the axes
 #'
 #' @param base_size Minimum font size. Default is `12`.
-#' @param x_title Option to remove the x axis title. If `TRUE`(default), the x axis
+#' @param x_title Option to remove the x axis title. If `TRUE` (default), the x axis
 #' title will be present and can be renamed using the `labs()` function. If set to
 #' `FALSE`, the x axis title will be removed.
-#' @param y_title Option to remove the y axis title. If `TRUE`(default), the y axis
+#' @param y_title Option to remove the y axis title. If `TRUE` (default), the y axis
 #' title will be present and can be renamed using the `labs()` function. If set to
 #' `FALSE`, the y axis title will be removed.
 #' @param grid_lines determines which major grid lines are shown:
@@ -33,11 +33,11 @@
 #' - `"y"`: show ticks on y axis
 #' - `"x+y"`: show ticks on both x and y axes
 #' - `"none"`: remove ticks
-#' @param legend Option to remove the chart legend. If `TRUE`(default), the legend
+#' @param legend Option to remove the chart legend. If `TRUE` (default), the legend
 #' will be present above the chart. If set to `FALSE`, the legend will be removed.
-#' @param panel_border Option to add a panel border. If `FALSE`(default), no border
+#' @param panel_border Option to add a panel border. If `FALSE` (default), no border
 #' will be present. If set to `TRUE`, a panel border will be added.
-#' @param remove_axes Option to remove the axes. If `FALSE`(default), chart axes
+#' @param remove_axes Option to remove the axes. If `FALSE` (default), chart axes
 #' will be present. If set to `TRUE`, the axes will be removed.
 #'
 #' @return A ggplot2 chart object

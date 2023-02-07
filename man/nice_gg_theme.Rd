@@ -18,11 +18,11 @@ nice_gg_theme(
 \arguments{
 \item{base_size}{Minimum font size. Default is \code{12}.}
 
-\item{x_title}{Option to remove the x axis title. If \code{TRUE}(default), the x axis
+\item{x_title}{Option to remove the x axis title. If \code{TRUE} (default), the x axis
 title will be present and can be renamed using the \code{labs()} function. If set to
 \code{FALSE}, the x axis title will be removed.}
 
-\item{y_title}{Option to remove the y axis title. If \code{TRUE}(default), the y axis
+\item{y_title}{Option to remove the y axis title. If \code{TRUE} (default), the y axis
 title will be present and can be renamed using the \code{labs()} function. If set to
 \code{FALSE}, the y axis title will be removed.}
 
@@ -42,13 +42,13 @@ title will be present and can be renamed using the \code{labs()} function. If se
 \item \code{"none"}: remove ticks
 }}
 
-\item{legend}{Option to remove the chart legend. If \code{TRUE}(default), the legend
+\item{legend}{Option to remove the chart legend. If \code{TRUE} (default), the legend
 will be present above the chart. If set to \code{FALSE}, the legend will be removed.}
 
-\item{panel_border}{Option to add a panel border. If \code{FALSE}(default), no border
+\item{panel_border}{Option to add a panel border. If \code{FALSE} (default), no border
 will be present. If set to \code{TRUE}, a panel border will be added.}
 
-\item{remove_axes}{Option to remove the axes. If \code{FALSE}(default), chart axes
+\item{remove_axes}{Option to remove the axes. If \code{FALSE} (default), chart axes
 will be present. If set to \code{TRUE}, the axes will be removed.}
 }
 \value{

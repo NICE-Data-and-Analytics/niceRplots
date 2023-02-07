@@ -28,6 +28,7 @@ Imports:
     ggpubr,
     grDevices,
     htmltools,
+    colorspace
 URL: https://github.com/GitWray1/niceRplots
 BugReports: https://github.com/GitWray1/niceRplots/issues
 Depends: 
