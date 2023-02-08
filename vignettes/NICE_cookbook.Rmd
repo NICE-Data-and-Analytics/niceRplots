@@ -207,7 +207,7 @@ colorspace::swatchplot(
 
 ## The ggplot2 package
 
-The `ggplot2` package can be used to create static charts in R. The sections below will demonstrate how to create a range of chart types using `ggplot2` and apply the NICE theme.
+The [ggplot2 package](https://ggplot2.tidyverse.org/) can be used to create static charts in R. The sections below will demonstrate how to create a range of chart types using `ggplot2` and apply the NICE theme.
 
 ## How to style your charts
 
@@ -296,7 +296,7 @@ ggsave("final_plot.png", iris_bar_themed)
 
 ```
 
-## Chart examples
+## Chart types
 
 ### Histogram
 
@@ -325,7 +325,7 @@ nice_hist
 <br>
 
 
-### Vertical bar chart
+### Bar chart
 
 ```{r gg_vbar}
 
@@ -359,9 +359,6 @@ bar_chart <- bar_df %>%
 bar_chart
 ```
 <br>
-
-
-### Horizontal  bar chart
 
 Transposing a bar chart is a useful way to make long axis labels easier to read. This has the added benefit of making the y-axis title horizontal, thereby making it easier to read.
 
@@ -658,7 +655,7 @@ The `nice_plotly_theme()` function alters the following aspects of the chart to 
 
 * **Modebar**: removes all modebar buttons from the chart, e.g. zoom, select, pan, except for the camera icon, which allows the graph to be saved as a PNG.
 
-Like with `nice_gg_theme()`, you will need to manually specify the use of NICE colours in the graph elements, e.g. with `line = list(color = "#228096")` for line charts or `marker = list(color = "#228096", line = list(color = "#000000"))` for bar charts. 
+Like with `nice_gg_theme()`, you will need to manually specify the use of NICE colours in the graph elements, e.g. with `line = list(color = nice_cols("bold_teal_100"))` for line charts or `marker = list(color = nice_cols("bold_teal_100"), line = list(color = nice_cols("black_100")))` for bar charts. 
 
 `nice_plotly_theme()` only makes basic adjustments to make graphs more aesthetically consistent. You may need to make additional changes.
 
@@ -668,12 +665,13 @@ Using the `iris` dataset, we first create a basic chart (top), then recreate the
 
 We also alter how the x and y values are displayed in the hover text (or tooltip) using `hovertemplate`. See the [Plotly guidance on hover text and formatting in R](https://plotly.com/r/hover-text-and-formatting/) for more information.
 
-```{r format_plotly, fig.show = "hold", out.width = "50%"}
+```{r format_plotly}
 # Create basic bar chart (top)
 plotly_iris_bar <- plot_ly(iris_bar_df,
                     x = ~Species,
                     y = ~Sepal_Width,
-                    type = "bar")
+                    type = "bar",
+                    showlegend = FALSE)
 
 # Create formatted chart (bottom)
 plotly_iris_bar_formatted <- plot_ly(iris_bar_df,
@@ -684,12 +682,13 @@ plotly_iris_bar_formatted <- plot_ly(iris_bar_df,
                                   line = list(color = nice_cols("white_100"), width = 0.2)),
                     hovertemplate = paste0("Species: %{x}<br>",
                                            "Sepal width: %{y:.2f}",
-                                           "<extra></extra>"))
+                                           "<extra></extra>"),
+                    showlegend = FALSE)
 
-plotly_iris_bar
-plotly_iris_bar_formatted
+plotly::subplot(plotly_iris_bar,
+                plotly_iris_bar_formatted, 
+                nrows = 1)
 
-# fig.show = "hold" not working for Plotly?
 ```
 
 We then apply the NICE Plotly theme using `nice_plotly_theme()`, providing axis titles and specifying `chart_type = "vertical_bar"`. 
@@ -699,20 +698,10 @@ plotly_iris_bar_themed <- plotly_iris_bar_formatted %>%
   nice_plotly_theme(chart_type = "vertical_bar",
              x_title = "Species",
              y_title = "Sepal Width")
-```
 
-#### Formatted chart headline title {.unlisted .unnumbered}
-##### Figure x. Formatted chart statistical title
-
-```{r theme_plotly_output, echo = FALSE}
 plotly_iris_bar_themed
 ```
 
-[Alt text - text description of message chart is showing]
-<br>
-Source: R - Iris dataset
-<br>
-Download the data for Figure x (CSV, 5.0KB).
 
 ### How to save your plot
 
@@ -751,9 +740,6 @@ plotly_hist <- iris %>%
              y_title = "Count")
 
 plotly_hist
-
-# Category order differs from ggplot but no big difference
-
 ```
 
 #### Bar chart
@@ -783,13 +769,7 @@ plotly_vbar_chart <- bar_df %>%
   nice_plotly_theme(chart_type = "vertical_bar",
              x_title = "",
              y_title = "Dispensed items (millions)")
-```
 
-**Apixaban was the most prescribed anticoagulant in 2021**  
-
-Figure x. Total anticoagulant medicines dispensed in primary care in England, 2020
-
-```{r plotly_vertical_bar_output, echo = FALSE}
 plotly_vbar_chart
 ```
 
@@ -884,14 +864,10 @@ plotly_line_chart <- line_df %>%
              y_title = "Dispensed items",
              # Don't pad the axes, as ticks shown. Do not want gap between axis line and ticks
              pad_axes = FALSE)
-```
 
-**Edoxaban prescribing has increased since 2017**  
-Figure x. Edoxaban prescribing in England, 2017-2022
-
-```{r plotly_line_output, echo = FALSE}
 plotly_line_chart
 ```
+
 
 #### Scatter plot
 
@@ -920,14 +896,10 @@ plotly_scatter_chart <- scatter_df %>%
              y_title = "Dispensed items",
              # Don't pad the axes, as ticks shown. Do not want gap between axis line and ticks
              pad_axes = FALSE)
-```
 
-**Apixaban prescribing**  
-Items of apixaban dispensed in primary care compared to sub-ICB location list size, July 2021
-
-```{r plotly_scatter_output, echo = FALSE}
 plotly_scatter_chart
 ```
+
 
 #### Faceted charts
 
@@ -942,18 +914,19 @@ It is possible to do it [entirely in Plotly using subplots](https://plotly.com/r
 
 ## Choropleth map (Leaflet)
 
-It is also possible to create an interactive choropleth map using the `leaflet` package, which provides additional zoom, drag and labeling functionality to allow users to explore the data. 
+It is also possible to create a fully interactive choropleth map using the [Leaflet package](https://rstudio.github.io/leaflet/), which provides additional zoom, drag and labeling functionality to allow users to explore the data. 
 
 ```{r leaflet, out.width="100%"}
 
-# Using same map data as previous choropleths
+# Using same map data as previous maps
 
-# Create chart
+# Set up colour palette using the NICE sequential palette
 pal <- colorBin(colorRampPalette(nice_pal("seq"))(5),   
                 domain = map_df$items_per_1000,
                 bins = 5,
                 na.color = nice_cols("black_50"))
 
+# Create chart
 leaflet_map <- map_df %>% 
   # Set up degree of zoom using controls and scroll
   leaflet(options = leafletOptions(zoomDelta = 0.25,
@@ -989,5 +962,4 @@ leaflet_map <- map_df %>%
             opacity = 1)
   
 leaflet_map
-
 ```
