@@ -85,7 +85,7 @@ library(niceRplots)
 
 ## Load in data
 
-Throughout this cookbook we will use two datasets for our example charts. The first is R's built in `iris` dataset, and the second is the `anticoag_df` dataframe that comes built into the `niceRplots` package. You can find detailed information on these datasets by typing `?iris` or `anticoag_df` into the R console.
+Throughout this cookbook we will use two datasets for our example charts. The first is R's built in `iris` dataset, and the second is the `anticoag_df` dataframe that comes built into the `niceRplots` package. You can find detailed information on these datasets by typing `?iris` or `?anticoag_df` into the R console.
 
 As the `anticoag_df` comes pre-loaded with the `niceRplots` package, we don't need to load this in. The code below demonstrates how we would usually load data into R.
 
