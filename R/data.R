@@ -67,7 +67,7 @@
 "nice_colours"
 
 
-#' NICE brand colours
+#' Government Analysis Function colours
 #'
 #' A named vector of Government Analysis Function (GAF) colours for use in plots
 #'
