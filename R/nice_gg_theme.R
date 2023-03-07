@@ -192,7 +192,7 @@ nice_gg_theme <- function(base_size = 12,
                                              fill = NA))
   }
 
-  # Option to remove legend axis title --------------------------------------
+  # Option to remove legend --------------------------------------
   if (!legend){
 
     nice_theme <- nice_theme +
