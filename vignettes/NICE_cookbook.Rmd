@@ -23,7 +23,7 @@ here::i_am("vignettes/NICE_cookbook.Rmd")
 
 The `niceRplots` package and cookbook make the process of creating publication-ready graphics in the NICE style a more reproducible process, as well as making it easier for people new to R to create graphics. 
 
-Within this cookbook, we will demonstrate how to use the functions included within the `niceRplots` package, and provide examples of plots that have been created in the NICE style. The plots in this cookbook has been created using two graphing packages. The `ggplot2` package is used to create static plots, while the `plotly` package is used to create interactive plots. We have also included an example choropleth map (heatmap) that has been created using the `leaflet` package. Navigate to the relevant section to view the code used to create these charts.
+Within this cookbook, we will demonstrate how to use the functions included within the `niceRplots` package, and provide examples of plots that have been created in the NICE style. The plots in this cookbook has been created using two graphing packages. The [ggplot2 package](https://ggplot2.tidyverse.org/) is used to create static plots, while the [plotly package](https://plotly.com/r/) is used to create interactive plots. We have also included an example choropleth map (heatmap) that has been created using the [leaflet package](https://rstudio.github.io/leaflet/). Navigate to the relevant section to view the code used to create these charts.
 <br>
 
 ## Installing the niceRplots package
