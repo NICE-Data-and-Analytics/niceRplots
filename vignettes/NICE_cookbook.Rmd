@@ -57,7 +57,7 @@ The `niceRplots` package contains four functions and five data objects:
 
 These have been included primarily for demonstration purposes in the present cookbook.
 
-* `anticoag_df` - A data frame showing monthly primary care dispensing of 5 anticoagulant medicines for all 106 sub-ICB locations in England between October 2017 and September 2022.This was downloaded from [OpenPrescribing.net](https://openprescribing.net/).
+* `anticoag_df` - A data frame showing monthly primary care dispensing of 5 anticoagulant medicines for all 106 sub-ICB locations in England between October 2017 and September 2022. This was downloaded from [OpenPrescribing.net](https://openprescribing.net/).
 * `sub_icb_shapes_2022` - A data frame containing the April 2022 polygon boundaries for all 106 sub-ICB locations in England. 
 * `england_shape_2022` - A single polygon containing the boundary for England, created by merging the polygons for all sub-ICB locations.
 * `nice_colours` - A named vector of names and hex codes for all NICE brand colours. 
