@@ -101,13 +101,13 @@ example_df <- readr::read_csv("example_data.csv",
 
 # Chart accessibility
 
-By law, all content published on public sector websites must meet the level A and AA success criterion in the [Web Content Accessibility Guidelines (WCAG) 2.1.](https://www.w3.org/TR/WCAG21/). This includes charts and data visualisations. 
+By law, all content published on public sector websites must meet the level A and AA success criterion in the [Web Content Accessibility Guidelines (WCAG) 2.1](https://www.w3.org/TR/WCAG21/). This includes charts and data visualisations. 
 
-This guide will not go into detail on the principles of chart accessibility as this has been thoroughly covered elsewhere. Listed below are several useful resources designed to help create accessible charts. 
+This guide will not go into detail on the principles of chart accessibility as this has been thoroughly covered elsewhere. Listed below are several useful resources designed to help create accessible charts: 
 
 * [Government Analysis Function - Data visualisation: charts](https://analysisfunction.civilservice.gov.uk/policy-store/data-visualisation-charts/)
 * [Office for National Statistics - Guidance for presenting data](https://style.ons.gov.uk/category/data-visualisation/)
-* [Office for National Statistics - Accesibility guidance](https://style.ons.gov.uk/category/accessibility/)
+* [Office for National Statistics - Accessibility guidance](https://style.ons.gov.uk/category/accessibility/)
 
 Many of the principles highlighted in these guides have been considered when developing the `niceRplots` package and visualisation cookbook. 
 
@@ -115,11 +115,11 @@ Many of the principles highlighted in these guides have been considered when dev
 
 When publishing charts on the web it is important to include all necessary information alongside the chart. These should be provided in the body of the page, rather than within the chart itself. All charts should be supplied with following 6 key elements:
 
-* **Title** - This should be ten words or less and convey the main message of the chart.
+* **Title** - This should be concise and convey the main message of the chart.
 
 * **Statistical title** - This should have information on the statistical measure, the geographical coverage and the time period. This should also include a figure number if appropriate. 
 
-* **Alternative text** - This should describe what you want users to understand from the chart. Ideally this should live in the body of the page, directly above or below the chart. In this situation the figure itself should be marked as decorative to be hidden from screen reader software. Refer to the [Office for National Statistics Alt text page](https://style.ons.gov.uk/category/accessibility/alt-text/) for guidance on writing informative alt text. 
+* **Alternative text** - This should describe what you want users to understand from the chart. The Government Analysis Function [recommends](https://analysisfunction.civilservice.gov.uk/policy-store/data-visualisation-charts/#section-6) that where you want a user to to take away an overall understanding of the data, provide alt text as a text description in the body of the page, directly below the chart. The graph image should then be marked as decorative to be hidden from screen reader software. Refer to the [GAF accessibility guidance](https://analysisfunction.civilservice.gov.uk/policy-store/making-analytical-publications-accessible/#section-4) for more on alt text. 
 
 * **Source** - This should detail the source of the data in the following format: [organisation] – [publication or source of data]. e.g. NHS Digital - Hospital Episode Statistics. If all charts come from the same data source, this does not need to be repeated under each figure.
 
@@ -166,17 +166,23 @@ Source: Bennett Institute for Applied Data Science – [OpenPrescribing](https:/
 
 ## Colour usage
 
-For guidance on colour usage in charts, please refer to the below links:
+For guidance on colour usage in charts, please refer to the guides below:
 
 * [Government Analysis Function - Data visualisation: colours](https://analysisfunction.civilservice.gov.uk/policy-store/data-visualisation-colours-in-charts/)
 * [Office for National Statistics - Using colours](https://style.ons.gov.uk/category/data-visualisation/using-colours/)
+
+Above all, do not rely on colour alone to communicate information in a chart.
 
 ### NICE colours and palettes
 
 The `niceRplots` package includes two functions to assist with colour usage: 
 
 * `nice_cols()` - used to select individual colours from the NICE brand guidelines e.g. `nice_cols("bold_teal_100")`
-* `nice_pal()` - used to select one of five colour palettes e.g. `nice_pal("seq")`. Three primary palettes have been created using the NICE brand colours, and include categorical, sequential and diverging schemes. Secondary categorical and sequential palettes have also been included, using colours recommended by the Government Analysis Function (GAF). These palettes have been visualized below, showing the original colors, and how they would look to people with various colour vision deficiencies.
+* `nice_pal()` - used to select one of five colour palettes e.g. `nice_pal("seq")`. 
+    + Three primary palettes have been created using the NICE brand colours, and include categorical, sequential and diverging schemes. 
+    + Secondary categorical and sequential palettes [developed by the Government Analysis Function (GAF)](https://analysisfunction.civilservice.gov.uk/policy-store/data-visualisation-colours-in-charts/#section-4) have also been included. Compared to the NICE categorical palette, the GAF palette may be preferred as when used in the order specified, all adjacent colours have a contrast ratio of at least 3 to 1 and appear distinct from each other in greyscale.
+
+These palettes have been visualized below, showing the original colors, and how they would look to people with various colour vision deficiencies.
 
 ```{r nice_cols, out.width="50%", echo = FALSE}
 
@@ -271,9 +277,9 @@ The `nice_gg_theme()` function alters several aspects of the chart to make it co
 
 * **Margins**: adjusts the margins around the title, subtitle, and axis titles to give everything space to breathe.
 
-* **Grid lines**:  grid lines can be added or removed from the axes using the optional `grid_lines` argument (options are `"y"` (default), `"x"`, `"x+y`" and `"none"`). A panel border can also be added by setting the `panel_border` argument to `TRUE`. 
+* **Grid lines**:  grid lines can be added or removed from the axes using the optional `grid_lines` argument (options are `"y"` (default), `"x"`, `"x+y"` and `"none"`). A panel border can also be added by setting the `panel_border` argument to `TRUE`. 
 
-* **Axes**: axes ticks can be added or removed using the optional `axis_ticks` argument (options are `"x"` (default), `"y"`, `"x+y`" and `"none"`). Axes can be removed entirely by setting the `remove_axes` argument to `TRUE`. 
+* **Axes**: axes titles can be removed by setting the `x_title` or `y_title` arguments to `FALSE` (default is `TRUE`). Axes ticks can be added or removed using the optional `axis_ticks` argument (options are `"x"` (default), `"y"`, `"x+y"` and `"none"`). Axes can be removed entirely by setting the `remove_axes` argument to `TRUE`. 
 
 * **Legend**: remove the chart legend by setting the `legend` argument to `FALSE`. 
 
@@ -348,7 +354,7 @@ bar_chart <- bar_df %>%
   # set y-axis limits and remove padding
   scale_y_continuous(expand = c(0,0), limits = c(0,8)) +
   # Set x-axis labels to wrap to prevent overlapping
-  scale_x_discrete(labels = function(x) {stringr::str_wrap(x, width = 10)}) +
+  scale_x_discrete(labels = function(x) {stringr::str_wrap(x, width = 0)}) +
   # Apply NICE theme
   nice_gg_theme(x_title = FALSE) +
   # Add labels
@@ -655,7 +661,7 @@ The `nice_plotly_theme()` function alters the following aspects of the chart to 
 
 * **Modebar**: removes all modebar buttons from the chart, e.g. zoom, select, pan, except for the camera icon, which allows the graph to be saved as a PNG.
 
-Like with `nice_gg_theme()`, you will need to manually specify the use of NICE colours in the graph elements, e.g. with `line = list(color = nice_cols("bold_teal_100"))` for line charts or `marker = list(color = nice_cols("bold_teal_100"), line = list(color = nice_cols("black_100")))` for bar charts. 
+Like with `nice_gg_theme()`, you will need to manually specify the use of NICE colours in the graph elements, e.g. with `line = list(color = nice_cols("bold_teal_100"))` for line charts or `marker = list(color = nice_cols("bold_teal_100"), line = list(color = nice_cols("white_100")))` for bar charts. 
 
 `nice_plotly_theme()` only makes basic adjustments to make graphs more aesthetically consistent. You may need to make additional changes.
 
@@ -723,7 +729,7 @@ plotly_hist <- iris %>%
           # Use NICE colours - remove colour names so it maps correctly
           colors = nice_pal("cat")[1:3],
           type = "histogram",
-          # Black outline for bars
+          # White outline for bars
           marker = list(line = list(color = nice_cols("white_100"), width = 0.4)),
           # Set bin width
           xbins = list(size = 0.2,
@@ -748,7 +754,7 @@ plotly_hist
 
 Use `chart_type = "vertical_bar"`.
 
-Add a black outline around the bars so adjacent colours of stacked bars are better distinguished.
+For stacked bar charts, add a white outline around the bars so adjacent colours are better distinguished.
 
 ```{r plotly_vertical_bar}
 # Create chart
@@ -758,7 +764,7 @@ plotly_vbar_chart <- bar_df %>%
   plot_ly(x = ~chemical,
           y = ~items,
           type = "bar",
-          # Bold teal bars with black outline
+          # Bold teal bars with white outline
           marker = list(color = nice_cols("bold_teal_100"),
                         line = list(color = nice_cols("white_100"), width = 0.2)),
           # Edit hover text
@@ -787,7 +793,7 @@ plotly_vbar_chart <- bar_df %>%
           type = "bar",
           # Make horizontal
           orientation = "h",
-          # Bold teal bars with black outline
+          # Bold teal bars with white outline
           marker = list(color = nice_cols("bold_teal_100"),
                         line = list(color = nice_cols("white_100"), width = 0.2)),
           # Edit hover text
@@ -806,7 +812,7 @@ plotly_vbar_chart
 
 Use `chart_type = "line"`.
 
-`pad_axes = FALSE` here in `nice_plotly_theme()` as we do not want a gap between the x axis tick marks and the x axis line.
+`pad_axes = FALSE` here in `nice_plotly_theme()` as we do not want a gap between the x-axis tick marks and the x-axis line.
 
 ```{r plotly_line}
 # Create chart
@@ -906,7 +912,7 @@ plotly_scatter_chart
 The easiest way to make NICE-themed [faceted charts in Plotly is to make it in ggplot](https://plotly.com/ggplot2/facet-plots/), apply the `nice_gg_theme()` and then convert it into a Plotly chart using the function ggplotly. 
 
 ```{r ggplotly_facet}
-# Create chart
+# Convert previously created faceted ggplot to Plotly
 ggplotly(facet_chart)
 ```
 
