@@ -5,10 +5,7 @@
 \alias{england_shape_2022}
 \title{Polygon for England}
 \format{
-\subsection{\code{england_shape_2022}}{
-
 A single SFC_multipolygon shape
-}
 }
 \source{
 \url{https://geoportal.statistics.gov.uk}
@@ -18,6 +15,6 @@ england_shape_2022
 }
 \description{
 Single polygon containing the boundary for England, created by merging the polygons
-for all sub_ICB locations.
+for all sub-ICB locations.
 }
 \keyword{datasets}

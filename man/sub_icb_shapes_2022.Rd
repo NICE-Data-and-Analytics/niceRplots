@@ -5,12 +5,10 @@
 \alias{sub_icb_shapes_2022}
 \title{Polygons for sub-ICB locations}
 \format{
-\subsection{\code{sub_icb_shapes_2022}}{
-
 A data frame with 106 rows and 9 columns:
 \describe{
-\item{sicbl22cd}{Sub-icb location Government Statistical Service code}
-\item{sicbl22nm}{Sub-icb location name}
+\item{sicbl22cd}{Sub-ICB location Government Statistical Service code}
+\item{sicbl22nm}{Sub-ICB location name}
 \item{bng_e}{Eastings}
 \item{bng_n}{Northings}
 \item{long}{Longtitude}
@@ -20,7 +18,6 @@ A data frame with 106 rows and 9 columns:
 \item{geometry}{Polygon shape}
 }
 }
-}
 \source{
 \url{https://geoportal.statistics.gov.uk/datasets/ons::sub-integrated-care-board-locations-july-2022-en-buc/explore?location=52.809615\%2C-2.452657\%2C8.22}
 }
@@ -28,7 +25,7 @@ A data frame with 106 rows and 9 columns:
 sub_icb_shapes_2022
 }
 \description{
-Data frame containing the April 2022 polygon boundaries for all 106 sub-ICB location
+Data frame containing the April 2022 polygon boundaries for all 106 sub-ICB locations
 in England. Data taken directly from the Open Geography Portal as a .geoJSON file.
 }
 \keyword{datasets}

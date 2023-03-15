@@ -20,15 +20,15 @@ Imports:
     sf,
     janitor,
     here,
-    ggpubr,
-    png,
     systemfonts,
-    grid,
     leaflet,
+    knitr,
+    rlang,
+    svglite,
+    ggpubr,
     grDevices,
     htmltools,
-    knitr,
-    rlang
+    colorspace
 URL: https://github.com/GitWray1/niceRplots
 BugReports: https://github.com/GitWray1/niceRplots/issues
 Depends: 
