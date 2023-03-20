@@ -7,7 +7,7 @@
 \format{
 A data frame with 31,792 rows and 10 columns:
 \describe{
-\item{date}{data month, first day of month specified}
+\item{date}{the month the data covers, displayed as first day of the month}
 \item{chemical}{Anticoagulant medicine}
 \item{bnf_code}{Medicine British National Formulary code}
 \item{ods_code}{Sub-icb location Organisation Data Service code}

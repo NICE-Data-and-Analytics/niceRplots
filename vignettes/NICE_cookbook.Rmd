@@ -217,7 +217,7 @@ The [ggplot2 package](https://ggplot2.tidyverse.org/) can be used to create stat
 
 ## How to style your charts
 
-As an example we will create a simple bar chart using the `iris` dataset. We will first create a basic chart, and then add some formatting. We can see the two charts below with and without formatting.
+Using the `iris` dataset, we first create a basic chart (left), then recreate the chart with a NICE colour applied to the fill colour of the bars and adding a white border to the bars (right).
 
 ```{r format_chart}
 

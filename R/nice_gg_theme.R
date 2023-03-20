@@ -86,7 +86,7 @@ nice_gg_theme <- function(base_size = 12,
     panel.border = ggplot2::element_blank(),
 
 
-    # Format the title and subtitle -------------------------------------------
+    # Format the title, subtitle and caption ----------------------------------
 
     plot.title = ggplot2::element_text(family = heading_font,
                                        size = ggplot2::rel(1.5),
@@ -94,10 +94,14 @@ nice_gg_theme <- function(base_size = 12,
 
     plot.subtitle = ggplot2::element_text(family = font,
                                           size = ggplot2::rel(1.2),
-                                          margin = ggplot2::margin(0,0,15,0)),
+                                          margin = ggplot2::margin(0,0,15,0),
+                                          color = "#000000"),
 
-    # Leave the caption empty, because we add this when finalizing the chart
-    plot.caption = ggplot2::element_blank(),
+    plot.caption = ggplot2::element_text(family = font,
+                                         size = ggplot2::rel(1.1),
+                                         margin = ggplot2::margin(10,0,0,0),
+                                         hjust = 0,
+                                         color = "#000000"),
 
 
     # Format the axes ---------------------------------------------------------

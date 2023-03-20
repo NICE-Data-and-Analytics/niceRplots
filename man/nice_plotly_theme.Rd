@@ -63,8 +63,8 @@ plot_ly(iris_bar_df,
    x = ~Species,
    y = ~Sepal_Width,
    type = "bar",
-   marker = list(color = nice_colours_full[["bold_teal_100"]],
-                 line = list(color = nice_colours_full[['black_100']], width = 1.5))) \%>\%
+   marker = list(color = nice_cols("bold_teal_100"),
+                 line = list(color = nice_cols("black_100"), width = 1.5))) \%>\%
    # Apply NICE theme
    nice_plotly_theme(chart_type = "vertical_bar",
                      x_title = "Species",

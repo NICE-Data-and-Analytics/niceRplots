@@ -85,11 +85,7 @@ geom_col(aes(x = Species, y = Sepal.Width), fill = "#228096", colour = "#000000"
 geom_hline(yintercept = 0, linewidth = 1, colour = "#333333") +
 scale_y_continuous(expand = c(0, 0), limits = c(0, 4)) +
 nice_gg_theme(
-  base_size = 12,
-  x_title = FALSE,
-  y_title = TRUE,
-  panel_border = FALSE,
-  grid_lines = "y",
-  legend = TRUE
-)
+  x_title = FALSE
+) +
+labs(y = "Sepal width")
 }
