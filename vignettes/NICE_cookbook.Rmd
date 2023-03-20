@@ -99,6 +99,18 @@ example_df <- readr::read_csv("example_data.csv",
 
 ```
 
+## Change RStudio graphic device
+
+In order to use the NICE fonts within our charts, we first need to change the graphics device used by RStudio. To do this, install the `ragg` package with the below code:
+
+```{r ragg_install, eval = FALSE}
+
+install.packages("ragg")
+
+```
+
+Then restart R by clicking *Session > Restart R*, and change the graphic device by clicking *Tools > Global options > General > Graphics > Backend: AGG > Apply*
+
 # Chart accessibility
 
 By law, all content published on public sector websites must meet the level A and AA success criterion in the [Web Content Accessibility Guidelines (WCAG) 2.1](https://www.w3.org/TR/WCAG21/). This includes charts and data visualisations. 
