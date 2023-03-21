@@ -157,8 +157,6 @@ anticoag_df %>%
   # Add bars, add fill and border colours
   geom_col(fill = nice_cols("bold_teal_100"), 
            colour = nice_cols("white_100"), linewidth = 0.2) +
-  # Add baseline to x axis
-  geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
   # set y-axis limits and remove padding
   scale_y_continuous(expand = c(0,0), limits = c(0,8)) +
   # set x-axis labels to wrap to prevent overlapping
@@ -250,8 +248,6 @@ iris_bar_formatted <- ggplot(iris_bar_df) +
   # Adjust bar fill and outline colour
   geom_col(aes(x = Species, y = Sepal_Width), fill = nice_cols("bold_teal_100"), 
            colour = nice_cols("white_100"), linewidth = 0.2)+
-  # Add baseline to x-axis
-  geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
   # Set y-axis limits and remove padding
   scale_y_continuous(expand = c(0, 0), limits = c(0, 4)) +
   # Add labels 
@@ -325,8 +321,6 @@ nice_hist <- iris %>%
   ggplot() +
   geom_histogram(aes(x = Sepal.Width, fill = Species), 
                  binwidth = 0.2, linewidth = 0.2, color = nice_cols("white_100")) +
-  # Add a line on the x axis
-  geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
   # Remove extra spacing and set y-axis limits
   scale_y_continuous(expand = c(0,0), limits = c(0,40)) +
   # Use NICE categorical colour palette
@@ -361,8 +355,6 @@ bar_chart <- bar_df %>%
   # Add bars, add fill and border colours
   geom_col(fill = nice_cols("bold_teal_100"), 
            colour = nice_cols("white_100"), linewidth = 0.2) +
-  # Add baseline to x axis
-  geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
   # set y-axis limits and remove padding
   scale_y_continuous(expand = c(0,0), limits = c(0,8)) +
   # Set x-axis labels to wrap to prevent overlapping
@@ -391,13 +383,12 @@ horizontal_bar_chart <- bar_df %>%
   # Add bars, add fill and border colours
   geom_col(fill = nice_cols("bold_teal_100"), 
            colour = nice_cols("white_100"), linewidth = 0.2) +
-  # Add baseline to x axis
-  geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
   # Set y-axis limits and remove padding
   scale_y_continuous(expand = c(0,0), limits = c(0,8)) +
   # Apply NICE theme
   nice_gg_theme(y_title = FALSE,
                 grid_lines = "x",
+                axis_lines = "y",
                 axis_ticks = "y") +
   coord_flip() +
   # Add labels
@@ -424,8 +415,6 @@ line_df <- anticoag_df %>%
 # Create chart
 line_chart <- line_df %>%
   ggplot(aes(x = date, y = items)) +
-  # Add baseline to x axis
-  geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
   # Add the vertical dashed line to show lockdown date. Added this before plotting the 
   # data so that it sits on a layer behind the line and points
   geom_vline(xintercept = as.Date("2020-03-01"), linewidth = 0.6, linetype = "dashed") +
@@ -473,8 +462,9 @@ scatter_chart <- scatter_df %>%
   scale_y_continuous(expand = c(0,0), limits = c(0, 25000), label = scales::comma) +
   # Apply NICE theme
   nice_gg_theme(grid_lines = "x+y",
-                panel_border = TRUE,
-                axis_ticks = "none") +
+                axis_lines = "none",
+                axis_ticks = "none",
+                panel_border = TRUE) +
   # Add labels
   labs(x = "Primary care list size (x1000)",
        y = "Dispensed items")
@@ -515,6 +505,7 @@ facet_chart <- facet_df %>%
   facet_wrap(~chemical) +
   # Apply the NICE theme
   nice_gg_theme(x_title = FALSE,
+                axis_lines = "none",
                 panel_border = TRUE,
                 legend = FALSE) +
   # Add labels
@@ -615,7 +606,6 @@ choropleth_chart_seq <- map_df %>%
 choropleth_chart_seq
 ```
 <br>
-
 
 Using a diverging palette can be helpful if you want to draw attention to the extremes of the scale, or show variation around a mean. The example below uses the NICE diverging colour palette, accessed using `nice_pal("div")`.
 

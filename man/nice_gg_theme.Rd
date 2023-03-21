@@ -9,6 +9,7 @@ nice_gg_theme(
   x_title = TRUE,
   y_title = TRUE,
   grid_lines = "y",
+  axis_lines = "x",
   axis_ticks = "x",
   legend = TRUE,
   panel_border = FALSE,
@@ -34,11 +35,19 @@ title will be present and can be renamed using the \code{labs()} function. If se
 \item \code{"none"}: remove grid lines
 }}
 
-\item{axis_ticks}{determines whether axes ticks are shown:
+\item{axis_lines}{determines which axis lines are shown:
+\itemize{
+\item \code{"x"} (default): show x axis line
+\item \code{"y"}: show y axis line
+\item \code{"x+y"}: show both x and y axis lines
+\item \code{"none"}: remove axis lines
+}}
+
+\item{axis_ticks}{determines which axis ticks are shown:
 \itemize{
 \item \code{"x"} (default): show ticks on x axis
 \item \code{"y"}: show ticks on y axis
-\item \code{"x+y"}: show ticks on both x and y axes
+\item \code{"x+y"}: show ticks on both x and y axis
 \item \code{"none"}: remove ticks
 }}
 
@@ -49,7 +58,8 @@ will be present above the chart. If set to \code{FALSE}, the legend will be remo
 will be present. If set to \code{TRUE}, a panel border will be added.}
 
 \item{remove_axes}{Option to remove the axes. If \code{FALSE} (default), chart axes
-will be present. If set to \code{TRUE}, the axes will be removed.}
+will be present. If set to \code{TRUE}, the axes will be removed. This will overwrite
+previous axis formatting options}
 }
 \value{
 A ggplot2 chart object
@@ -65,6 +75,7 @@ consistent with the NICE style. Changes made are listed below:
 \item Adjusts the chart colour scheme
 \item Provides an option to remove axis titles
 \item Provides an option to alter grid lines
+\item Provides an option to alter axis lines
 \item Provides an option to alter axis ticks
 \item Provides an option to remove the legend
 \item Provides an option to add a panel border
@@ -84,8 +95,6 @@ iris_bar <- ggplot(iris_bar_df) +
 geom_col(aes(x = Species, y = Sepal.Width), fill = "#228096", colour = "#000000") +
 geom_hline(yintercept = 0, linewidth = 1, colour = "#333333") +
 scale_y_continuous(expand = c(0, 0), limits = c(0, 4)) +
-nice_gg_theme(
-  x_title = FALSE
-) +
+nice_gg_theme(x_title = FALSE) +
 labs(y = "Sepal width")
 }

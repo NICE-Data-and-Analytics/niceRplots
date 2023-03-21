@@ -11,6 +11,7 @@
 #' - Adjusts the chart colour scheme
 #' - Provides an option to remove axis titles
 #' - Provides an option to alter grid lines
+#' - Provides an option to alter axis lines
 #' - Provides an option to alter axis ticks
 #' - Provides an option to remove the legend
 #' - Provides an option to add a panel border
@@ -28,17 +29,23 @@
 #' - `"x"`: show x axis grid lines
 #' - `"x+y"`: show both x and y axis grid lines
 #' - `"none"`: remove grid lines
-#' @param axis_ticks determines whether axes ticks are shown:
+#' @param axis_lines determines which axis lines are shown:
+#' - `"x"` (default): show x axis line
+#' - `"y"`: show y axis line
+#' - `"x+y"`: show both x and y axis lines
+#' - `"none"`: remove axis lines
+#' @param axis_ticks determines which axis ticks are shown:
 #' - `"x"` (default): show ticks on x axis
 #' - `"y"`: show ticks on y axis
-#' - `"x+y"`: show ticks on both x and y axes
+#' - `"x+y"`: show ticks on both x and y axis
 #' - `"none"`: remove ticks
 #' @param legend Option to remove the chart legend. If `TRUE` (default), the legend
 #' will be present above the chart. If set to `FALSE`, the legend will be removed.
 #' @param panel_border Option to add a panel border. If `FALSE` (default), no border
 #' will be present. If set to `TRUE`, a panel border will be added.
 #' @param remove_axes Option to remove the axes. If `FALSE` (default), chart axes
-#' will be present. If set to `TRUE`, the axes will be removed.
+#' will be present. If set to `TRUE`, the axes will be removed. This will overwrite
+#' previous axis formatting options
 #'
 #' @return A ggplot2 chart object
 #' @export
@@ -58,15 +65,14 @@
 #' geom_col(aes(x = Species, y = Sepal.Width), fill = "#228096", colour = "#000000") +
 #' geom_hline(yintercept = 0, linewidth = 1, colour = "#333333") +
 #' scale_y_continuous(expand = c(0, 0), limits = c(0, 4)) +
-#' nice_gg_theme(
-#'   x_title = FALSE
-#' ) +
+#' nice_gg_theme(x_title = FALSE) +
 #' labs(y = "Sepal width")
 
 nice_gg_theme <- function(base_size = 12,
                           x_title = TRUE,
                           y_title = TRUE,
                           grid_lines = "y",
+                          axis_lines = "x",
                           axis_ticks = "x",
                           legend = TRUE,
                           panel_border = FALSE,
@@ -234,6 +240,43 @@ nice_gg_theme <- function(base_size = 12,
       )
   }
 
+  # Option to alter axis lines -----------------------------------------------
+  if (axis_lines == "x"){
+
+    nice_theme <- nice_theme +
+      ggplot2::theme(
+        axis.line.x = ggplot2::element_line(linewidth = 0.7,
+                                            colour = "#000000"),
+        axis.line.y = ggplot2::element_blank()
+      )
+
+  } else if(axis_lines == "y"){
+
+    nice_theme <- nice_theme +
+      ggplot2::theme(
+        axis.line.x = ggplot2::element_blank(),
+        axis.line.y = ggplot2::element_line(linewidth = 0.7,
+                                            colour = "#000000")
+      )
+
+  } else if(axis_lines == "x+y"){
+
+    nice_theme <- nice_theme +
+      ggplot2::theme(
+        axis.line.x = ggplot2::element_line(linewidth = 0.7,
+                                            colour = "#000000"),
+        axis.line.y = ggplot2::element_line(linewidth = 0.7,
+                                            colour = "#000000")
+      )
+
+  } else if(axis_lines == "none"){
+
+    nice_theme <- nice_theme +
+      ggplot2::theme(
+        axis.ticks.x = ggplot2::element_blank(),
+        axis.ticks.y = ggplot2::element_blank()
+      )
+  }
 
   # Option to alter axis ticks ----------------------------------------------
   if (axis_ticks == "x"){
@@ -269,15 +312,18 @@ nice_gg_theme <- function(base_size = 12,
       )
   }
 
-
-  # Option to remove axes e.g. for choropleth or pie chart -------------------
+  # Option to fully remove axes (e.g. for choropleth map)
   if (remove_axes){
 
     nice_theme <- nice_theme +
       ggplot2::theme(
+        axis.title.x = ggplot2::element_blank(),
+        axis.title.y = ggplot2::element_blank(),
         axis.text = ggplot2::element_blank(),
         axis.ticks.x = ggplot2::element_blank(),
-        axis.ticks.y = ggplot2::element_blank()
+        axis.ticks.y = ggplot2::element_blank(),
+        axis.line.x = ggplot2::element_blank(),
+        axis.line.y = ggplot2::element_blank()
       )
   }
 
