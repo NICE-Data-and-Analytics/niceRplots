@@ -22,7 +22,7 @@ nice_plotly_theme(
 \item{x_title, y_title}{String to use as x or y axis title. Defaults to
 \code{"[x axis title]"} and \code{"[y axis title]"} respectively.}
 
-\item{font_size}{Minimum font size. Default is \code{12}.}
+\item{font_size}{Minimum font size in px. Default is \code{16}.}
 
 \item{grid_lines}{determines which major grid lines are shown:
 \itemize{

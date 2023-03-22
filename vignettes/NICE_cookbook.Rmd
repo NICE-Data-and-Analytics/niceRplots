@@ -289,7 +289,7 @@ The `nice_gg_theme()` function alters several aspects of the chart to make it co
 
 * **Axes**: axes titles can be removed by setting the `x_title` or `y_title` arguments to `FALSE` (default is `TRUE`). Axes ticks can be added or removed using the optional `axis_ticks` argument (options are `"x"` (default), `"y"`, `"x+y"` and `"none"`). Axes can be removed entirely by setting the `remove_axes` argument to `TRUE`. 
 
-* **Legend**: remove the chart legend by setting the `legend` argument to `FALSE`. 
+* **Legend**: remove the chart legend by setting the `show_legend` argument to `FALSE`. 
 
 The `nice_gg_theme()` function isn't designed to modify every aspect of the chart, but to apply a general consistent theme and provide options for the most common chart modifications. When making complex charts, many aspects of the chart will still need to be modified manually (see choropleth example). The remaining chart examples in this section will demonstrate several use cases of the `nice_gg_theme()` function.
 
@@ -655,11 +655,13 @@ The [Plotly package](https://plotly.com/r/) can be used to create interactive ch
 
 The `nice_plotly_theme()` function alters the following aspects of the chart to make it more consistent with the [NICE brand guidelines](https://indepth.nice.org.uk/our-brand/index.html):
 
-* **Fonts**: changes all text to Inter Regular and sets the minimum font size to the `font_size` argument (default is `12`).
+* **Fonts**: changes all text to Inter Regular and sets the minimum font size to the `font_size` argument (default is `16`). Plotly font sizes are measured in pixels (px). 16px is equivalent to 12pt font size.
 
-* **Grid lines**: the horizontal and/or vertical grid lines are displayed according to the graph type selected in the `chart_type` argument (options are `"vertical_bar"`, `"horizontal_bar"`, `"scatter`" and `"line"`).
+* **Grid lines**: the horizontal and/or vertical grid lines are displayed according to the `grid_lines` argument. (options are `x`, `y`(default), `both` and `none`)
 
-* **Margins**: adds space between the axis lines and the tick labels. The default Plotly theme has no axis tick marks, just tick labels, and this function adds a gap between the axis lines and the tick labels for better spacing. If tick marks are desired, turn the padding off with `pad_axes = FALSE`, otherwise there will be a gap between the tick marks and the axis lines.
+* **Axis lines and ticks**: axis lines and ticks are displayed according to the `axis_lines` and `axis_ticks` arguments, respectively. (options are `x` (default), `y`, `both` and `none`). A panel border can also be added by setting the `panel_border` argument to `TRUE`, this will override the `axis_lines` argument.
+
+* **Legend**: remove the chart legend by setting the `show_legend` argument to `FALSE`. 
 
 * **Modebar**: removes all modebar buttons from the chart, e.g. zoom, select, pan, except for the camera icon, which allows the graph to be saved as a PNG.
 
@@ -699,7 +701,7 @@ plotly::subplot(plotly_iris_bar,
 
 ```
 
-We then apply the NICE Plotly theme using `nice_plotly_theme()`, providing axis titles and specifying `chart_type = "vertical_bar"`. 
+We then apply the NICE Plotly theme using `nice_plotly_theme()`, providing axis titles.
 
 ```{r theme_plotly}
 plotly_iris_bar_themed <- plotly_iris_bar_formatted %>% 
@@ -719,8 +721,6 @@ Saving in other file formats (e.g. .svg or .jpg) is more complicated and require
 ### Chart types
 
 #### Histogram
-
-Use `chart_type = "vertical_bar"` for histograms.
 
 ```{r plotly_histogram}
 # Create chart
@@ -752,8 +752,6 @@ plotly_hist
 
 ##### Vertical bar chart
 
-Use `chart_type = "vertical_bar"`.
-
 For stacked bar charts, add a white outline around the bars so adjacent colours are better distinguished.
 
 ```{r plotly_vertical_bar}
@@ -780,8 +778,6 @@ plotly_vbar_chart
 ```
 
 ##### Horizontal bar chart
-
-Use `chart_type = "horizontal_bar"`.
 
 ```{r plotly_horizontal_bar}
 # Create chart
@@ -812,10 +808,6 @@ plotly_hbar_chart
 ```
 
 #### Line chart
-
-Use `chart_type = "line"`.
-
-`pad_axes = FALSE` here in `nice_plotly_theme()` as we do not want a gap between the x-axis tick marks and the x-axis line.
 
 ```{r plotly_line}
 # Create chart
@@ -877,8 +869,6 @@ plotly_line_chart
 
 
 #### Scatter plot
-
-Use `chart_type = "scatter"`.
 
 ```{r plotly_scatter}
 
@@ -958,7 +948,8 @@ leaflet_map <- map_df %>%
                                            bringToFront = TRUE),
               # Add hover labels to the shapes
               label = ~lapply(paste0("<strong>Name: </strong>", map_df$name,
-                                     "<br><strong>Items per 1000 people:</strong> ", round(map_df$items_per_1000),2),
+                                     "<br><strong>Items per 1000 people:</strong> ",
+                                     round(map_df$items_per_1000),2),
                               htmltools::HTML),
               # Set font options
               labelOptions = labelOptions(textsize = "12px",

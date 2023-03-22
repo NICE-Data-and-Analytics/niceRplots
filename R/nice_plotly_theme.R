@@ -12,7 +12,7 @@
 #' @param p Plotly chart object.
 #' @param x_title,y_title String to use as x or y axis title. Defaults to
 #'     `"[x axis title]"` and `"[y axis title]"` respectively.
-#' @param font_size Minimum font size. Default is `12`.
+#' @param font_size Minimum font size in px. Default is `16`.
 #' @param grid_lines determines which major grid lines are shown:
 #' - `"y"` (default): show y axis grid lines
 #' - `"x"`: show x axis grid lines
