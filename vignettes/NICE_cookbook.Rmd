@@ -422,7 +422,7 @@ line_chart <- line_df %>%
   geom_line(linewidth = 0.8, colour = nice_cols("bold_teal_100")) +
   geom_point(size = 1.5, colour = nice_cols("bold_teal_100")) +
   # Set y-axis limits and remove padding, add commas to axis labels
-  scale_y_continuous(expand = c(0,0), limits = c(0,200000), label = scales::comma) +
+  scale_y_continuous(expand = c(0,0), limits = c(0,250000), label = scales::comma) +
   # Set x-axis labels to show as month year, and to occur at 6-monthly intervals
   scale_x_date(date_labels = "%b\n%Y", date_breaks = "6 months") +
   # Apply NICE theme
@@ -507,7 +507,7 @@ facet_chart <- facet_df %>%
   nice_gg_theme(x_title = FALSE,
                 axis_lines = "none",
                 panel_border = TRUE,
-                legend = FALSE) +
+                show_legend = FALSE) +
   # Add labels
   labs(x = "Sepal Length",
        y = "Dispensed items (thousands)")
@@ -703,9 +703,8 @@ We then apply the NICE Plotly theme using `nice_plotly_theme()`, providing axis 
 
 ```{r theme_plotly}
 plotly_iris_bar_themed <- plotly_iris_bar_formatted %>% 
-  nice_plotly_theme(chart_type = "vertical_bar",
-             x_title = "Species",
-             y_title = "Sepal Width")
+  nice_plotly_theme(x_title = "Species",
+                    y_title = "Sepal Width")
 
 plotly_iris_bar_themed
 ```
@@ -743,9 +742,8 @@ plotly_hist <- iris %>%
   # Stack bars
   layout(barmode = "stack") %>% 
   # Add NICE theme and set axis titles
-  nice_plotly_theme(chart_type = "vertical_bar",
-             x_title = "Sepal width",
-             y_title = "Count")
+  nice_plotly_theme(x_title = "Sepal width",
+                    y_title = "Count")
 
 plotly_hist
 ```
@@ -774,9 +772,9 @@ plotly_vbar_chart <- bar_df %>%
                                  "%{y:.2f} million items dispensed",
                                  "<extra></extra>")) %>% 
   # Add NICE theme and set axis titles
-  nice_plotly_theme(chart_type = "vertical_bar",
-             x_title = "",
-             y_title = "Dispensed items (millions)")
+  nice_plotly_theme(x_title = "",
+                    y_title = "Dispensed items (millions)",
+                    show_legend = FALSE)
 
 plotly_vbar_chart
 ```
@@ -787,7 +785,7 @@ Use `chart_type = "horizontal_bar"`.
 
 ```{r plotly_horizontal_bar}
 # Create chart
-plotly_vbar_chart <- bar_df %>%
+plotly_hbar_chart <- bar_df %>%
   # Reorder chemical factor levels in decreasing order of items
   mutate(chemical = reorder(chemical, items)) %>% 
   plot_ly(x = ~items,
@@ -803,11 +801,14 @@ plotly_vbar_chart <- bar_df %>%
                                  "%{x:.2f} million items dispensed",
                                  "<extra></extra>")) %>% 
   # Add NICE theme and set axis titles
-  nice_plotly_theme(chart_type = "horizontal_bar",
-             x_title = "Dispensed items (millions)",
-             y_title = "")
+  nice_plotly_theme(x_title = "Dispensed items (millions)",
+                    y_title = "",
+                    grid_lines = "x",
+                    axis_lines = "y",
+                    axis_ticks = "y",
+                    show_legend = FALSE)
 
-plotly_vbar_chart
+plotly_hbar_chart
 ```
 
 #### Line chart
@@ -859,7 +860,7 @@ plotly_line_chart <- line_df %>%
          yaxis = list(tickformat = ",",
                       range = ~c(0, max(items)+10000)),
          annotations = list(x = as.Date("2020-03-01"),
-                            xshift = -60,
+                            xshift = -80,
                             y = 180000,
                             text = "National lockdown\non 23 March",
                             xref = "x",
@@ -867,11 +868,9 @@ plotly_line_chart <- line_df %>%
                             showarrow = FALSE, 
                             align = "right")) %>% 
   # Add NICE theme and set axis titles
-  nice_plotly_theme(chart_type = "line",
-             x_title = "",
-             y_title = "Dispensed items",
-             # Don't pad the axes, as ticks shown. Do not want gap between axis line and ticks
-             pad_axes = FALSE)
+  nice_plotly_theme(x_title = "",
+                    y_title = "Dispensed items",
+                    show_legend = FALSE)
 
 plotly_line_chart
 ```
@@ -899,11 +898,12 @@ plotly_scatter_chart <- scatter_df %>%
          xaxis = list(tickformat = ","),
          yaxis = list(tickformat = ",")) %>% 
   # Add NICE theme and set axis titles
-  nice_plotly_theme(chart_type = "scatter",
-             x_title = "Primary care list size (x1000)",
-             y_title = "Dispensed items",
-             # Don't pad the axes, as ticks shown. Do not want gap between axis line and ticks
-             pad_axes = FALSE)
+  nice_plotly_theme(x_title = "Primary care list size (x1000)",
+                    y_title = "Dispensed items",
+                    grid_lines = "both",
+                    axis_ticks = "both",
+                    show_legend = FALSE,
+                    panel_border = TRUE)
 
 plotly_scatter_chart
 ```

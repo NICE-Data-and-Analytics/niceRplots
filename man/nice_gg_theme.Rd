@@ -11,7 +11,7 @@ nice_gg_theme(
   grid_lines = "y",
   axis_lines = "x",
   axis_ticks = "x",
-  legend = TRUE,
+  show_legend = TRUE,
   panel_border = FALSE,
   remove_axes = FALSE
 )
@@ -51,7 +51,7 @@ title will be present and can be renamed using the \code{labs()} function. If se
 \item \code{"none"}: remove ticks
 }}
 
-\item{legend}{Option to remove the chart legend. If \code{TRUE} (default), the legend
+\item{show_legend}{Option to remove the chart legend. If \code{TRUE} (default), the legend
 will be present above the chart. If set to \code{FALSE}, the legend will be removed.}
 
 \item{panel_border}{Option to add a panel border. If \code{FALSE} (default), no border

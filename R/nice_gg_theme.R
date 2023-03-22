@@ -39,7 +39,7 @@
 #' - `"y"`: show ticks on y axis
 #' - `"x+y"`: show ticks on both x and y axis
 #' - `"none"`: remove ticks
-#' @param legend Option to remove the chart legend. If `TRUE` (default), the legend
+#' @param show_legend Option to remove the chart legend. If `TRUE` (default), the legend
 #' will be present above the chart. If set to `FALSE`, the legend will be removed.
 #' @param panel_border Option to add a panel border. If `FALSE` (default), no border
 #' will be present. If set to `TRUE`, a panel border will be added.
@@ -74,7 +74,7 @@ nice_gg_theme <- function(base_size = 12,
                           grid_lines = "y",
                           axis_lines = "x",
                           axis_ticks = "x",
-                          legend = TRUE,
+                          show_legend = TRUE,
                           panel_border = FALSE,
                           remove_axes = FALSE){
 
@@ -199,7 +199,7 @@ nice_gg_theme <- function(base_size = 12,
   }
 
   # Option to remove legend --------------------------------------
-  if (!legend){
+  if (!show_legend){
 
     nice_theme <- nice_theme +
       ggplot2::theme(
@@ -329,5 +329,3 @@ nice_gg_theme <- function(base_size = 12,
 
   return(nice_theme)
 }
-
-
