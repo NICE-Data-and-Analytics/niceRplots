@@ -22,5 +22,5 @@ run the first line in the code below as well.
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("GitWray1/niceRplots")
+devtools::install_github("NICE-Data-and-Analytics/niceRplots")
 ```

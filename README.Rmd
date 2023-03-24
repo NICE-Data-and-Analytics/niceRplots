@@ -27,6 +27,6 @@ If you do not have the `devtools` package installed, you will have to run the fi
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("GitWray1/niceRplots")
+devtools::install_github("NICE-Data-and-Analytics/niceRplots")
 ```
 
