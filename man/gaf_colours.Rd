@@ -3,7 +3,7 @@
 \docType{data}
 \name{gaf_colours}
 \alias{gaf_colours}
-\title{NICE brand colours}
+\title{Government Analysis Function colours}
 \format{
 A named vector with 9 colours and associated HEX codes
 }

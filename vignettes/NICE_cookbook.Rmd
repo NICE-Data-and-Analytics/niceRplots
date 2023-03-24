@@ -99,6 +99,18 @@ example_df <- readr::read_csv("example_data.csv",
 
 ```
 
+## Change RStudio graphic device
+
+In order to use the NICE fonts within our charts, we first need to change the graphics device used by RStudio. To do this, install the `ragg` package with the below code:
+
+```{r ragg_install, eval = FALSE}
+
+install.packages("ragg")
+
+```
+
+Then restart R by clicking *Session > Restart R*, and change the graphic device by clicking *Tools > Global options > General > Graphics > Backend: AGG > Apply*
+
 # Chart accessibility
 
 By law, all content published on public sector websites must meet the level A and AA success criterion in the [Web Content Accessibility Guidelines (WCAG) 2.1](https://www.w3.org/TR/WCAG21/). This includes charts and data visualisations. 
@@ -145,8 +157,6 @@ anticoag_df %>%
   # Add bars, add fill and border colours
   geom_col(fill = nice_cols("bold_teal_100"), 
            colour = nice_cols("white_100"), linewidth = 0.2) +
-  # Add baseline to x axis
-  geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
   # set y-axis limits and remove padding
   scale_y_continuous(expand = c(0,0), limits = c(0,8)) +
   # set x-axis labels to wrap to prevent overlapping
@@ -217,7 +227,7 @@ The [ggplot2 package](https://ggplot2.tidyverse.org/) can be used to create stat
 
 ## How to style your charts
 
-As an example we will create a simple bar chart using the `iris` dataset. We will first create a basic chart, and then add some formatting. We can see the two charts below with and without formatting.
+Using the `iris` dataset, we first create a basic chart (left), then recreate the chart with a NICE colour applied to the fill colour of the bars and adding a white border to the bars (right).
 
 ```{r format_chart}
 
@@ -238,8 +248,6 @@ iris_bar_formatted <- ggplot(iris_bar_df) +
   # Adjust bar fill and outline colour
   geom_col(aes(x = Species, y = Sepal_Width), fill = nice_cols("bold_teal_100"), 
            colour = nice_cols("white_100"), linewidth = 0.2)+
-  # Add baseline to x-axis
-  geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
   # Set y-axis limits and remove padding
   scale_y_continuous(expand = c(0, 0), limits = c(0, 4)) +
   # Add labels 
@@ -281,7 +289,7 @@ The `nice_gg_theme()` function alters several aspects of the chart to make it co
 
 * **Axes**: axes titles can be removed by setting the `x_title` or `y_title` arguments to `FALSE` (default is `TRUE`). Axes ticks can be added or removed using the optional `axis_ticks` argument (options are `"x"` (default), `"y"`, `"x+y"` and `"none"`). Axes can be removed entirely by setting the `remove_axes` argument to `TRUE`. 
 
-* **Legend**: remove the chart legend by setting the `legend` argument to `FALSE`. 
+* **Legend**: remove the chart legend by setting the `show_legend` argument to `FALSE`. 
 
 The `nice_gg_theme()` function isn't designed to modify every aspect of the chart, but to apply a general consistent theme and provide options for the most common chart modifications. When making complex charts, many aspects of the chart will still need to be modified manually (see choropleth example). The remaining chart examples in this section will demonstrate several use cases of the `nice_gg_theme()` function.
 
@@ -313,8 +321,6 @@ nice_hist <- iris %>%
   ggplot() +
   geom_histogram(aes(x = Sepal.Width, fill = Species), 
                  binwidth = 0.2, linewidth = 0.2, color = nice_cols("white_100")) +
-  # Add a line on the x axis
-  geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
   # Remove extra spacing and set y-axis limits
   scale_y_continuous(expand = c(0,0), limits = c(0,40)) +
   # Use NICE categorical colour palette
@@ -349,8 +355,6 @@ bar_chart <- bar_df %>%
   # Add bars, add fill and border colours
   geom_col(fill = nice_cols("bold_teal_100"), 
            colour = nice_cols("white_100"), linewidth = 0.2) +
-  # Add baseline to x axis
-  geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
   # set y-axis limits and remove padding
   scale_y_continuous(expand = c(0,0), limits = c(0,8)) +
   # Set x-axis labels to wrap to prevent overlapping
@@ -379,13 +383,12 @@ horizontal_bar_chart <- bar_df %>%
   # Add bars, add fill and border colours
   geom_col(fill = nice_cols("bold_teal_100"), 
            colour = nice_cols("white_100"), linewidth = 0.2) +
-  # Add baseline to x axis
-  geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
   # Set y-axis limits and remove padding
   scale_y_continuous(expand = c(0,0), limits = c(0,8)) +
   # Apply NICE theme
   nice_gg_theme(y_title = FALSE,
                 grid_lines = "x",
+                axis_lines = "y",
                 axis_ticks = "y") +
   coord_flip() +
   # Add labels
@@ -412,8 +415,6 @@ line_df <- anticoag_df %>%
 # Create chart
 line_chart <- line_df %>%
   ggplot(aes(x = date, y = items)) +
-  # Add baseline to x axis
-  geom_hline(yintercept = 0, linewidth = 1, colour = nice_cols("black_100")) +
   # Add the vertical dashed line to show lockdown date. Added this before plotting the 
   # data so that it sits on a layer behind the line and points
   geom_vline(xintercept = as.Date("2020-03-01"), linewidth = 0.6, linetype = "dashed") +
@@ -421,7 +422,7 @@ line_chart <- line_df %>%
   geom_line(linewidth = 0.8, colour = nice_cols("bold_teal_100")) +
   geom_point(size = 1.5, colour = nice_cols("bold_teal_100")) +
   # Set y-axis limits and remove padding, add commas to axis labels
-  scale_y_continuous(expand = c(0,0), limits = c(0,200000), label = scales::comma) +
+  scale_y_continuous(expand = c(0,0), limits = c(0,250000), label = scales::comma) +
   # Set x-axis labels to show as month year, and to occur at 6-monthly intervals
   scale_x_date(date_labels = "%b\n%Y", date_breaks = "6 months") +
   # Apply NICE theme
@@ -461,8 +462,9 @@ scatter_chart <- scatter_df %>%
   scale_y_continuous(expand = c(0,0), limits = c(0, 25000), label = scales::comma) +
   # Apply NICE theme
   nice_gg_theme(grid_lines = "x+y",
-                panel_border = TRUE,
-                axis_ticks = "none") +
+                axis_lines = "none",
+                axis_ticks = "none",
+                panel_border = TRUE) +
   # Add labels
   labs(x = "Primary care list size (x1000)",
        y = "Dispensed items")
@@ -503,8 +505,9 @@ facet_chart <- facet_df %>%
   facet_wrap(~chemical) +
   # Apply the NICE theme
   nice_gg_theme(x_title = FALSE,
+                axis_lines = "none",
                 panel_border = TRUE,
-                legend = FALSE) +
+                show_legend = FALSE) +
   # Add labels
   labs(x = "Sepal Length",
        y = "Dispensed items (thousands)")
@@ -604,7 +607,6 @@ choropleth_chart_seq
 ```
 <br>
 
-
 Using a diverging palette can be helpful if you want to draw attention to the extremes of the scale, or show variation around a mean. The example below uses the NICE diverging colour palette, accessed using `nice_pal("div")`.
 
 ```{r gg_choropleth_div}
@@ -653,11 +655,13 @@ The [Plotly package](https://plotly.com/r/) can be used to create interactive ch
 
 The `nice_plotly_theme()` function alters the following aspects of the chart to make it more consistent with the [NICE brand guidelines](https://indepth.nice.org.uk/our-brand/index.html):
 
-* **Fonts**: changes all text to Inter Regular and sets the minimum font size to the `font_size` argument (default is `12`).
+* **Fonts**: changes all text to Inter Regular and sets the minimum font size to the `font_size` argument (default is `16`). Plotly font sizes are measured in pixels (px). 16px is equivalent to 12pt font size.
 
-* **Grid lines**: the horizontal and/or vertical grid lines are displayed according to the graph type selected in the `chart_type` argument (options are `"vertical_bar"`, `"horizontal_bar"`, `"scatter`" and `"line"`).
+* **Grid lines**: the horizontal and/or vertical grid lines are displayed according to the `grid_lines` argument. (options are `x`, `y`(default), `both` and `none`)
 
-* **Margins**: adds space between the axis lines and the tick labels. The default Plotly theme has no axis tick marks, just tick labels, and this function adds a gap between the axis lines and the tick labels for better spacing. If tick marks are desired, turn the padding off with `pad_axes = FALSE`, otherwise there will be a gap between the tick marks and the axis lines.
+* **Axis lines and ticks**: axis lines and ticks are displayed according to the `axis_lines` and `axis_ticks` arguments, respectively. (options are `x` (default), `y`, `both` and `none`). A panel border can also be added by setting the `panel_border` argument to `TRUE`, this will override the `axis_lines` argument.
+
+* **Legend**: remove the chart legend by setting the `show_legend` argument to `FALSE`. 
 
 * **Modebar**: removes all modebar buttons from the chart, e.g. zoom, select, pan, except for the camera icon, which allows the graph to be saved as a PNG.
 
@@ -697,13 +701,12 @@ plotly::subplot(plotly_iris_bar,
 
 ```
 
-We then apply the NICE Plotly theme using `nice_plotly_theme()`, providing axis titles and specifying `chart_type = "vertical_bar"`. 
+We then apply the NICE Plotly theme using `nice_plotly_theme()`, providing axis titles.
 
 ```{r theme_plotly}
 plotly_iris_bar_themed <- plotly_iris_bar_formatted %>% 
-  nice_plotly_theme(chart_type = "vertical_bar",
-             x_title = "Species",
-             y_title = "Sepal Width")
+  nice_plotly_theme(x_title = "Species",
+                    y_title = "Sepal Width")
 
 plotly_iris_bar_themed
 ```
@@ -718,8 +721,6 @@ Saving in other file formats (e.g. .svg or .jpg) is more complicated and require
 ### Chart types
 
 #### Histogram
-
-Use `chart_type = "vertical_bar"` for histograms.
 
 ```{r plotly_histogram}
 # Create chart
@@ -741,9 +742,8 @@ plotly_hist <- iris %>%
   # Stack bars
   layout(barmode = "stack") %>% 
   # Add NICE theme and set axis titles
-  nice_plotly_theme(chart_type = "vertical_bar",
-             x_title = "Sepal width",
-             y_title = "Count")
+  nice_plotly_theme(x_title = "Sepal width",
+                    y_title = "Count")
 
 plotly_hist
 ```
@@ -751,8 +751,6 @@ plotly_hist
 #### Bar chart
 
 ##### Vertical bar chart
-
-Use `chart_type = "vertical_bar"`.
 
 For stacked bar charts, add a white outline around the bars so adjacent colours are better distinguished.
 
@@ -772,20 +770,18 @@ plotly_vbar_chart <- bar_df %>%
                                  "%{y:.2f} million items dispensed",
                                  "<extra></extra>")) %>% 
   # Add NICE theme and set axis titles
-  nice_plotly_theme(chart_type = "vertical_bar",
-             x_title = "",
-             y_title = "Dispensed items (millions)")
+  nice_plotly_theme(x_title = "",
+                    y_title = "Dispensed items (millions)",
+                    show_legend = FALSE)
 
 plotly_vbar_chart
 ```
 
 ##### Horizontal bar chart
 
-Use `chart_type = "horizontal_bar"`.
-
 ```{r plotly_horizontal_bar}
 # Create chart
-plotly_vbar_chart <- bar_df %>%
+plotly_hbar_chart <- bar_df %>%
   # Reorder chemical factor levels in decreasing order of items
   mutate(chemical = reorder(chemical, items)) %>% 
   plot_ly(x = ~items,
@@ -801,18 +797,17 @@ plotly_vbar_chart <- bar_df %>%
                                  "%{x:.2f} million items dispensed",
                                  "<extra></extra>")) %>% 
   # Add NICE theme and set axis titles
-  nice_plotly_theme(chart_type = "horizontal_bar",
-             x_title = "Dispensed items (millions)",
-             y_title = "")
+  nice_plotly_theme(x_title = "Dispensed items (millions)",
+                    y_title = "",
+                    grid_lines = "x",
+                    axis_lines = "y",
+                    axis_ticks = "y",
+                    show_legend = FALSE)
 
-plotly_vbar_chart
+plotly_hbar_chart
 ```
 
 #### Line chart
-
-Use `chart_type = "line"`.
-
-`pad_axes = FALSE` here in `nice_plotly_theme()` as we do not want a gap between the x-axis tick marks and the x-axis line.
 
 ```{r plotly_line}
 # Create chart
@@ -857,7 +852,7 @@ plotly_line_chart <- line_df %>%
          yaxis = list(tickformat = ",",
                       range = ~c(0, max(items)+10000)),
          annotations = list(x = as.Date("2020-03-01"),
-                            xshift = -60,
+                            xshift = -80,
                             y = 180000,
                             text = "National lockdown\non 23 March",
                             xref = "x",
@@ -865,19 +860,15 @@ plotly_line_chart <- line_df %>%
                             showarrow = FALSE, 
                             align = "right")) %>% 
   # Add NICE theme and set axis titles
-  nice_plotly_theme(chart_type = "line",
-             x_title = "",
-             y_title = "Dispensed items",
-             # Don't pad the axes, as ticks shown. Do not want gap between axis line and ticks
-             pad_axes = FALSE)
+  nice_plotly_theme(x_title = "",
+                    y_title = "Dispensed items",
+                    show_legend = FALSE)
 
 plotly_line_chart
 ```
 
 
 #### Scatter plot
-
-Use `chart_type = "scatter"`.
 
 ```{r plotly_scatter}
 
@@ -897,11 +888,12 @@ plotly_scatter_chart <- scatter_df %>%
          xaxis = list(tickformat = ","),
          yaxis = list(tickformat = ",")) %>% 
   # Add NICE theme and set axis titles
-  nice_plotly_theme(chart_type = "scatter",
-             x_title = "Primary care list size (x1000)",
-             y_title = "Dispensed items",
-             # Don't pad the axes, as ticks shown. Do not want gap between axis line and ticks
-             pad_axes = FALSE)
+  nice_plotly_theme(x_title = "Primary care list size (x1000)",
+                    y_title = "Dispensed items",
+                    grid_lines = "both",
+                    axis_ticks = "both",
+                    show_legend = FALSE,
+                    panel_border = TRUE)
 
 plotly_scatter_chart
 ```
@@ -956,7 +948,8 @@ leaflet_map <- map_df %>%
                                            bringToFront = TRUE),
               # Add hover labels to the shapes
               label = ~lapply(paste0("<strong>Name: </strong>", map_df$name,
-                                     "<br><strong>Items per 1000 people:</strong> ", round(map_df$items_per_1000),2),
+                                     "<br><strong>Items per 1000 people:</strong> ",
+                                     round(map_df$items_per_1000),2),
                               htmltools::HTML),
               # Set font options
               labelOptions = labelOptions(textsize = "12px",

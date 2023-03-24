@@ -3,28 +3,35 @@
 #' @description
 #' `nice_plotly_theme()` applies a NICE theme to a Plotly chart object. It makes
 #' some basic changes, including:
-#' - Changing the font to Inter
+#' - Changing the font to Inter Regular
 #' - Setting the minimum font size
-#' - Adding or removing grid lines depending on the chart type
 #' - Reminds users to edit the x and y axis titles
+#' - Provides options to adjust the grid lines, axis lines and axis ticks
 #' - Removes icons from the default Plotly tool bar
 #'
 #' @param p Plotly chart object.
-#' @param chart_type Type of chart, determines which grid lines are shown:
-#' - `"vertical_bar"` (default): For bar charts and histograms. Only shows
-#' horizontal grid lines.
-#' - `"horizontal_bar"`: For horizontal bar charts. Only shows vertical grid
-#' lines.
-#' - `"scatter"`: For scatter plots. Shows both horizontal and vertical grid
-#' lines.
-#' - `"line"`: For line charts. Only shows horizontal grid lines.
 #' @param x_title,y_title String to use as x or y axis title. Defaults to
 #'     `"[x axis title]"` and `"[y axis title]"` respectively.
-#' @param font_size Minimum font size. Default is `12`.
-#' @param pad_axes Add space between the axis lines and the axis title or tick
-#'    marks? If `TRUE` (default), adds some space between the tick labels and
-#'    the axis lines. If using tick marks, set to `FALSE` to avoid a gap between
-#'    the axis lines and the tick marks.
+#' @param font_size Minimum font size in px. Default is `16`.
+#' @param grid_lines determines which major grid lines are shown:
+#' - `"y"` (default): show y axis grid lines
+#' - `"x"`: show x axis grid lines
+#' - `"both"`: show both x and y axis grid lines
+#' - `"none"`: remove grid lines
+#' @param axis_lines determines which axis lines are shown:
+#' - `"x"` (default): show x axis line
+#' - `"y"`: show y axis line
+#' - `"both"`: show both x and y axis lines
+#' - `"none"`: remove axis lines
+#' @param axis_ticks determines which axis ticks are shown:
+#' - `"x"` (default): show ticks on x axis
+#' - `"y"`: show ticks on y axis
+#' - `"both"`: show ticks on both x and y axis
+#' - `"none"`: remove ticks
+#' @param show_legend Option to remove the chart legend. If `TRUE` (default), the legend
+#' will be present above the chart. If set to `FALSE`, the legend will be removed.
+#' @param panel_border Option to add a panel border. If `FALSE` (default), no border
+#' will be present. If set to `TRUE`, a panel border will be added.
 #'
 #' @returns A Plotly chart object.
 #' @export
@@ -45,52 +52,101 @@
 #'    x = ~Species,
 #'    y = ~Sepal_Width,
 #'    type = "bar",
-#'    marker = list(color = nice_colours_full[["bold_teal_100"]],
-#'                  line = list(color = nice_colours_full[['black_100']], width = 1.5))) %>%
+#'    marker = list(color = nice_cols("bold_teal_100"),
+#'                  line = list(color = nice_cols("black_100"), width = 1.5))) %>%
 #'    # Apply NICE theme
-#'    nice_plotly_theme(chart_type = "vertical_bar",
-#'                      x_title = "Species",
+#'    nice_plotly_theme(x_title = "Species",
 #'                      y_title = "Sepal Width")
 
 nice_plotly_theme <- function(p,
-                       chart_type = "vertical_bar",
-                       x_title = "[x axis title]",
-                       y_title = "[y axis title]",
-                       font_size = 12,
-                       pad_axes = TRUE) {
+                              x_title = "[x axis title]",
+                              y_title = "[y axis title]",
+                              font_size = 16,
+                              grid_lines = "y",
+                              axis_lines = "x",
+                              axis_ticks = "x",
+                              show_legend = TRUE,
+                              panel_border = FALSE){
 
-  chart_grids <- list(vertical_bar = list(xgrid = FALSE,
-                                          ygrid = TRUE),
-                     horizontal_bar = list(xgrid = TRUE,
-                                           ygrid = FALSE),
-                     scatter = list(xgrid = TRUE,
-                                    ygrid = TRUE),
-                     line = list(xgrid = FALSE,
-                                 ygrid = TRUE))
+  # Set up options for the axis and gridlines
+  options <- list(x = list(show_x = TRUE,
+                           show_y = FALSE),
+                  y = list(show_x = FALSE,
+                           show_y = TRUE),
+                  both = list(show_x = TRUE,
+                              show_y = TRUE),
+                  none = list(show_x = FALSE,
+                              show_y = FALSE))
 
-  layout(p,
-         font = list(family = "Inter Regular",
-                     size = font_size,
-                     color = "#000000"),
-         xaxis = list(showgrid = chart_grids[[chart_type]][["xgrid"]],
-                      title = list(font = list(size = font_size),
-                                   text = x_title,
-                                   standoff = 10),
-                      tickfont = list(size = font_size),
-                      gridwidth = 1.5,
-                      gridcolor = "#e6e6e6",
-                      zerolinewidth = 1.5),
-         yaxis = list(showgrid = chart_grids[[chart_type]][["ygrid"]],
-                      title = list(font = list(size = font_size),
-                                   text = y_title,
-                                   standoff = 5),
-                      tickfont = list(size = font_size),
-                      gridwidth = 1.5,
-                      gridcolor = "#e6e6e6",
-                      zerolinewidth = 1.5),
-         margin = list(pad = 10*pad_axes),
-         legend = list(font = list(size = font_size))) %>%
-    config(modeBarButtonsToRemove = c("zoom", "pan", "select", "lasso", "zoomIn2d", "zoomOut2d", "autoscale", "resetscale", "hovercompare", "hoverclosest"),
+  # Set up options for axis ticks
+  tick_options <- list(x = list(show_x = "outside",
+                                show_y = ""),
+                       y = list(show_x = "",
+                                show_y = "outside"),
+                       both = list(show_x = "outside",
+                                   show_y = "outside"),
+                       none = list(show_x = "",
+                                   show_y = ""))
+
+  # Set values for axis lines, overwrite these if the panel border option is TRUE
+  axis_x <- options[[axis_lines]][["show_x"]]
+  axis_y <- options[[axis_lines]][["show_y"]]
+
+  if (panel_border) {
+    axis_x <- TRUE
+    axis_y <- TRUE
+  }
+
+  plot <- layout(p,
+                 font = list(family = "Inter Regular",
+                             size = font_size,
+                             color = "#000000"),
+                 xaxis = list(title = list(font = list(size = font_size),
+                                           text = x_title,
+                                           standoff = 10),
+                              # Set up grid formatting
+                              showgrid = options[[grid_lines]][["show_x"]],
+                              gridwidth = 1.5,
+                              gridcolor = "#e6e6e6",
+                              # Set up axis line formatting
+                              showline = axis_x,
+                              linewidth = 1.5,
+                              linecolor = "#000000",
+                              # Set up tick formatting
+                              ticks = tick_options[[axis_ticks]][["show_x"]],
+                              tickfont = list(size = font_size),
+                              # Options to add panel border (mirrors x and y axis)
+                              mirror = panel_border),
+                 yaxis = list(title = list(font = list(size = font_size),
+                                           text = y_title,
+                                           standoff = 5),
+                              # Set up grid formatting
+                              showgrid = options[[grid_lines]][["show_y"]],
+                              gridwidth = 1.5,
+                              gridcolor = "#e6e6e6",
+                              # Set up axis line formatting
+                              showline = axis_y,
+                              linewidth = 1.5,
+                              linecolor = "#000000",
+                              # Set up tick formatting
+                              ticks = tick_options[[axis_ticks]][["show_y"]],
+                              tickfont = list(size = font_size),
+                              # Options to add panel border (mirrors x and y axis)
+                              mirror = panel_border),
+                 # Remove axis margins so axis lines are not offset
+                 margin = list(pad = 0),
+                 # Set up legend formatting (above chart)
+                 showlegend = show_legend,
+                 legend = list(orientation = "h",
+                               yanchor = "bottom",
+                               y = 1.01,
+                               xanchor = "right",
+                               x = 1,
+                               font = list(size = font_size))) %>%
+    # Remove unnecessary plotly options
+    config(modeBarButtonsToRemove = c("zoom", "pan", "select", "lasso", "zoomIn2d", "zoomOut2d",
+                                      "autoscale", "resetscale", "hovercompare", "hoverclosest"),
            displaylogo = FALSE)
-}
 
+  return(plot)
+}

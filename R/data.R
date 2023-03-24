@@ -10,9 +10,9 @@
 #'   \item{date}{the month the data covers, displayed as first day of the month}
 #'   \item{chemical}{Anticoagulant medicine}
 #'   \item{bnf_code}{Medicine British National Formulary code}
-#'   \item{ods_code}{Sub-icb location Organisation Data Service code}
-#'   \item{gss_code}{Sub-icb location Government Statistical Service code}
-#'   \item{name}{Sub-icb location name}
+#'   \item{ods_code}{Sub-ICB location Organisation Data Service code}
+#'   \item{gss_code}{Sub-ICB location Government Statistical Service code}
+#'   \item{name}{Sub-ICB location name}
 #'   \item{items}{Number of items prescribed}
 #'   \item{quantity}{Number of individual units prescribed e.g. tablets, capsules}
 #'   \item{actual_cost}{Cost of medicine after discounts have been applied}
