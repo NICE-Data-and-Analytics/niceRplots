@@ -429,7 +429,8 @@ stacked_bar_chart <- stacked_bar_df %>%
            colour = nice_cols("white_100"), 
            linewidth = 0.2) +
   # Set y-axis limits and remove padding
-  scale_y_continuous(expand = c(0,0), limits = c(0,1.02)) +
+  scale_y_continuous(expand = c(0,0), limits = c(0,1.02),
+                     breaks = seq(0, 1, by = 0.2)) +
   # Use NICE categorical colour palette, reverse legend order to replicate bars
   scale_fill_manual(values = nice_pal("cat"),
                     guide = guide_legend(reverse = TRUE)) +
@@ -856,6 +857,40 @@ plotly_hbar_chart <- bar_df %>%
 
 plotly_hbar_chart
 ```
+
+
+#### Stacked bar chart
+
+```{r plotly_stacked_bar}
+
+# Create chart
+plotly_stacked_bar <- stacked_bar_df %>% 
+  plot_ly(x = ~prop,
+          y = ~forcats::fct_rev(factor(year)),
+          type = "bar",
+          # Set orientation to horizontal
+          orientation = "h",
+          # Apply NICE colours
+          color = ~factor(chemical),
+          colors = c("#D07B4D", "#228096"),
+          hoverinfo = "text",
+          hovertext = ~paste0("<b>", "Year: ", "</b>", year,
+                              "<br>", "<b>", "Group: ", "</b>", chemical,
+                              "<br>", "<b>", "Proportion of dispensed items: ", "</b>", round(prop,2)),
+          # Apply white lines around bars
+          marker = list(line = list(color = "#FFFFFF", width = 0.4))) %>% 
+  # Convert to a stacked bar
+  layout(barmode = "stack") %>% 
+  #Apply NICE theme
+  nice_plotly_theme(x_title = "Proportion of dispensed items",
+                    y_title = "",
+                    grid_lines = "x",
+                    axis_lines = "y",
+                    axis_ticks = "y")
+
+plotly_stacked_bar
+```
+
 
 #### Line chart
 
