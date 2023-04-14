@@ -1,6 +1,5 @@
 ---
 title: "NICE visual cookbook for R graphics"
-author: "Impact team"
 output: 
    html_document:
      toc: true
@@ -401,6 +400,55 @@ horizontal_bar_chart
 <br>
 
 
+### Stacked bar chart
+
+```{r gg_stacked_bar}
+
+# Prepare data, get the proportion of direct oral anticoagluants (DOACs) vs warfarin dispensed 
+# over the 4 complete years of data
+stacked_bar_df <- anticoag_df %>% 
+  filter(between(date, as.Date("2018-01-01"), as.Date("2021-12-31"))) %>% 
+  mutate(year = lubridate::year(date),
+         chemical = case_when(
+           chemical %in% c("Apixaban", "Dabigatran etexilate", "Rivaroxaban", "Edoxaban") ~ "DOACs",
+           chemical == "Warfarin sodium" ~ "Warfarin")) %>%
+  group_by(year, chemical) %>% 
+  summarise(items = sum(items)) %>% 
+  group_by(year) %>% 
+  mutate(prop = items/sum(items)) %>% 
+  ungroup()
+
+# Create chart
+stacked_bar_chart <- stacked_bar_df %>%
+  # Convert to factors so that they can be reversed to plot years in correct order
+  ggplot(aes(x = forcats::fct_rev(factor(year)), 
+             y = prop, 
+             fill = forcats::fct_rev(factor(chemical)))) +
+  # Set the position to stack and add a white outline to the bars
+  geom_col(position = "stack", 
+           colour = nice_cols("white_100"), 
+           linewidth = 0.2) +
+  # Set y-axis limits and remove padding
+  scale_y_continuous(expand = c(0,0), limits = c(0,1.02)) +
+  # Use NICE categorical colour palette, reverse legend order to replicate bars
+  scale_fill_manual(values = nice_pal("cat"),
+                    guide = guide_legend(reverse = TRUE)) +
+  coord_flip() +
+  # Apply the NICE theme
+  nice_gg_theme(y_title = FALSE,
+                grid_lines = "x",
+                axis_lines = "y",
+                axis_ticks = "y") +
+  # Add labels
+  labs(y = "Proportion of dispensed items")
+
+```
+<br>
+```{r gg_stacked_bar_out, echo = FALSE}
+stacked_bar_chart
+```
+<br>
+
 ### Line chart
 
 ```{r gg_line}
@@ -454,7 +502,9 @@ scatter_df <- anticoag_df %>%
 scatter_chart <- scatter_df %>%
   ggplot(aes(x = total_list_size, y = items)) +
   # Add the points and make them teal
-  geom_point(colour = nice_cols("bold_teal_100"), size = 3) +
+  geom_point(shape = 21,
+             fill = nice_cols("bold_teal_100"), size = 4,
+             colour = nice_cols("black_100"), stroke = 0.2) +
   # Set x-axis limits, adjust padding and add commas to axis labels
   scale_x_continuous(expand = expansion(mult = c(0, 0.05)), 
                      limits = c(0,3000), label = scales::comma) +
@@ -462,8 +512,8 @@ scatter_chart <- scatter_df %>%
   scale_y_continuous(expand = c(0,0), limits = c(0, 25000), label = scales::comma) +
   # Apply NICE theme
   nice_gg_theme(grid_lines = "x+y",
-                axis_lines = "none",
-                axis_ticks = "none",
+                axis_lines = "x+y",
+                axis_ticks = "x+y",
                 panel_border = TRUE) +
   # Add labels
   labs(x = "Primary care list size (x1000)",
@@ -878,11 +928,13 @@ plotly_scatter_chart <- scatter_df %>%
           y = ~items,
           type = "scatter",
           mode = "markers",
-          marker = list(color = nice_cols("bold_teal_100")),
+          marker = list(color = nice_cols("bold_teal_100"),
+                        size = 10,
+                        line = list(width = 0.5,
+                                    color = nice_cols("black_100"))),
           hoverinfo = "text",
           hovertext = ~paste0("List size: ", scales::label_comma()(total_list_size*1000),
-                              "<br>", scales::label_comma()(items), " items dispensed")
-          ) %>% 
+                              "<br>", scales::label_comma()(items), " items dispensed")) %>% 
   layout(showlegend = FALSE,
          # Axis ticks with commas as thousands separators
          xaxis = list(tickformat = ","),
