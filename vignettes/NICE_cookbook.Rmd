@@ -1078,7 +1078,7 @@ leaflet_map <- map_df %>%
   # Add our shapes
   addPolygons(fillColor = ~pal(items_per_1000),
               fillOpacity = 1,
-              color = nice_cols("white_100"),
+              color = nice_cols("black_100"),
               weight = 0.5,
               opacity = 1,
               # Add functionality to highlight shape when hovered over
