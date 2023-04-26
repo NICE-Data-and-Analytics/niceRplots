@@ -53,11 +53,11 @@ nice_palettes <- list(
                           "balanced_green_100",
                           "deep_blue_100")],
 
-  "seq" = nice_colours[c("black_25",
-                         "deep_blue_100")],
+  "seq" = nice_colours[c("soft_cream_25",
+                         "bold_teal_100")],
 
-  "div" = nice_colours[c("deep_blue_100",
-                         "black_25",
+  "div" = nice_colours[c("bold_teal_100",
+                         "soft_cream_25",
                          "positive_yellow_100")],
 
   "cat_gaf" = gaf_colours[c("dark blue",
